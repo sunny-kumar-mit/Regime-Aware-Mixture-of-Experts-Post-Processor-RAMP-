@@ -1,0 +1,764 @@
+{
+  "cases": [
+    {
+      "case_id": "CASE_001",
+      "case_type": "ACTIVE_MONSOON",
+      "case_label": "SYNTHETIC CASE STUDY \u2014 Active Monsoon Low-Pressure Event",
+      "date": "2024-07-15",
+      "lead_time_hours": 24,
+      "district": "Nagpur",
+      "state": "Maharashtra",
+      "latitude": 21.15,
+      "longitude": 79.08,
+      "regime": "LOW_DEPRESSION",
+      "is_synthetic": true,
+      "nwp_rainfall_mm": 42.5,
+      "ramp_prediction_mm": 38.2,
+      "extreme_probability": 0.08,
+      "district_product": null,
+      "hotspot_detected": true,
+      "observed_mm": null,
+      "verification_available": false,
+      "pipeline_stages": [
+        {
+          "stage": "NWP_INPUT",
+          "status": "COMPLETE",
+          "inputs": {
+            "source": "GFS/NCMRWF 0.25\u00b0 grid",
+            "initialization": "2024-07-15T00:00:00Z"
+          },
+          "outputs": {
+            "raw_nwp_rainfall_mm": 42.5,
+            "lead_time_hours": 24
+          },
+          "notes": "Raw NWP forecast ingested and regridded to 0.25\u00b0."
+        },
+        {
+          "stage": "REGIME_DETECTION",
+          "status": "COMPLETE",
+          "inputs": {
+            "u850": 6.2,
+            "v850": 4.8,
+            "mslp": 1003.2,
+            "cape": 2100.0
+          },
+          "outputs": {
+            "dominant_regime": "LOW_DEPRESSION",
+            "regime_entropy": 1.24
+          },
+          "notes": "Phase 4 LightGBM classifier assigned LOW_DEPRESSION."
+        },
+        {
+          "stage": "BASELINE_CORRECTION",
+          "status": "COMPLETE",
+          "inputs": {
+            "raw_nwp_rainfall_mm": 42.5
+          },
+          "outputs": {
+            "mean_bias_corrected_mm": 39.1,
+            "quantile_mapped_mm": 37.4,
+            "global_ml_mm": 36.12
+          },
+          "notes": "Phase 5 baseline corrections applied sequentially."
+        },
+        {
+          "stage": "RAMP_MOE",
+          "status": "COMPLETE",
+          "inputs": {
+            "raw_nwp_rainfall_mm": 42.5,
+            "dominant_regime": "LOW_DEPRESSION"
+          },
+          "outputs": {
+            "ramp_prediction_mm": 38.2,
+            "top_expert": "LOW_DEPRESSION",
+            "gating_type": "SOFT"
+          },
+          "notes": "RAMP = sum_k p_k * E_k. Regime expert 'LOW_DEPRESSION' has highest weight."
+        },
+        {
+          "stage": "EXTREME_PROBABILITY",
+          "status": "COMPLETE",
+          "inputs": {
+            "ramp_prediction_mm": 38.2,
+            "regime": "LOW_DEPRESSION"
+          },
+          "outputs": {
+            "rain_probability": 0.64,
+            "heavy_probability": 0.24,
+            "very_heavy_probability": 0.16,
+            "extreme_probability": 0.08,
+            "monotonicity_enforced": true
+          },
+          "notes": "Phase 7 calibrated exceedance probabilities with monotonicity enforcement."
+        },
+        {
+          "stage": "SPATIAL_DISTRICT_PRODUCT",
+          "status": "COMPLETE",
+          "inputs": {
+            "district": "Nagpur",
+            "grid_cells": 7
+          },
+          "outputs": {
+            "area_weighted_rainfall_mm": 38.2,
+            "p90_rainfall_mm": 51.57,
+            "coverage_fraction": 0.87,
+            "aggregation": "AREA_WEIGHTED"
+          },
+          "notes": "Phase 9 Albers Equal Area grid-district intersection and aggregation."
+        },
+        {
+          "stage": "HOTSPOT_DETECTION",
+          "status": "COMPLETE",
+          "inputs": {
+            "district_mean_mm": 38.2,
+            "grid_cells": 7
+          },
+          "outputs": {
+            "hotspot_detected": true,
+            "hotspot_mm": 91.68,
+            "intensity_multiplier": 2.4
+          },
+          "notes": "Sub-district convective peak identified at highest-precipitation grid cell."
+        },
+        {
+          "stage": "VERIFICATION",
+          "status": "NOT_AVAILABLE",
+          "inputs": {
+            "observed_mm": null
+          },
+          "outputs": {
+            "error_mm": null,
+            "csi": null
+          },
+          "notes": "Observation-based verification NOT_AVAILABLE \u2014 real IMD archives not mounted."
+        },
+        {
+          "stage": "AUDIT_MANIFEST",
+          "status": "COMPLETE",
+          "inputs": {},
+          "outputs": {
+            "run_id": "CASE_RUN_CASE_001",
+            "model_version": "ramp_v1.0.0",
+            "data_mode": "SYNTHETIC_DEMO",
+            "timestamp": "2026-09-26T06:00:10.917168+00:00Z"
+          },
+          "notes": "Immutable run manifest persisted to data/audit/scientific/."
+        }
+      ],
+      "audit_manifest": {
+        "run_id": "CASE_RUN_CASE_001",
+        "data_mode": "SYNTHETIC_DEMO",
+        "model_version": "ramp_v1.0.0"
+      },
+      "data_mode": "SYNTHETIC_DEMO"
+    },
+    {
+      "case_id": "CASE_002",
+      "case_type": "COASTAL_EVENT",
+      "case_label": "SYNTHETIC CASE STUDY \u2014 Coastal Cyclonic Landfall Precursor",
+      "date": "2024-10-08",
+      "lead_time_hours": 48,
+      "district": "Visakhapatnam",
+      "state": "Andhra Pradesh",
+      "latitude": 17.68,
+      "longitude": 83.21,
+      "regime": "COASTAL",
+      "is_synthetic": true,
+      "nwp_rainfall_mm": 78.2,
+      "ramp_prediction_mm": 65.4,
+      "extreme_probability": 0.22,
+      "district_product": null,
+      "hotspot_detected": true,
+      "observed_mm": null,
+      "verification_available": false,
+      "pipeline_stages": [
+        {
+          "stage": "NWP_INPUT",
+          "status": "COMPLETE",
+          "inputs": {
+            "source": "GFS/NCMRWF 0.25\u00b0 grid",
+            "initialization": "2024-10-08T00:00:00Z"
+          },
+          "outputs": {
+            "raw_nwp_rainfall_mm": 78.2,
+            "lead_time_hours": 48
+          },
+          "notes": "Raw NWP forecast ingested and regridded to 0.25\u00b0."
+        },
+        {
+          "stage": "REGIME_DETECTION",
+          "status": "COMPLETE",
+          "inputs": {
+            "u850": 6.2,
+            "v850": 4.8,
+            "mslp": 1003.2,
+            "cape": 2100.0
+          },
+          "outputs": {
+            "dominant_regime": "COASTAL",
+            "regime_entropy": 1.24
+          },
+          "notes": "Phase 4 LightGBM classifier assigned COASTAL."
+        },
+        {
+          "stage": "BASELINE_CORRECTION",
+          "status": "COMPLETE",
+          "inputs": {
+            "raw_nwp_rainfall_mm": 78.2
+          },
+          "outputs": {
+            "mean_bias_corrected_mm": 71.94,
+            "quantile_mapped_mm": 68.82,
+            "global_ml_mm": 66.47
+          },
+          "notes": "Phase 5 baseline corrections applied sequentially."
+        },
+        {
+          "stage": "RAMP_MOE",
+          "status": "COMPLETE",
+          "inputs": {
+            "raw_nwp_rainfall_mm": 78.2,
+            "dominant_regime": "COASTAL"
+          },
+          "outputs": {
+            "ramp_prediction_mm": 65.4,
+            "top_expert": "COASTAL",
+            "gating_type": "SOFT"
+          },
+          "notes": "RAMP = sum_k p_k * E_k. Regime expert 'COASTAL' has highest weight."
+        },
+        {
+          "stage": "EXTREME_PROBABILITY",
+          "status": "COMPLETE",
+          "inputs": {
+            "ramp_prediction_mm": 65.4,
+            "regime": "COASTAL"
+          },
+          "outputs": {
+            "rain_probability": 0.99,
+            "heavy_probability": 0.66,
+            "very_heavy_probability": 0.44,
+            "extreme_probability": 0.22,
+            "monotonicity_enforced": true
+          },
+          "notes": "Phase 7 calibrated exceedance probabilities with monotonicity enforcement."
+        },
+        {
+          "stage": "SPATIAL_DISTRICT_PRODUCT",
+          "status": "COMPLETE",
+          "inputs": {
+            "district": "Visakhapatnam",
+            "grid_cells": 7
+          },
+          "outputs": {
+            "area_weighted_rainfall_mm": 65.4,
+            "p90_rainfall_mm": 88.29,
+            "coverage_fraction": 0.87,
+            "aggregation": "AREA_WEIGHTED"
+          },
+          "notes": "Phase 9 Albers Equal Area grid-district intersection and aggregation."
+        },
+        {
+          "stage": "HOTSPOT_DETECTION",
+          "status": "COMPLETE",
+          "inputs": {
+            "district_mean_mm": 65.4,
+            "grid_cells": 7
+          },
+          "outputs": {
+            "hotspot_detected": true,
+            "hotspot_mm": 156.96,
+            "intensity_multiplier": 2.4
+          },
+          "notes": "Sub-district convective peak identified at highest-precipitation grid cell."
+        },
+        {
+          "stage": "VERIFICATION",
+          "status": "NOT_AVAILABLE",
+          "inputs": {
+            "observed_mm": null
+          },
+          "outputs": {
+            "error_mm": null,
+            "csi": null
+          },
+          "notes": "Observation-based verification NOT_AVAILABLE \u2014 real IMD archives not mounted."
+        },
+        {
+          "stage": "AUDIT_MANIFEST",
+          "status": "COMPLETE",
+          "inputs": {},
+          "outputs": {
+            "run_id": "CASE_RUN_CASE_002",
+            "model_version": "ramp_v1.0.0",
+            "data_mode": "SYNTHETIC_DEMO",
+            "timestamp": "2026-09-26T06:00:10.917470+00:00Z"
+          },
+          "notes": "Immutable run manifest persisted to data/audit/scientific/."
+        }
+      ],
+      "audit_manifest": {
+        "run_id": "CASE_RUN_CASE_002",
+        "data_mode": "SYNTHETIC_DEMO",
+        "model_version": "ramp_v1.0.0"
+      },
+      "data_mode": "SYNTHETIC_DEMO"
+    },
+    {
+      "case_id": "CASE_003",
+      "case_type": "OROGRAPHIC_EVENT",
+      "case_label": "SYNTHETIC CASE STUDY \u2014 Western Ghats Orographic Intensification",
+      "date": "2024-06-25",
+      "lead_time_hours": 72,
+      "district": "Kochi",
+      "state": "Kerala",
+      "latitude": 9.93,
+      "longitude": 76.26,
+      "regime": "OROGRAPHIC",
+      "is_synthetic": true,
+      "nwp_rainfall_mm": 115.0,
+      "ramp_prediction_mm": 98.6,
+      "extreme_probability": 0.41,
+      "district_product": null,
+      "hotspot_detected": true,
+      "observed_mm": null,
+      "verification_available": false,
+      "pipeline_stages": [
+        {
+          "stage": "NWP_INPUT",
+          "status": "COMPLETE",
+          "inputs": {
+            "source": "GFS/NCMRWF 0.25\u00b0 grid",
+            "initialization": "2024-06-25T00:00:00Z"
+          },
+          "outputs": {
+            "raw_nwp_rainfall_mm": 115.0,
+            "lead_time_hours": 72
+          },
+          "notes": "Raw NWP forecast ingested and regridded to 0.25\u00b0."
+        },
+        {
+          "stage": "REGIME_DETECTION",
+          "status": "COMPLETE",
+          "inputs": {
+            "u850": 6.2,
+            "v850": 4.8,
+            "mslp": 1003.2,
+            "cape": 2100.0
+          },
+          "outputs": {
+            "dominant_regime": "OROGRAPHIC",
+            "regime_entropy": 1.24
+          },
+          "notes": "Phase 4 LightGBM classifier assigned OROGRAPHIC."
+        },
+        {
+          "stage": "BASELINE_CORRECTION",
+          "status": "COMPLETE",
+          "inputs": {
+            "raw_nwp_rainfall_mm": 115.0
+          },
+          "outputs": {
+            "mean_bias_corrected_mm": 105.8,
+            "quantile_mapped_mm": 101.2,
+            "global_ml_mm": 97.75
+          },
+          "notes": "Phase 5 baseline corrections applied sequentially."
+        },
+        {
+          "stage": "RAMP_MOE",
+          "status": "COMPLETE",
+          "inputs": {
+            "raw_nwp_rainfall_mm": 115.0,
+            "dominant_regime": "OROGRAPHIC"
+          },
+          "outputs": {
+            "ramp_prediction_mm": 98.6,
+            "top_expert": "OROGRAPHIC",
+            "gating_type": "SOFT"
+          },
+          "notes": "RAMP = sum_k p_k * E_k. Regime expert 'OROGRAPHIC' has highest weight."
+        },
+        {
+          "stage": "EXTREME_PROBABILITY",
+          "status": "COMPLETE",
+          "inputs": {
+            "ramp_prediction_mm": 98.6,
+            "regime": "OROGRAPHIC"
+          },
+          "outputs": {
+            "rain_probability": 0.99,
+            "heavy_probability": 0.95,
+            "very_heavy_probability": 0.82,
+            "extreme_probability": 0.41,
+            "monotonicity_enforced": true
+          },
+          "notes": "Phase 7 calibrated exceedance probabilities with monotonicity enforcement."
+        },
+        {
+          "stage": "SPATIAL_DISTRICT_PRODUCT",
+          "status": "COMPLETE",
+          "inputs": {
+            "district": "Kochi",
+            "grid_cells": 7
+          },
+          "outputs": {
+            "area_weighted_rainfall_mm": 98.6,
+            "p90_rainfall_mm": 133.11,
+            "coverage_fraction": 0.87,
+            "aggregation": "AREA_WEIGHTED"
+          },
+          "notes": "Phase 9 Albers Equal Area grid-district intersection and aggregation."
+        },
+        {
+          "stage": "HOTSPOT_DETECTION",
+          "status": "COMPLETE",
+          "inputs": {
+            "district_mean_mm": 98.6,
+            "grid_cells": 7
+          },
+          "outputs": {
+            "hotspot_detected": true,
+            "hotspot_mm": 236.64,
+            "intensity_multiplier": 2.4
+          },
+          "notes": "Sub-district convective peak identified at highest-precipitation grid cell."
+        },
+        {
+          "stage": "VERIFICATION",
+          "status": "NOT_AVAILABLE",
+          "inputs": {
+            "observed_mm": null
+          },
+          "outputs": {
+            "error_mm": null,
+            "csi": null
+          },
+          "notes": "Observation-based verification NOT_AVAILABLE \u2014 real IMD archives not mounted."
+        },
+        {
+          "stage": "AUDIT_MANIFEST",
+          "status": "COMPLETE",
+          "inputs": {},
+          "outputs": {
+            "run_id": "CASE_RUN_CASE_003",
+            "model_version": "ramp_v1.0.0",
+            "data_mode": "SYNTHETIC_DEMO",
+            "timestamp": "2026-09-26T06:00:10.917527+00:00Z"
+          },
+          "notes": "Immutable run manifest persisted to data/audit/scientific/."
+        }
+      ],
+      "audit_manifest": {
+        "run_id": "CASE_RUN_CASE_003",
+        "data_mode": "SYNTHETIC_DEMO",
+        "model_version": "ramp_v1.0.0"
+      },
+      "data_mode": "SYNTHETIC_DEMO"
+    },
+    {
+      "case_id": "CASE_004",
+      "case_type": "WESTERN_DISTURBANCE",
+      "case_label": "SYNTHETIC CASE STUDY \u2014 Western Disturbance Winter Precipitation",
+      "date": "2024-01-18",
+      "lead_time_hours": 96,
+      "district": "Shimla",
+      "state": "Himachal Pradesh",
+      "latitude": 31.1,
+      "longitude": 77.17,
+      "regime": "WESTERN_DISTURBANCE",
+      "is_synthetic": true,
+      "nwp_rainfall_mm": 22.1,
+      "ramp_prediction_mm": 19.4,
+      "extreme_probability": 0.02,
+      "district_product": null,
+      "hotspot_detected": false,
+      "observed_mm": null,
+      "verification_available": false,
+      "pipeline_stages": [
+        {
+          "stage": "NWP_INPUT",
+          "status": "COMPLETE",
+          "inputs": {
+            "source": "GFS/NCMRWF 0.25\u00b0 grid",
+            "initialization": "2024-01-18T00:00:00Z"
+          },
+          "outputs": {
+            "raw_nwp_rainfall_mm": 22.1,
+            "lead_time_hours": 96
+          },
+          "notes": "Raw NWP forecast ingested and regridded to 0.25\u00b0."
+        },
+        {
+          "stage": "REGIME_DETECTION",
+          "status": "COMPLETE",
+          "inputs": {
+            "u850": 6.2,
+            "v850": 4.8,
+            "mslp": 1003.2,
+            "cape": 2100.0
+          },
+          "outputs": {
+            "dominant_regime": "WESTERN_DISTURBANCE",
+            "regime_entropy": 1.24
+          },
+          "notes": "Phase 4 LightGBM classifier assigned WESTERN_DISTURBANCE."
+        },
+        {
+          "stage": "BASELINE_CORRECTION",
+          "status": "COMPLETE",
+          "inputs": {
+            "raw_nwp_rainfall_mm": 22.1
+          },
+          "outputs": {
+            "mean_bias_corrected_mm": 20.33,
+            "quantile_mapped_mm": 19.45,
+            "global_ml_mm": 18.79
+          },
+          "notes": "Phase 5 baseline corrections applied sequentially."
+        },
+        {
+          "stage": "RAMP_MOE",
+          "status": "COMPLETE",
+          "inputs": {
+            "raw_nwp_rainfall_mm": 22.1,
+            "dominant_regime": "WESTERN_DISTURBANCE"
+          },
+          "outputs": {
+            "ramp_prediction_mm": 19.4,
+            "top_expert": "WESTERN_DISTURBANCE",
+            "gating_type": "SOFT"
+          },
+          "notes": "RAMP = sum_k p_k * E_k. Regime expert 'WESTERN_DISTURBANCE' has highest weight."
+        },
+        {
+          "stage": "EXTREME_PROBABILITY",
+          "status": "COMPLETE",
+          "inputs": {
+            "ramp_prediction_mm": 19.4,
+            "regime": "WESTERN_DISTURBANCE"
+          },
+          "outputs": {
+            "rain_probability": 0.16,
+            "heavy_probability": 0.06,
+            "very_heavy_probability": 0.04,
+            "extreme_probability": 0.02,
+            "monotonicity_enforced": true
+          },
+          "notes": "Phase 7 calibrated exceedance probabilities with monotonicity enforcement."
+        },
+        {
+          "stage": "SPATIAL_DISTRICT_PRODUCT",
+          "status": "COMPLETE",
+          "inputs": {
+            "district": "Shimla",
+            "grid_cells": 7
+          },
+          "outputs": {
+            "area_weighted_rainfall_mm": 19.4,
+            "p90_rainfall_mm": 26.19,
+            "coverage_fraction": 0.87,
+            "aggregation": "AREA_WEIGHTED"
+          },
+          "notes": "Phase 9 Albers Equal Area grid-district intersection and aggregation."
+        },
+        {
+          "stage": "HOTSPOT_DETECTION",
+          "status": "COMPLETE",
+          "inputs": {
+            "district_mean_mm": 19.4,
+            "grid_cells": 7
+          },
+          "outputs": {
+            "hotspot_detected": false,
+            "hotspot_mm": null,
+            "intensity_multiplier": 1.0
+          },
+          "notes": "Sub-district convective peak identified at highest-precipitation grid cell."
+        },
+        {
+          "stage": "VERIFICATION",
+          "status": "NOT_AVAILABLE",
+          "inputs": {
+            "observed_mm": null
+          },
+          "outputs": {
+            "error_mm": null,
+            "csi": null
+          },
+          "notes": "Observation-based verification NOT_AVAILABLE \u2014 real IMD archives not mounted."
+        },
+        {
+          "stage": "AUDIT_MANIFEST",
+          "status": "COMPLETE",
+          "inputs": {},
+          "outputs": {
+            "run_id": "CASE_RUN_CASE_004",
+            "model_version": "ramp_v1.0.0",
+            "data_mode": "SYNTHETIC_DEMO",
+            "timestamp": "2026-09-26T06:00:10.917575+00:00Z"
+          },
+          "notes": "Immutable run manifest persisted to data/audit/scientific/."
+        }
+      ],
+      "audit_manifest": {
+        "run_id": "CASE_RUN_CASE_004",
+        "data_mode": "SYNTHETIC_DEMO",
+        "model_version": "ramp_v1.0.0"
+      },
+      "data_mode": "SYNTHETIC_DEMO"
+    },
+    {
+      "case_id": "CASE_005",
+      "case_type": "BREAK_MONSOON",
+      "case_label": "SYNTHETIC CASE STUDY \u2014 Break Monsoon Dry-Spell Verification",
+      "date": "2024-08-05",
+      "lead_time_hours": 24,
+      "district": "Jaipur",
+      "state": "Rajasthan",
+      "latitude": 26.91,
+      "longitude": 75.79,
+      "regime": "BREAK_MONSOON",
+      "is_synthetic": true,
+      "nwp_rainfall_mm": 3.2,
+      "ramp_prediction_mm": 2.1,
+      "extreme_probability": 0.005,
+      "district_product": null,
+      "hotspot_detected": false,
+      "observed_mm": null,
+      "verification_available": false,
+      "pipeline_stages": [
+        {
+          "stage": "NWP_INPUT",
+          "status": "COMPLETE",
+          "inputs": {
+            "source": "GFS/NCMRWF 0.25\u00b0 grid",
+            "initialization": "2024-08-05T00:00:00Z"
+          },
+          "outputs": {
+            "raw_nwp_rainfall_mm": 3.2,
+            "lead_time_hours": 24
+          },
+          "notes": "Raw NWP forecast ingested and regridded to 0.25\u00b0."
+        },
+        {
+          "stage": "REGIME_DETECTION",
+          "status": "COMPLETE",
+          "inputs": {
+            "u850": 6.2,
+            "v850": 4.8,
+            "mslp": 1003.2,
+            "cape": 2100.0
+          },
+          "outputs": {
+            "dominant_regime": "BREAK_MONSOON",
+            "regime_entropy": 1.24
+          },
+          "notes": "Phase 4 LightGBM classifier assigned BREAK_MONSOON."
+        },
+        {
+          "stage": "BASELINE_CORRECTION",
+          "status": "COMPLETE",
+          "inputs": {
+            "raw_nwp_rainfall_mm": 3.2
+          },
+          "outputs": {
+            "mean_bias_corrected_mm": 2.94,
+            "quantile_mapped_mm": 2.82,
+            "global_ml_mm": 2.72
+          },
+          "notes": "Phase 5 baseline corrections applied sequentially."
+        },
+        {
+          "stage": "RAMP_MOE",
+          "status": "COMPLETE",
+          "inputs": {
+            "raw_nwp_rainfall_mm": 3.2,
+            "dominant_regime": "BREAK_MONSOON"
+          },
+          "outputs": {
+            "ramp_prediction_mm": 2.1,
+            "top_expert": "BREAK_MONSOON",
+            "gating_type": "SOFT"
+          },
+          "notes": "RAMP = sum_k p_k * E_k. Regime expert 'BREAK_MONSOON' has highest weight."
+        },
+        {
+          "stage": "EXTREME_PROBABILITY",
+          "status": "COMPLETE",
+          "inputs": {
+            "ramp_prediction_mm": 2.1,
+            "regime": "BREAK_MONSOON"
+          },
+          "outputs": {
+            "rain_probability": 0.04,
+            "heavy_probability": 0.015,
+            "very_heavy_probability": 0.01,
+            "extreme_probability": 0.005,
+            "monotonicity_enforced": true
+          },
+          "notes": "Phase 7 calibrated exceedance probabilities with monotonicity enforcement."
+        },
+        {
+          "stage": "SPATIAL_DISTRICT_PRODUCT",
+          "status": "COMPLETE",
+          "inputs": {
+            "district": "Jaipur",
+            "grid_cells": 7
+          },
+          "outputs": {
+            "area_weighted_rainfall_mm": 2.1,
+            "p90_rainfall_mm": 2.84,
+            "coverage_fraction": 0.87,
+            "aggregation": "AREA_WEIGHTED"
+          },
+          "notes": "Phase 9 Albers Equal Area grid-district intersection and aggregation."
+        },
+        {
+          "stage": "HOTSPOT_DETECTION",
+          "status": "COMPLETE",
+          "inputs": {
+            "district_mean_mm": 2.1,
+            "grid_cells": 7
+          },
+          "outputs": {
+            "hotspot_detected": false,
+            "hotspot_mm": null,
+            "intensity_multiplier": 1.0
+          },
+          "notes": "Sub-district convective peak identified at highest-precipitation grid cell."
+        },
+        {
+          "stage": "VERIFICATION",
+          "status": "NOT_AVAILABLE",
+          "inputs": {
+            "observed_mm": null
+          },
+          "outputs": {
+            "error_mm": null,
+            "csi": null
+          },
+          "notes": "Observation-based verification NOT_AVAILABLE \u2014 real IMD archives not mounted."
+        },
+        {
+          "stage": "AUDIT_MANIFEST",
+          "status": "COMPLETE",
+          "inputs": {},
+          "outputs": {
+            "run_id": "CASE_RUN_CASE_005",
+            "model_version": "ramp_v1.0.0",
+            "data_mode": "SYNTHETIC_DEMO",
+            "timestamp": "2026-09-26T06:00:10.917617+00:00Z"
+          },
+          "notes": "Immutable run manifest persisted to data/audit/scientific/."
+        }
+      ],
+      "audit_manifest": {
+        "run_id": "CASE_RUN_CASE_005",
+        "data_mode": "SYNTHETIC_DEMO",
+        "model_version": "ramp_v1.0.0"
+      },
+      "data_mode": "SYNTHETIC_DEMO"
+    }
+  ]
+}

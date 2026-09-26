@@ -1,0 +1,135 @@
+{
+  "ACTIVE_MONSOON": {
+    "regime": "ACTIVE_MONSOON",
+    "status": "TRAINED",
+    "train_samples": 205,
+    "train_rmse": 7.2413,
+    "top_features": [
+      [
+        "raw_nwp_rainfall",
+        0.1214
+      ],
+      [
+        "precipitable_water",
+        0.082
+      ],
+      [
+        "v850",
+        0.0668
+      ],
+      [
+        "u850",
+        0.0591
+      ],
+      [
+        "rainfall_mean_3x3",
+        0.0572
+      ]
+    ]
+  },
+  "BREAK_MONSOON": {
+    "regime": "BREAK_MONSOON",
+    "status": "TRAINED",
+    "train_samples": 11,
+    "train_rmse": 2.9376,
+    "top_features": [
+      [
+        "geopotential_height",
+        0.36
+      ],
+      [
+        "cape",
+        0.2
+      ],
+      [
+        "precipitable_water",
+        0.18
+      ],
+      [
+        "mslp",
+        0.14
+      ],
+      [
+        "relative_humidity",
+        0.09
+      ]
+    ]
+  },
+  "LOW_DEPRESSION": {
+    "regime": "LOW_DEPRESSION",
+    "status": "TRAINED",
+    "train_samples": 19,
+    "train_rmse": 2.0268,
+    "top_features": [
+      [
+        "lead_time_hours",
+        0.17
+      ],
+      [
+        "u850",
+        0.135
+      ],
+      [
+        "precipitable_water",
+        0.115
+      ],
+      [
+        "raw_nwp_rainfall",
+        0.1
+      ],
+      [
+        "rainfall_max_3x3",
+        0.09
+      ]
+    ]
+  },
+  "COASTAL": {
+    "regime": "COASTAL",
+    "status": "INSUFFICIENT_DATA",
+    "train_samples": 0,
+    "train_rmse": null,
+    "top_features": []
+  },
+  "OROGRAPHIC": {
+    "regime": "OROGRAPHIC",
+    "status": "INSUFFICIENT_DATA",
+    "train_samples": 0,
+    "train_rmse": null,
+    "top_features": []
+  },
+  "WESTERN_DISTURBANCE": {
+    "regime": "WESTERN_DISTURBANCE",
+    "status": "INSUFFICIENT_DATA",
+    "train_samples": 0,
+    "train_rmse": null,
+    "top_features": []
+  },
+  "TRANSITION_OTHER": {
+    "regime": "TRANSITION_OTHER",
+    "status": "TRAINED",
+    "train_samples": 8,
+    "train_rmse": 11.1657,
+    "top_features": [
+      [
+        "raw_nwp_rainfall",
+        0.0
+      ],
+      [
+        "lead_time_hours",
+        0.0
+      ],
+      [
+        "u850",
+        0.0
+      ],
+      [
+        "v850",
+        0.0
+      ],
+      [
+        "wind_speed_850",
+        0.0
+      ]
+    ]
+  }
+}

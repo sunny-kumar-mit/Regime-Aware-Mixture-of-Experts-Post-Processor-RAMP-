@@ -1,0 +1,50 @@
+{
+  "mean_bias_vs_raw_nwp": {
+    "n_bootstraps": 300,
+    "confidence_level": 0.95,
+    "observed_delta_rmse": -0.0054,
+    "ci_delta_rmse": [
+      -0.0268,
+      0.0192
+    ],
+    "statistically_significant_rmse": false,
+    "observed_delta_mae": -0.0274,
+    "ci_delta_mae": [
+      -0.0978,
+      0.0486
+    ],
+    "statistically_significant_mae": false
+  },
+  "quantile_mapping_vs_raw_nwp": {
+    "n_bootstraps": 300,
+    "confidence_level": 0.95,
+    "observed_delta_rmse": 0.3081,
+    "ci_delta_rmse": [
+      -0.0314,
+      0.6666
+    ],
+    "statistically_significant_rmse": false,
+    "observed_delta_mae": 0.2304,
+    "ci_delta_mae": [
+      -0.1844,
+      0.6681
+    ],
+    "statistically_significant_mae": false
+  },
+  "global_ml_vs_raw_nwp": {
+    "n_bootstraps": 300,
+    "confidence_level": 0.95,
+    "observed_delta_rmse": -0.7018,
+    "ci_delta_rmse": [
+      -7.3791,
+      5.9246
+    ],
+    "statistically_significant_rmse": false,
+    "observed_delta_mae": -0.0706,
+    "ci_delta_mae": [
+      -3.1529,
+      2.685
+    ],
+    "statistically_significant_mae": false
+  }
+}

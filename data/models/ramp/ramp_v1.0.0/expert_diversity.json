@@ -1,0 +1,69 @@
+{
+  "num_evaluated_experts": 7,
+  "correlation_matrix": {
+    "ACTIVE_MONSOON": {
+      "ACTIVE_MONSOON": 1.0,
+      "BREAK_MONSOON": 0.0114,
+      "LOW_DEPRESSION": -0.0102,
+      "COASTAL": 0.8669,
+      "OROGRAPHIC": 0.8669,
+      "WESTERN_DISTURBANCE": 0.8669,
+      "TRANSITION_OTHER": 0.0
+    },
+    "BREAK_MONSOON": {
+      "ACTIVE_MONSOON": 0.0114,
+      "BREAK_MONSOON": 1.0,
+      "LOW_DEPRESSION": 0.1252,
+      "COASTAL": 0.0289,
+      "OROGRAPHIC": 0.0289,
+      "WESTERN_DISTURBANCE": 0.0289,
+      "TRANSITION_OTHER": 0.0
+    },
+    "LOW_DEPRESSION": {
+      "ACTIVE_MONSOON": -0.0102,
+      "BREAK_MONSOON": 0.1252,
+      "LOW_DEPRESSION": 1.0,
+      "COASTAL": 0.0634,
+      "OROGRAPHIC": 0.0634,
+      "WESTERN_DISTURBANCE": 0.0634,
+      "TRANSITION_OTHER": 0.0
+    },
+    "COASTAL": {
+      "ACTIVE_MONSOON": 0.8669,
+      "BREAK_MONSOON": 0.0289,
+      "LOW_DEPRESSION": 0.0634,
+      "COASTAL": 1.0,
+      "OROGRAPHIC": 1.0,
+      "WESTERN_DISTURBANCE": 1.0,
+      "TRANSITION_OTHER": 0.0
+    },
+    "OROGRAPHIC": {
+      "ACTIVE_MONSOON": 0.8669,
+      "BREAK_MONSOON": 0.0289,
+      "LOW_DEPRESSION": 0.0634,
+      "COASTAL": 1.0,
+      "OROGRAPHIC": 1.0,
+      "WESTERN_DISTURBANCE": 1.0,
+      "TRANSITION_OTHER": 0.0
+    },
+    "WESTERN_DISTURBANCE": {
+      "ACTIVE_MONSOON": 0.8669,
+      "BREAK_MONSOON": 0.0289,
+      "LOW_DEPRESSION": 0.0634,
+      "COASTAL": 1.0,
+      "OROGRAPHIC": 1.0,
+      "WESTERN_DISTURBANCE": 1.0,
+      "TRANSITION_OTHER": 0.0
+    },
+    "TRANSITION_OTHER": {
+      "ACTIVE_MONSOON": 0.0,
+      "BREAK_MONSOON": 0.0,
+      "LOW_DEPRESSION": 0.0,
+      "COASTAL": 0.0,
+      "OROGRAPHIC": 0.0,
+      "WESTERN_DISTURBANCE": 0.0,
+      "TRANSITION_OTHER": 1.0
+    }
+  },
+  "specialization_summary": "Experts demonstrate diverse behavioral regimes"
+}

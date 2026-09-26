@@ -1,0 +1,34 @@
+{
+  "scientific_version": "scientific_v1.0.0",
+  "model_versions": {
+    "regime": "regime_lgbm_v0.1.0",
+    "mean_bias": "mean_bias_v1.0.0",
+    "quantile_mapping": "quantile_mapping_v1.0.0",
+    "global_ml": "global_ml_v1.0.0",
+    "ramp": "ramp_v1.0.0",
+    "extreme_prob": "extreme_prob_v1.0.0"
+  },
+  "phase_versions": {
+    "phase_1": "production_foundation_v1.0.0",
+    "phase_2": "meteorological_data_v1.0.0",
+    "phase_3": "training_dataset_v1.0.0",
+    "phase_4": "regime_engine_v1.0.0",
+    "phase_5": "baseline_benchmarks_v1.0.0",
+    "phase_6": "ramp_moe_v1.0.0",
+    "phase_7": "extreme_prob_engine_v1.0.0",
+    "phase_8": "operational_verification_v1.0.0",
+    "phase_9": "spatial_products_v1.0.0",
+    "phase_10": "scientific_v1.0.0"
+  },
+  "data_mode": "SYNTHETIC_DEMO",
+  "random_seed": 42,
+  "bootstrap_samples": 300,
+  "thresholds_mm": [
+    0.1,
+    64.5,
+    115.6,
+    204.5
+  ],
+  "timestamp": "2026-09-26T06:00:10.927137+00:00Z",
+  "run_id": "sci_20260926_060010_2c0fc50d"
+}

@@ -1,0 +1,44 @@
+{
+  "model_id": "mean_bias_v1",
+  "model_type": "MEAN_BIAS",
+  "version": "v1.0.0",
+  "dataset_id": "ramp_dataset_v0.3.0",
+  "dataset_version": "v0.3.0",
+  "feature_schema_version": "v1.0.0",
+  "training_period": {},
+  "validation_period": {},
+  "test_period": {},
+  "lead_times": [
+    24,
+    48
+  ],
+  "thresholds": [
+    0.1,
+    64.5,
+    115.6,
+    204.5
+  ],
+  "hyperparameters": {
+    "model_type": "MEAN_BIAS",
+    "global_bias_mm": -0.2673,
+    "lead_time_biases_mm": {
+      "24": -0.091,
+      "48": -0.4572
+    },
+    "lead_time_counts": {
+      "24": 126,
+      "48": 117
+    },
+    "train_samples": 243,
+    "fitted_split": "TRAIN"
+  },
+  "metrics": {
+    "rmse": 16.1736,
+    "mae": 7.9467,
+    "mean_bias": -1.1198,
+    "pearson_r": 0.5391,
+    "sample_count": 63
+  },
+  "data_mode": "SYNTHETIC_DEMO",
+  "created_at": "2026-09-26T02:44:43.319913"
+}

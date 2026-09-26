@@ -1,0 +1,96 @@
+version: '3.8'
+
+services:
+  # ---------------------------------------------------------------------------
+  # RAMP FastAPI Backend
+  # ---------------------------------------------------------------------------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ramp-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_ENV=production
+      - APP_HOST=0.0.0.0
+      - APP_PORT=8000
+      - RAMP_DATA_MODE=${RAMP_DATA_MODE:-SYNTHETIC_DEMO}
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-ramp}:${POSTGRES_PASSWORD:-ramp}@db:5432/${POSTGRES_DB:-ramp_db}
+      - REDIS_URL=redis://redis:6379/0
+      - CORS_ORIGINS=http://localhost:3000,http://localhost:5173
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ramp-network
+
+  # ---------------------------------------------------------------------------
+  # RAMP React Frontend Dashboard
+  # ---------------------------------------------------------------------------
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ramp-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+      - "5173:80"
+    depends_on:
+      - backend
+    networks:
+      - ramp-network
+
+  # ---------------------------------------------------------------------------
+  # PostgreSQL Metadata & Verification Store
+  # ---------------------------------------------------------------------------
+  db:
+    image: postgres:15-alpine
+    container_name: ramp-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-ramp}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ramp}
+      POSTGRES_DB: ${POSTGRES_DB:-ramp_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ramp} -d ${POSTGRES_DB:-ramp_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ramp-network
+
+  # ---------------------------------------------------------------------------
+  # Redis Cache & Pipeline Queue
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: ramp-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ramp-network
+
+networks:
+  ramp-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

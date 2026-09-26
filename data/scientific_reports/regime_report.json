@@ -1,0 +1,102 @@
+{
+  "data": [
+    {
+      "regime": "ACTIVE_MONSOON",
+      "n_samples": 42,
+      "availability_status": "AVAILABLE",
+      "rmse": 2.4994,
+      "mae": 2.0223,
+      "bias": 0.7698,
+      "pearson_r": 0.9471,
+      "heavy_csi": null,
+      "heavy_pod": null,
+      "heavy_far": null,
+      "extreme_brier": null,
+      "data_mode": "SYNTHETIC_DEMO"
+    },
+    {
+      "regime": "BREAK_MONSOON",
+      "n_samples": 25,
+      "availability_status": "AVAILABLE",
+      "rmse": 1.4959,
+      "mae": 1.1715,
+      "bias": -0.6272,
+      "pearson_r": 0.9795,
+      "heavy_csi": null,
+      "heavy_pod": null,
+      "heavy_far": null,
+      "extreme_brier": null,
+      "data_mode": "SYNTHETIC_DEMO"
+    },
+    {
+      "regime": "LOW_DEPRESSION",
+      "n_samples": 18,
+      "availability_status": "AVAILABLE",
+      "rmse": 4.4623,
+      "mae": 3.2454,
+      "bias": 2.448,
+      "pearson_r": 0.8806,
+      "heavy_csi": null,
+      "heavy_pod": null,
+      "heavy_far": null,
+      "extreme_brier": null,
+      "data_mode": "SYNTHETIC_DEMO"
+    },
+    {
+      "regime": "COASTAL",
+      "n_samples": 30,
+      "availability_status": "AVAILABLE",
+      "rmse": 3.0908,
+      "mae": 2.3161,
+      "bias": 1.2647,
+      "pearson_r": 0.9135,
+      "heavy_csi": null,
+      "heavy_pod": null,
+      "heavy_far": null,
+      "extreme_brier": null,
+      "data_mode": "SYNTHETIC_DEMO"
+    },
+    {
+      "regime": "OROGRAPHIC",
+      "n_samples": 20,
+      "availability_status": "AVAILABLE",
+      "rmse": 5.7101,
+      "mae": 4.2736,
+      "bias": 2.1009,
+      "pearson_r": 0.818,
+      "heavy_csi": null,
+      "heavy_pod": null,
+      "heavy_far": null,
+      "extreme_brier": null,
+      "data_mode": "SYNTHETIC_DEMO"
+    },
+    {
+      "regime": "WESTERN_DISTURBANCE",
+      "n_samples": 28,
+      "availability_status": "AVAILABLE",
+      "rmse": 2.7679,
+      "mae": 2.0842,
+      "bias": 0.9688,
+      "pearson_r": 0.9475,
+      "heavy_csi": null,
+      "heavy_pod": null,
+      "heavy_far": null,
+      "extreme_brier": null,
+      "data_mode": "SYNTHETIC_DEMO"
+    },
+    {
+      "regime": "TRANSITION_OTHER",
+      "n_samples": 37,
+      "availability_status": "AVAILABLE",
+      "rmse": 1.7283,
+      "mae": 1.3373,
+      "bias": -0.0543,
+      "pearson_r": 0.9755,
+      "heavy_csi": null,
+      "heavy_pod": null,
+      "heavy_far": null,
+      "extreme_brier": null,
+      "data_mode": "SYNTHETIC_DEMO"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "model_id": "raw_nwp_v1",
+  "model_type": "RAW_NWP",
+  "version": "v1.0.0",
+  "dataset_id": "ramp_dataset_v0.3.0",
+  "dataset_version": "v0.3.0",
+  "feature_schema_version": "v1.0.0",
+  "training_period": {},
+  "validation_period": {},
+  "test_period": {},
+  "lead_times": [
+    24,
+    48
+  ],
+  "thresholds": [
+    0.1,
+    64.5,
+    115.6,
+    204.5
+  ],
+  "hyperparameters": {
+    "model_type": "RAW_NWP",
+    "description": "Uncorrected raw NWP rainfall benchmark",
+    "correction_applied": false
+  },
+  "metrics": {
+    "rmse": 16.179,
+    "mae": 7.9741,
+    "mean_bias": -0.8779,
+    "pearson_r": 0.539,
+    "sample_count": 63
+  },
+  "data_mode": "SYNTHETIC_DEMO",
+  "created_at": "2026-09-26T02:44:43.316584"
+}

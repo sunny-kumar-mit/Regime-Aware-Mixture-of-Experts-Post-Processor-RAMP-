@@ -1,0 +1,69 @@
+{
+  "model_id": "global_lgbm_v1",
+  "model_type": "GLOBAL_LIGHTGBM",
+  "version": "v1.0.0",
+  "dataset_id": "ramp_dataset_v0.3.0",
+  "dataset_version": "v0.3.0",
+  "feature_schema_version": "v1.0.0",
+  "training_period": {},
+  "validation_period": {},
+  "test_period": {},
+  "lead_times": [
+    24,
+    48
+  ],
+  "thresholds": [
+    0.1,
+    64.5,
+    115.6,
+    204.5
+  ],
+  "hyperparameters": {
+    "model_type": "GLOBAL_LIGHTGBM",
+    "use_log1p_target": true,
+    "n_estimators": 100,
+    "learning_rate": 0.05,
+    "max_depth": 6,
+    "feature_count": 28,
+    "features": [
+      "raw_nwp_rainfall",
+      "lead_time_hours",
+      "u850",
+      "v850",
+      "wind_speed_850",
+      "wind_direction_850",
+      "mslp",
+      "mslp_anomaly",
+      "temperature",
+      "relative_humidity",
+      "precipitable_water",
+      "cape",
+      "geopotential_height",
+      "rainfall_mean_3x3",
+      "rainfall_max_3x3",
+      "rainfall_std_3x3",
+      "elevation",
+      "distance_to_coast",
+      "monsoon",
+      "winter",
+      "pre_monsoon",
+      "post_monsoon",
+      "day_of_year_sin",
+      "day_of_year_cos",
+      "valid_hour_sin",
+      "valid_hour_cos",
+      "latitude",
+      "longitude"
+    ],
+    "fitted_split": "TRAIN"
+  },
+  "metrics": {
+    "rmse": 15.4772,
+    "mae": 7.9035,
+    "mean_bias": -5.2214,
+    "pearson_r": 0.5995,
+    "sample_count": 63
+  },
+  "data_mode": "SYNTHETIC_DEMO",
+  "created_at": "2026-09-26T02:44:43.325828"
+}

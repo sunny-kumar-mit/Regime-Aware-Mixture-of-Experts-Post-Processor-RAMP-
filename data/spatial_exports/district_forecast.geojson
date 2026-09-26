@@ -1,0 +1,1253 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "generated_at": "2026-09-26T05:24:00.815294+00:00",
+    "dataset_version": "ramp_v0.3.0",
+    "model_version": "ramp_v1.0.0",
+    "boundary_version": "v1.0.0",
+    "data_mode": "SYNTHETIC_DEMO",
+    "aggregation_method": "AREA_WEIGHTED",
+    "total_districts": 21
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "product_id": "PROD_DIST_NAGPUR_20250702 000000+0000_24H",
+        "district_id": "NAGPUR",
+        "district_name": "Nagpur",
+        "state_id": "MH",
+        "state_name": "Maharashtra",
+        "forecast_valid_time": "2025-07-02 00:00:00+00:00",
+        "lead_time_hours": 24,
+        "aggregation_method": "AREA_WEIGHTED",
+        "rainfall_mm": 12.12,
+        "min_rainfall_mm": 2.5,
+        "max_rainfall_mm": 206.52,
+        "p95_rainfall_mm": 32.29,
+        "rain_probability": 1.0,
+        "heavy_probability": 0.0733,
+        "very_heavy_probability": 0.0313,
+        "extreme_probability": 0.0091,
+        "hotspot_rainfall_mm": 206.52,
+        "hotspot_latitude": 21.5,
+        "hotspot_longitude": 78.5,
+        "coverage_fraction": 1.0,
+        "risk_category": "VERY_HIGH_RAINFALL",
+        "color_hex": "#CC3300",
+        "raw_nwp_rainfall_mm": 10.69,
+        "difference_nwp_mm": 1.43,
+        "data_mode": "SYNTHETIC_DEMO",
+        "model_version": "ramp_v1.0.0",
+        "boundary_version": "v1.0.0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              79.5,
+              20.8
+            ],
+            [
+              79.5,
+              21.8
+            ],
+            [
+              78.4,
+              21.8
+            ],
+            [
+              78.4,
+              20.8
+            ],
+            [
+              79.5,
+              20.8
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "product_id": "PROD_PUNE_NO_COVERAGE",
+        "district_id": "PUNE",
+        "district_name": "Pune",
+        "state_id": "MH",
+        "state_name": "Maharashtra",
+        "forecast_valid_time": "",
+        "lead_time_hours": 24,
+        "aggregation_method": "AREA_WEIGHTED",
+        "rainfall_mm": 0.0,
+        "min_rainfall_mm": 0.0,
+        "max_rainfall_mm": 0.0,
+        "p95_rainfall_mm": 0.0,
+        "rain_probability": 0.0,
+        "heavy_probability": 0.0,
+        "very_heavy_probability": 0.0,
+        "extreme_probability": 0.0,
+        "hotspot_rainfall_mm": 0.0,
+        "hotspot_latitude": 0.0,
+        "hotspot_longitude": 0.0,
+        "coverage_fraction": 0.0,
+        "risk_category": "NORMAL",
+        "color_hex": "#009933",
+        "raw_nwp_rainfall_mm": 0.0,
+        "difference_nwp_mm": 0.0,
+        "data_mode": "SYNTHETIC_DEMO",
+        "model_version": "ramp_v1.0.0",
+        "boundary_version": "v1.0.0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              75.0,
+              18.2
+            ],
+            [
+              75.0,
+              19.3
+            ],
+            [
+              73.4,
+              19.3
+            ],
+            [
+              73.4,
+              18.2
+            ],
+            [
+              75.0,
+              18.2
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "product_id": "PROD_MUMBAI_NO_COVERAGE",
+        "district_id": "MUMBAI",
+        "district_name": "Mumbai",
+        "state_id": "MH",
+        "state_name": "Maharashtra",
+        "forecast_valid_time": "",
+        "lead_time_hours": 24,
+        "aggregation_method": "AREA_WEIGHTED",
+        "rainfall_mm": 0.0,
+        "min_rainfall_mm": 0.0,
+        "max_rainfall_mm": 0.0,
+        "p95_rainfall_mm": 0.0,
+        "rain_probability": 0.0,
+        "heavy_probability": 0.0,
+        "very_heavy_probability": 0.0,
+        "extreme_probability": 0.0,
+        "hotspot_rainfall_mm": 0.0,
+        "hotspot_latitude": 0.0,
+        "hotspot_longitude": 0.0,
+        "coverage_fraction": 0.0,
+        "risk_category": "NORMAL",
+        "color_hex": "#009933",
+        "raw_nwp_rainfall_mm": 0.0,
+        "difference_nwp_mm": 0.0,
+        "data_mode": "SYNTHETIC_DEMO",
+        "model_version": "ramp_v1.0.0",
+        "boundary_version": "v1.0.0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              73.0,
+              18.8
+            ],
+            [
+              73.0,
+              19.3
+            ],
+            [
+              72.7,
+              19.3
+            ],
+            [
+              72.7,
+              18.8
+            ],
+            [
+              73.0,
+              18.8
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "product_id": "PROD_DIST_AMRAVATI_20250702 000000+0000_24H",
+        "district_id": "AMRAVATI",
+        "district_name": "Amravati",
+        "state_id": "MH",
+        "state_name": "Maharashtra",
+        "forecast_valid_time": "2025-07-02 00:00:00+00:00",
+        "lead_time_hours": 24,
+        "aggregation_method": "AREA_WEIGHTED",
+        "rainfall_mm": 13.56,
+        "min_rainfall_mm": 2.5,
+        "max_rainfall_mm": 124.3,
+        "p95_rainfall_mm": 43.14,
+        "rain_probability": 1.0,
+        "heavy_probability": 0.083,
+        "very_heavy_probability": 0.0267,
+        "extreme_probability": 0.005,
+        "hotspot_rainfall_mm": 124.3,
+        "hotspot_latitude": 21.0,
+        "hotspot_longitude": 78.0,
+        "coverage_fraction": 1.0,
+        "risk_category": "HIGH_RAINFALL",
+        "color_hex": "#FF9900",
+        "raw_nwp_rainfall_mm": 12.29,
+        "difference_nwp_mm": 1.27,
+        "data_mode": "SYNTHETIC_DEMO",
+        "model_version": "ramp_v1.0.0",
+        "boundary_version": "v1.0.0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              78.3,
+              20.7
+            ],
+            [
+              78.3,
+              21.7
+            ],
+            [
+              77.2,
+              21.7
+            ],
+            [
+              77.2,
+              20.7
+            ],
+            [
+              78.3,
+              20.7
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "product_id": "PROD_RATNAGIRI_NO_COVERAGE",
+        "district_id": "RATNAGIRI",
+        "district_name": "Ratnagiri",
+        "state_id": "MH",
+        "state_name": "Maharashtra",
+        "forecast_valid_time": "",
+        "lead_time_hours": 24,
+        "aggregation_method": "AREA_WEIGHTED",
+        "rainfall_mm": 0.0,
+        "min_rainfall_mm": 0.0,
+        "max_rainfall_mm": 0.0,
+        "p95_rainfall_mm": 0.0,
+        "rain_probability": 0.0,
+        "heavy_probability": 0.0,
+        "very_heavy_probability": 0.0,
+        "extreme_probability": 0.0,
+        "hotspot_rainfall_mm": 0.0,
+        "hotspot_latitude": 0.0,
+        "hotspot_longitude": 0.0,
+        "coverage_fraction": 0.0,
+        "risk_category": "NORMAL",
+        "color_hex": "#009933",
+        "raw_nwp_rainfall_mm": 0.0,
+        "difference_nwp_mm": 0.0,
+        "data_mode": "SYNTHETIC_DEMO",
+        "model_version": "ramp_v1.0.0",
+        "boundary_version": "v1.0.0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              73.8,
+              16.6
+            ],
+            [
+              73.8,
+              18.1
+            ],
+            [
+              73.1,
+              18.1
+            ],
+            [
+              73.1,
+              16.6
+            ],
+            [
+              73.8,
+              16.6
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "product_id": "PROD_NASHIK_NO_COVERAGE",
+        "district_id": "NASHIK",
+        "district_name": "Nashik",
+        "state_id": "MH",
+        "state_name": "Maharashtra",
+        "forecast_valid_time": "",
+        "lead_time_hours": 24,
+        "aggregation_method": "AREA_WEIGHTED",
+        "rainfall_mm": 0.0,
+        "min_rainfall_mm": 0.0,
+        "max_rainfall_mm": 0.0,
+        "p95_rainfall_mm": 0.0,
+        "rain_probability": 0.0,
+        "heavy_probability": 0.0,
+        "very_heavy_probability": 0.0,
+        "extreme_probability": 0.0,
+        "hotspot_rainfall_mm": 0.0,
+        "hotspot_latitude": 0.0,
+        "hotspot_longitude": 0.0,
+        "coverage_fraction": 0.0,
+        "risk_category": "NORMAL",
+        "color_hex": "#009933",
+        "raw_nwp_rainfall_mm": 0.0,
+        "difference_nwp_mm": 0.0,
+        "data_mode": "SYNTHETIC_DEMO",
+        "model_version": "ramp_v1.0.0",
+        "boundary_version": "v1.0.0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              74.8,
+              19.5
+            ],
+            [
+              74.8,
+              20.8
+            ],
+            [
+              73.3,
+              20.8
+            ],
+            [
+              73.3,
+              19.5
+            ],
+            [
+              74.8,
+              19.5
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "product_id": "PROD_WAYANAD_NO_COVERAGE",
+        "district_id": "WAYANAD",
+        "district_name": "Wayanad",
+        "state_id": "KL",
+        "state_name": "Kerala",
+        "forecast_valid_time": "",
+        "lead_time_hours": 24,
+        "aggregation_method": "AREA_WEIGHTED",
+        "rainfall_mm": 0.0,
+        "min_rainfall_mm": 0.0,
+        "max_rainfall_mm": 0.0,
+        "p95_rainfall_mm": 0.0,
+        "rain_probability": 0.0,
+        "heavy_probability": 0.0,
+        "very_heavy_probability": 0.0,
+        "extreme_probability": 0.0,
+        "hotspot_rainfall_mm": 0.0,
+        "hotspot_latitude": 0.0,
+        "hotspot_longitude": 0.0,
+        "coverage_fraction": 0.0,
+        "risk_category": "NORMAL",
+        "color_hex": "#009933",
+        "raw_nwp_rainfall_mm": 0.0,
+        "difference_nwp_mm": 0.0,
+        "data_mode": "SYNTHETIC_DEMO",
+        "model_version": "ramp_v1.0.0",
+        "boundary_version": "v1.0.0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.4,
+              11.5
+            ],
+            [
+              76.4,
+              11.9
+            ],
+            [
+              75.8,
+              11.9
+            ],
+            [
+              75.8,
+              11.5
+            ],
+            [
+              76.4,
+              11.5
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "product_id": "PROD_IDUKKI_NO_COVERAGE",
+        "district_id": "IDUKKI",
+        "district_name": "Idukki",
+        "state_id": "KL",
+        "state_name": "Kerala",
+        "forecast_valid_time": "",
+        "lead_time_hours": 24,
+        "aggregation_method": "AREA_WEIGHTED",
+        "rainfall_mm": 0.0,
+        "min_rainfall_mm": 0.0,
+        "max_rainfall_mm": 0.0,
+        "p95_rainfall_mm": 0.0,
+        "rain_probability": 0.0,
+        "heavy_probability": 0.0,
+        "very_heavy_probability": 0.0,
+        "extreme_probability": 0.0,
+        "hotspot_rainfall_mm": 0.0,
+        "hotspot_latitude": 0.0,
+        "hotspot_longitude": 0.0,
+        "coverage_fraction": 0.0,
+        "risk_category": "NORMAL",
+        "color_hex": "#009933",
+        "raw_nwp_rainfall_mm": 0.0,
+        "difference_nwp_mm": 0.0,
+        "data_mode": "SYNTHETIC_DEMO",
+        "model_version": "ramp_v1.0.0",
+        "boundary_version": "v1.0.0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.3,
+              9.6
+            ],
+            [
+              77.3,
+              10.4
+            ],
+            [
+              76.6,
+              10.4
+            ],
+            [
+              76.6,
+              9.6
+            ],
+            [
+              77.3,
+              9.6
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "product_id": "PROD_ERNAKULAM_NO_COVERAGE",
+        "district_id": "ERNAKULAM",
+        "district_name": "Ernakulam",
+        "state_id": "KL",
+        "state_name": "Kerala",
+        "forecast_valid_time": "",
+        "lead_time_hours": 24,
+        "aggregation_method": "AREA_WEIGHTED",
+        "rainfall_mm": 0.0,
+        "min_rainfall_mm": 0.0,
+        "max_rainfall_mm": 0.0,
+        "p95_rainfall_mm": 0.0,
+        "rain_probability": 0.0,
+        "heavy_probability": 0.0,
+        "very_heavy_probability": 0.0,
+        "extreme_probability": 0.0,
+        "hotspot_rainfall_mm": 0.0,
+        "hotspot_latitude": 0.0,
+        "hotspot_longitude": 0.0,
+        "coverage_fraction": 0.0,
+        "risk_category": "NORMAL",
+        "color_hex": "#009933",
+        "raw_nwp_rainfall_mm": 0.0,
+        "difference_nwp_mm": 0.0,
+        "data_mode": "SYNTHETIC_DEMO",
+        "model_version": "ramp_v1.0.0",
+        "boundary_version": "v1.0.0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.7,
+              9.8
+            ],
+            [
+              76.7,
+              10.3
+            ],
+            [
+              76.1,
+              10.3
+            ],
+            [
+              76.1,
+              9.8
+            ],
+            [
+              76.7,
+              9.8
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "product_id": "PROD_AHMEDABAD_NO_COVERAGE",
+        "district_id": "AHMEDABAD",
+        "district_name": "Ahmedabad",
+        "state_id": "GJ",
+        "state_name": "Gujarat",
+        "forecast_valid_time": "",
+        "lead_time_hours": 24,
+        "aggregation_method": "AREA_WEIGHTED",
+        "rainfall_mm": 0.0,
+        "min_rainfall_mm": 0.0,
+        "max_rainfall_mm": 0.0,
+        "p95_rainfall_mm": 0.0,
+        "rain_probability": 0.0,
+        "heavy_probability": 0.0,
+        "very_heavy_probability": 0.0,
+        "extreme_probability": 0.0,
+        "hotspot_rainfall_mm": 0.0,
+        "hotspot_latitude": 0.0,
+        "hotspot_longitude": 0.0,
+        "coverage_fraction": 0.0,
+        "risk_category": "NORMAL",
+        "color_hex": "#009933",
+        "raw_nwp_rainfall_mm": 0.0,
+        "difference_nwp_mm": 0.0,
+        "data_mode": "SYNTHETIC_DEMO",
+        "model_version": "ramp_v1.0.0",
+        "boundary_version": "v1.0.0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.8,
+              22.6
+            ],
+            [
+              72.8,
+              23.4
+            ],
+            [
+              71.9,
+              23.4
+            ],
+            [
+              71.9,
+              22.6
+            ],
+            [
+              72.8,
+              22.6
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "product_id": "PROD_SURAT_NO_COVERAGE",
+        "district_id": "SURAT",
+        "district_name": "Surat",
+        "state_id": "GJ",
+        "state_name": "Gujarat",
+        "forecast_valid_time": "",
+        "lead_time_hours": 24,
+        "aggregation_method": "AREA_WEIGHTED",
+        "rainfall_mm": 0.0,
+        "min_rainfall_mm": 0.0,
+        "max_rainfall_mm": 0.0,
+        "p95_rainfall_mm": 0.0,
+        "rain_probability": 0.0,
+        "heavy_probability": 0.0,
+        "very_heavy_probability": 0.0,
+        "extreme_probability": 0.0,
+        "hotspot_rainfall_mm": 0.0,
+        "hotspot_latitude": 0.0,
+        "hotspot_longitude": 0.0,
+        "coverage_fraction": 0.0,
+        "risk_category": "NORMAL",
+        "color_hex": "#009933",
+        "raw_nwp_rainfall_mm": 0.0,
+        "difference_nwp_mm": 0.0,
+        "data_mode": "SYNTHETIC_DEMO",
+        "model_version": "ramp_v1.0.0",
+        "boundary_version": "v1.0.0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              73.3,
+              21.0
+            ],
+            [
+              73.3,
+              21.5
+            ],
+            [
+              72.6,
+              21.5
+            ],
+            [
+              72.6,
+              21.0
+            ],
+            [
+              73.3,
+              21.0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "product_id": "PROD_BENGALURU_NO_COVERAGE",
+        "district_id": "BENGALURU",
+        "district_name": "Bengaluru Urban",
+        "state_id": "KA",
+        "state_name": "Karnataka",
+        "forecast_valid_time": "",
+        "lead_time_hours": 24,
+        "aggregation_method": "AREA_WEIGHTED",
+        "rainfall_mm": 0.0,
+        "min_rainfall_mm": 0.0,
+        "max_rainfall_mm": 0.0,
+        "p95_rainfall_mm": 0.0,
+        "rain_probability": 0.0,
+        "heavy_probability": 0.0,
+        "very_heavy_probability": 0.0,
+        "extreme_probability": 0.0,
+        "hotspot_rainfall_mm": 0.0,
+        "hotspot_latitude": 0.0,
+        "hotspot_longitude": 0.0,
+        "coverage_fraction": 0.0,
+        "risk_category": "NORMAL",
+        "color_hex": "#009933",
+        "raw_nwp_rainfall_mm": 0.0,
+        "difference_nwp_mm": 0.0,
+        "data_mode": "SYNTHETIC_DEMO",
+        "model_version": "ramp_v1.0.0",
+        "boundary_version": "v1.0.0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.8,
+              12.8
+            ],
+            [
+              77.8,
+              13.2
+            ],
+            [
+              77.4,
+              13.2
+            ],
+            [
+              77.4,
+              12.8
+            ],
+            [
+              77.8,
+              12.8
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "product_id": "PROD_DAKSHINA_KANNADA_NO_COVERAGE",
+        "district_id": "DAKSHINA_KANNADA",
+        "district_name": "Dakshina Kannada",
+        "state_id": "KA",
+        "state_name": "Karnataka",
+        "forecast_valid_time": "",
+        "lead_time_hours": 24,
+        "aggregation_method": "AREA_WEIGHTED",
+        "rainfall_mm": 0.0,
+        "min_rainfall_mm": 0.0,
+        "max_rainfall_mm": 0.0,
+        "p95_rainfall_mm": 0.0,
+        "rain_probability": 0.0,
+        "heavy_probability": 0.0,
+        "very_heavy_probability": 0.0,
+        "extreme_probability": 0.0,
+        "hotspot_rainfall_mm": 0.0,
+        "hotspot_latitude": 0.0,
+        "hotspot_longitude": 0.0,
+        "coverage_fraction": 0.0,
+        "risk_category": "NORMAL",
+        "color_hex": "#009933",
+        "raw_nwp_rainfall_mm": 0.0,
+        "difference_nwp_mm": 0.0,
+        "data_mode": "SYNTHETIC_DEMO",
+        "model_version": "ramp_v1.0.0",
+        "boundary_version": "v1.0.0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              75.5,
+              12.5
+            ],
+            [
+              75.5,
+              13.2
+            ],
+            [
+              74.8,
+              13.2
+            ],
+            [
+              74.8,
+              12.5
+            ],
+            [
+              75.5,
+              12.5
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "product_id": "PROD_PURI_NO_COVERAGE",
+        "district_id": "PURI",
+        "district_name": "Puri",
+        "state_id": "OD",
+        "state_name": "Odisha",
+        "forecast_valid_time": "",
+        "lead_time_hours": 24,
+        "aggregation_method": "AREA_WEIGHTED",
+        "rainfall_mm": 0.0,
+        "min_rainfall_mm": 0.0,
+        "max_rainfall_mm": 0.0,
+        "p95_rainfall_mm": 0.0,
+        "rain_probability": 0.0,
+        "heavy_probability": 0.0,
+        "very_heavy_probability": 0.0,
+        "extreme_probability": 0.0,
+        "hotspot_rainfall_mm": 0.0,
+        "hotspot_latitude": 0.0,
+        "hotspot_longitude": 0.0,
+        "coverage_fraction": 0.0,
+        "risk_category": "NORMAL",
+        "color_hex": "#009933",
+        "raw_nwp_rainfall_mm": 0.0,
+        "difference_nwp_mm": 0.0,
+        "data_mode": "SYNTHETIC_DEMO",
+        "model_version": "ramp_v1.0.0",
+        "boundary_version": "v1.0.0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              86.4,
+              19.6
+            ],
+            [
+              86.4,
+              20.2
+            ],
+            [
+              85.1,
+              20.2
+            ],
+            [
+              85.1,
+              19.6
+            ],
+            [
+              86.4,
+              19.6
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "product_id": "PROD_CUTTACK_NO_COVERAGE",
+        "district_id": "CUTTACK",
+        "district_name": "Cuttack",
+        "state_id": "OD",
+        "state_name": "Odisha",
+        "forecast_valid_time": "",
+        "lead_time_hours": 24,
+        "aggregation_method": "AREA_WEIGHTED",
+        "rainfall_mm": 0.0,
+        "min_rainfall_mm": 0.0,
+        "max_rainfall_mm": 0.0,
+        "p95_rainfall_mm": 0.0,
+        "rain_probability": 0.0,
+        "heavy_probability": 0.0,
+        "very_heavy_probability": 0.0,
+        "extreme_probability": 0.0,
+        "hotspot_rainfall_mm": 0.0,
+        "hotspot_latitude": 0.0,
+        "hotspot_longitude": 0.0,
+        "coverage_fraction": 0.0,
+        "risk_category": "NORMAL",
+        "color_hex": "#009933",
+        "raw_nwp_rainfall_mm": 0.0,
+        "difference_nwp_mm": 0.0,
+        "data_mode": "SYNTHETIC_DEMO",
+        "model_version": "ramp_v1.0.0",
+        "boundary_version": "v1.0.0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              86.2,
+              20.2
+            ],
+            [
+              86.2,
+              20.8
+            ],
+            [
+              85.5,
+              20.8
+            ],
+            [
+              85.5,
+              20.2
+            ],
+            [
+              86.2,
+              20.2
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "product_id": "PROD_KAMRUP_NO_COVERAGE",
+        "district_id": "KAMRUP",
+        "district_name": "Kamrup Metropolitan",
+        "state_id": "AS",
+        "state_name": "Assam",
+        "forecast_valid_time": "",
+        "lead_time_hours": 24,
+        "aggregation_method": "AREA_WEIGHTED",
+        "rainfall_mm": 0.0,
+        "min_rainfall_mm": 0.0,
+        "max_rainfall_mm": 0.0,
+        "p95_rainfall_mm": 0.0,
+        "rain_probability": 0.0,
+        "heavy_probability": 0.0,
+        "very_heavy_probability": 0.0,
+        "extreme_probability": 0.0,
+        "hotspot_rainfall_mm": 0.0,
+        "hotspot_latitude": 0.0,
+        "hotspot_longitude": 0.0,
+        "coverage_fraction": 0.0,
+        "risk_category": "NORMAL",
+        "color_hex": "#009933",
+        "raw_nwp_rainfall_mm": 0.0,
+        "difference_nwp_mm": 0.0,
+        "data_mode": "SYNTHETIC_DEMO",
+        "model_version": "ramp_v1.0.0",
+        "boundary_version": "v1.0.0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              92.1,
+              25.9
+            ],
+            [
+              92.1,
+              26.4
+            ],
+            [
+              91.5,
+              26.4
+            ],
+            [
+              91.5,
+              25.9
+            ],
+            [
+              92.1,
+              25.9
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "product_id": "PROD_SHIMLA_NO_COVERAGE",
+        "district_id": "SHIMLA",
+        "district_name": "Shimla",
+        "state_id": "HP",
+        "state_name": "Himachal Pradesh",
+        "forecast_valid_time": "",
+        "lead_time_hours": 24,
+        "aggregation_method": "AREA_WEIGHTED",
+        "rainfall_mm": 0.0,
+        "min_rainfall_mm": 0.0,
+        "max_rainfall_mm": 0.0,
+        "p95_rainfall_mm": 0.0,
+        "rain_probability": 0.0,
+        "heavy_probability": 0.0,
+        "very_heavy_probability": 0.0,
+        "extreme_probability": 0.0,
+        "hotspot_rainfall_mm": 0.0,
+        "hotspot_latitude": 0.0,
+        "hotspot_longitude": 0.0,
+        "coverage_fraction": 0.0,
+        "risk_category": "NORMAL",
+        "color_hex": "#009933",
+        "raw_nwp_rainfall_mm": 0.0,
+        "difference_nwp_mm": 0.0,
+        "data_mode": "SYNTHETIC_DEMO",
+        "model_version": "ramp_v1.0.0",
+        "boundary_version": "v1.0.0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.9,
+              30.9
+            ],
+            [
+              77.9,
+              31.5
+            ],
+            [
+              77.0,
+              31.5
+            ],
+            [
+              77.0,
+              30.9
+            ],
+            [
+              77.9,
+              30.9
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "product_id": "PROD_JAIPUR_NO_COVERAGE",
+        "district_id": "JAIPUR",
+        "district_name": "Jaipur",
+        "state_id": "RJ",
+        "state_name": "Rajasthan",
+        "forecast_valid_time": "",
+        "lead_time_hours": 24,
+        "aggregation_method": "AREA_WEIGHTED",
+        "rainfall_mm": 0.0,
+        "min_rainfall_mm": 0.0,
+        "max_rainfall_mm": 0.0,
+        "p95_rainfall_mm": 0.0,
+        "rain_probability": 0.0,
+        "heavy_probability": 0.0,
+        "very_heavy_probability": 0.0,
+        "extreme_probability": 0.0,
+        "hotspot_rainfall_mm": 0.0,
+        "hotspot_latitude": 0.0,
+        "hotspot_longitude": 0.0,
+        "coverage_fraction": 0.0,
+        "risk_category": "NORMAL",
+        "color_hex": "#009933",
+        "raw_nwp_rainfall_mm": 0.0,
+        "difference_nwp_mm": 0.0,
+        "data_mode": "SYNTHETIC_DEMO",
+        "model_version": "ramp_v1.0.0",
+        "boundary_version": "v1.0.0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              76.2,
+              26.6
+            ],
+            [
+              76.2,
+              27.5
+            ],
+            [
+              75.3,
+              27.5
+            ],
+            [
+              75.3,
+              26.6
+            ],
+            [
+              76.2,
+              26.6
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "product_id": "PROD_DELHI_NO_COVERAGE",
+        "district_id": "DELHI",
+        "district_name": "Delhi NCT",
+        "state_id": "DL",
+        "state_name": "Delhi",
+        "forecast_valid_time": "",
+        "lead_time_hours": 24,
+        "aggregation_method": "AREA_WEIGHTED",
+        "rainfall_mm": 0.0,
+        "min_rainfall_mm": 0.0,
+        "max_rainfall_mm": 0.0,
+        "p95_rainfall_mm": 0.0,
+        "rain_probability": 0.0,
+        "heavy_probability": 0.0,
+        "very_heavy_probability": 0.0,
+        "extreme_probability": 0.0,
+        "hotspot_rainfall_mm": 0.0,
+        "hotspot_latitude": 0.0,
+        "hotspot_longitude": 0.0,
+        "coverage_fraction": 0.0,
+        "risk_category": "NORMAL",
+        "color_hex": "#009933",
+        "raw_nwp_rainfall_mm": 0.0,
+        "difference_nwp_mm": 0.0,
+        "data_mode": "SYNTHETIC_DEMO",
+        "model_version": "ramp_v1.0.0",
+        "boundary_version": "v1.0.0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.3,
+              28.4
+            ],
+            [
+              77.3,
+              28.9
+            ],
+            [
+              76.8,
+              28.9
+            ],
+            [
+              76.8,
+              28.4
+            ],
+            [
+              77.3,
+              28.4
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "product_id": "PROD_CHENNAI_NO_COVERAGE",
+        "district_id": "CHENNAI",
+        "district_name": "Chennai",
+        "state_id": "TN",
+        "state_name": "Tamil Nadu",
+        "forecast_valid_time": "",
+        "lead_time_hours": 24,
+        "aggregation_method": "AREA_WEIGHTED",
+        "rainfall_mm": 0.0,
+        "min_rainfall_mm": 0.0,
+        "max_rainfall_mm": 0.0,
+        "p95_rainfall_mm": 0.0,
+        "rain_probability": 0.0,
+        "heavy_probability": 0.0,
+        "very_heavy_probability": 0.0,
+        "extreme_probability": 0.0,
+        "hotspot_rainfall_mm": 0.0,
+        "hotspot_latitude": 0.0,
+        "hotspot_longitude": 0.0,
+        "coverage_fraction": 0.0,
+        "risk_category": "NORMAL",
+        "color_hex": "#009933",
+        "raw_nwp_rainfall_mm": 0.0,
+        "difference_nwp_mm": 0.0,
+        "data_mode": "SYNTHETIC_DEMO",
+        "model_version": "ramp_v1.0.0",
+        "boundary_version": "v1.0.0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              80.3,
+              12.9
+            ],
+            [
+              80.3,
+              13.2
+            ],
+            [
+              80.1,
+              13.2
+            ],
+            [
+              80.1,
+              12.9
+            ],
+            [
+              80.3,
+              12.9
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "product_id": "PROD_KOLKATA_NO_COVERAGE",
+        "district_id": "KOLKATA",
+        "district_name": "Kolkata",
+        "state_id": "WB",
+        "state_name": "West Bengal",
+        "forecast_valid_time": "",
+        "lead_time_hours": 24,
+        "aggregation_method": "AREA_WEIGHTED",
+        "rainfall_mm": 0.0,
+        "min_rainfall_mm": 0.0,
+        "max_rainfall_mm": 0.0,
+        "p95_rainfall_mm": 0.0,
+        "rain_probability": 0.0,
+        "heavy_probability": 0.0,
+        "very_heavy_probability": 0.0,
+        "extreme_probability": 0.0,
+        "hotspot_rainfall_mm": 0.0,
+        "hotspot_latitude": 0.0,
+        "hotspot_longitude": 0.0,
+        "coverage_fraction": 0.0,
+        "risk_category": "NORMAL",
+        "color_hex": "#009933",
+        "raw_nwp_rainfall_mm": 0.0,
+        "difference_nwp_mm": 0.0,
+        "data_mode": "SYNTHETIC_DEMO",
+        "model_version": "ramp_v1.0.0",
+        "boundary_version": "v1.0.0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              88.5,
+              22.4
+            ],
+            [
+              88.5,
+              22.7
+            ],
+            [
+              88.2,
+              22.7
+            ],
+            [
+              88.2,
+              22.4
+            ],
+            [
+              88.5,
+              22.4
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

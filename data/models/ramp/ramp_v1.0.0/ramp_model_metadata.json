@@ -1,0 +1,40 @@
+{
+  "ramp_model_id": "ramp_v1.0.0",
+  "dataset_version": "v0.3.0",
+  "phase4_model_version": "regime_lgbm_v0.1.0",
+  "phase5_baseline_version": "global_lgbm_v1",
+  "feature_schema_version": "v1.0.0",
+  "training_period": {
+    "start": "2023-01-01",
+    "end": "2023-08-31"
+  },
+  "validation_period": {
+    "start": "2023-09-01",
+    "end": "2023-09-15"
+  },
+  "test_period": {
+    "start": "2023-09-16",
+    "end": "2023-09-30"
+  },
+  "expert_versions": {
+    "ACTIVE_MONSOON": "active_monsoon_v1",
+    "BREAK_MONSOON": "break_monsoon_v1",
+    "LOW_DEPRESSION": "low_depression_v1",
+    "COASTAL": "coastal_v1",
+    "OROGRAPHIC": "orographic_v1",
+    "WESTERN_DISTURBANCE": "western_disturbance_v1",
+    "TRANSITION_OTHER": "transition_other_v1"
+  },
+  "expert_statuses": {
+    "ACTIVE_MONSOON": "TRAINED",
+    "BREAK_MONSOON": "TRAINED",
+    "LOW_DEPRESSION": "TRAINED",
+    "COASTAL": "INSUFFICIENT_DATA",
+    "OROGRAPHIC": "INSUFFICIENT_DATA",
+    "WESTERN_DISTURBANCE": "INSUFFICIENT_DATA",
+    "TRANSITION_OTHER": "TRAINED"
+  },
+  "training_mode": "hard_argmax",
+  "uncertainty_gating": false,
+  "created_at": "2026-09-26T03:02:15.926511"
+}

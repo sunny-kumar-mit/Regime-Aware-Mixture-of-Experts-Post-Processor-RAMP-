@@ -1,0 +1,43 @@
+{
+  "model_id": "quantile_mapping_v1",
+  "model_type": "QUANTILE_MAPPING",
+  "version": "v1.0.0",
+  "dataset_id": "ramp_dataset_v0.3.0",
+  "dataset_version": "v0.3.0",
+  "feature_schema_version": "v1.0.0",
+  "training_period": {},
+  "validation_period": {},
+  "test_period": {},
+  "lead_times": [
+    24,
+    48
+  ],
+  "thresholds": [
+    0.1,
+    64.5,
+    115.6,
+    204.5
+  ],
+  "hyperparameters": {
+    "model_type": "QUANTILE_MAPPING",
+    "rain_threshold_mm": 0.1,
+    "extrapolation_policy": "linear",
+    "train_samples": 243,
+    "train_wet_samples": 197,
+    "p_dry_nwp": 0.1893,
+    "p_dry_obs": 0.0329,
+    "tail_ratio": 0.941,
+    "p95_nwp": 33.58,
+    "p95_obs": 35.8,
+    "fitted_split": "TRAIN"
+  },
+  "metrics": {
+    "rmse": 16.4871,
+    "mae": 8.2045,
+    "mean_bias": -2.4659,
+    "pearson_r": 0.5247,
+    "sample_count": 63
+  },
+  "data_mode": "SYNTHETIC_DEMO",
+  "created_at": "2026-09-26T02:44:43.322791"
+}

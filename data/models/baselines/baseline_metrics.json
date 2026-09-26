@@ -1,0 +1,30 @@
+{
+  "raw_nwp": {
+    "rmse": 16.179,
+    "mae": 7.9741,
+    "mean_bias": -0.8779,
+    "pearson_r": 0.539,
+    "sample_count": 63
+  },
+  "mean_bias": {
+    "rmse": 16.1736,
+    "mae": 7.9467,
+    "mean_bias": -1.1198,
+    "pearson_r": 0.5391,
+    "sample_count": 63
+  },
+  "quantile_mapping": {
+    "rmse": 16.4871,
+    "mae": 8.2045,
+    "mean_bias": -2.4659,
+    "pearson_r": 0.5247,
+    "sample_count": 63
+  },
+  "global_ml": {
+    "rmse": 15.4772,
+    "mae": 7.9035,
+    "mean_bias": -5.2214,
+    "pearson_r": 0.5995,
+    "sample_count": 63
+  }
+}

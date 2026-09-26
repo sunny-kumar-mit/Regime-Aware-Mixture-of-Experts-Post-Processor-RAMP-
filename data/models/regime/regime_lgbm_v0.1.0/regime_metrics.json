@@ -1,0 +1,10 @@
+{
+  "accuracy": 0.9206,
+  "balanced_accuracy": 0.695,
+  "macro_f1": 0.5922,
+  "weighted_f1": 0.9268,
+  "brier_score_uncalibrated": 0.1393,
+  "brier_score_calibrated": 0.1568,
+  "log_loss_uncalibrated": 0.3158,
+  "log_loss_calibrated": 1.4013
+}

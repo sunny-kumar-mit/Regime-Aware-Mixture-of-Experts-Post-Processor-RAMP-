@@ -1,0 +1,143 @@
+# RAMP Weather Regime Configuration Registry
+# SIH26080 | Regime-Aware AI Post-Processing of Monsoon Rainfall Forecasts
+# MoES / NCMRWF
+#
+# Configurable meteorological definitions for the 7 canonical regimes.
+# All physical thresholds and confidence weights are declared here to prevent hardcoding.
+
+version: "1.0.0"
+updated_at: "2026-09-25T21:30:00Z"
+
+regimes:
+  ACTIVE_MONSOON:
+    id: "ACTIVE_MONSOON"
+    code: 0
+    name: "Active Monsoon"
+    description: "Vigorous southwest monsoon with strong low-level Somali jet, enhanced moisture transport, and widespread rainfall across central India."
+    seasonal_applicability: ["monsoon"]
+    months: [6, 7, 8, 9]
+    spatial_domain: "Monsoon Core Zone (18°N–26°N, 73°E–88°E) and Pan-India"
+    indicators:
+      u850_westerly_min_ms: 6.0
+      pw_min_kg_m2: 45.0
+      rainfall_threshold_mm: 5.0
+      rh850_min_pct: 75.0
+    confidence_rules:
+      all_matched: 0.85
+      partial_matched: 0.60
+    source_reference: "Rajeevan et al. (2010), MoES Monsoon Active-Break Index"
+    limitations: "Convective clustering inside monsoon depressions may overlap with active monsoon indicators."
+
+  BREAK_MONSOON:
+    id: "BREAK_MONSOON"
+    code: 1
+    name: "Break Monsoon"
+    description: "Monsoon trough shifts northwards to the Himalayan foothills, causing widespread rainfall deficits across central and peninsular India."
+    seasonal_applicability: ["monsoon"]
+    months: [6, 7, 8, 9]
+    spatial_domain: "Central India deficit; enhanced rain near foothills (27°N–34°N) and Tamil Nadu"
+    indicators:
+      core_rainfall_max_mm: 2.0
+      u850_westerly_deficit: true
+      mslp_anomaly_positive_pa: 150.0
+      rh850_max_pct: 65.0
+    confidence_rules:
+      all_matched: 0.82
+      partial_matched: 0.55
+    source_reference: "Gadgil and Joseph (2003), IMD Monsoon Break Classification Criteria"
+    limitations: "Localized convection or sea breeze in peninsular India can occur during break episodes without changing synoptic status."
+
+  LOW_DEPRESSION:
+    id: "LOW_DEPRESSION"
+    code: 2
+    name: "Monsoon Low / Depression"
+    description: "Synoptic-scale cyclonic vortex forming over the Bay of Bengal or Arabian Sea and migrating west-northwestward along the monsoon trough."
+    seasonal_applicability: ["monsoon", "pre_monsoon", "post_monsoon"]
+    months: [5, 6, 7, 8, 9, 10, 11]
+    spatial_domain: "Bay of Bengal, Odisha, West Bengal, Central India corridor"
+    indicators:
+      mslp_max_pa: 100400.0
+      mslp_anomaly_min_pa: -200.0
+      wind_speed_850_min_ms: 10.0
+      cape_min_j_kg: 800.0
+      pw_min_kg_m2: 50.0
+    confidence_rules:
+      all_matched: 0.88
+      partial_matched: 0.65
+    source_reference: "Sikka (2006), IMD Cyclone e-Atlas & Monsoon Depression Tracks"
+    limitations: "Indicates model atmospheric signature of a cyclonic system; does not replace official IMD cyclone/depression bulletin declarations."
+
+  COASTAL:
+    id: "COASTAL"
+    code: 3
+    name: "Coastal Rainfall"
+    description: "Diurnally modulated coastal convergence lines, offshore troughs, and maritime-continental boundary layer interaction."
+    seasonal_applicability: ["pre_monsoon", "monsoon", "post_monsoon"]
+    months: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    spatial_domain: "Konkan-Goa, Malabar coast, Coromandel coast, coastal Odisha"
+    indicators:
+      max_distance_to_coast_km: 100.0
+      onshore_wind_required: true
+      rh850_min_pct: 78.0
+      pw_min_kg_m2: 45.0
+    confidence_rules:
+      all_matched: 0.80
+      partial_matched: 0.50
+    source_reference: "Francis and Gadgil (2006), IMD Coastal Convergence Mechanics"
+    limitations: "Coastal proximity alone does not imply coastal regime if synoptic depression or active monsoon dominates the flow."
+
+  OROGRAPHIC:
+    id: "OROGRAPHIC"
+    code: 4
+    name: "Orographic Rainfall"
+    description: "Mechanical lifting of moisture-laden low-level flow against steep topographic barriers (Western Ghats, Meghalaya plateau, Himalayan foothills)."
+    seasonal_applicability: ["monsoon", "pre_monsoon"]
+    months: [5, 6, 7, 8, 9, 10]
+    spatial_domain: "Western Ghats windward slopes (8°N–21°N), Khasi-Jaintia Hills (Cherrapunji/Mawsynram), Sub-Himalayan foothills"
+    indicators:
+      elevation_min_m: 300.0
+      wind_speed_850_min_ms: 8.0
+      wind_direction_min_deg: 220.0
+      wind_direction_max_deg: 290.0
+      rh850_min_pct: 80.0
+    confidence_rules:
+      all_matched: 0.85
+      partial_matched: 0.55
+    source_reference: "Smith (1979), NCMRWF Western Ghats Orographic Precipitation Dynamics"
+    limitations: "When DEM elevation is unavailable, the engine gracefully degrades to secondary indicators and reports terrain unassisted."
+
+  WESTERN_DISTURBANCE:
+    id: "WESTERN_DISTURBANCE"
+    code: 5
+    name: "Western Disturbance"
+    description: "Extratropical upper-tropospheric trough embedded in the subtropical westerlies traversing northwest India and the Western Himalayas."
+    seasonal_applicability: ["winter", "pre_monsoon", "post_monsoon"]
+    months: [11, 12, 1, 2, 3, 4]
+    spatial_domain: "North & Northwest India: J&K, Ladakh, Himachal, Uttarakhand, Punjab, Haryana, Rajasthan"
+    indicators:
+      latitude_min_deg: 26.0
+      geopotential_height_500_max_m: 5820.0
+      temperature_max_k: 295.0
+      u850_westerly_min_ms: 5.0
+    confidence_rules:
+      all_matched: 0.82
+      partial_matched: 0.58
+    source_reference: "Dimri et al. (2015), IMD Western Disturbance Monograph"
+    limitations: "Represents extratropical wave signature in NWP forecast, not an official IMD WD tracking bulletin."
+
+  TRANSITION_OTHER:
+    id: "TRANSITION_OTHER"
+    code: 6
+    name: "Transition / Other"
+    description: "Atmospheric state lacking a dominant regime signal, multi-regime coexistence, onset/withdrawal phases, or conflicting indicators."
+    seasonal_applicability: ["all"]
+    months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    spatial_domain: "Pan-India"
+    indicators:
+      entropy_threshold_bits: 1.8
+      top_prob_max: 0.40
+    confidence_rules:
+      all_matched: 0.70
+      partial_matched: 0.50
+    source_reference: "RAMP Mixture-of-Experts Architecture Specification"
+    limitations: "Acts as an epistemic fallback class to prevent overconfident erroneous regime assignments."

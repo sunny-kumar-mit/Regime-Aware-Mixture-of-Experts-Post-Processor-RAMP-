@@ -1,0 +1,76 @@
+{
+  "run_id": "sci_20260926_055956_cfdbcfa2",
+  "scientific_version": "scientific_v1.0.0",
+  "model_versions": {
+    "regime": "regime_lgbm_v0.1.0",
+    "mean_bias": "mean_bias_v1.0.0",
+    "quantile_mapping": "quantile_mapping_v1.0.0",
+    "global_ml": "global_ml_v1.0.0",
+    "ramp": "ramp_v1.0.0",
+    "extreme_prob": "extreme_prob_v1.0.0"
+  },
+  "dataset_version": "ramp_dataset_v0.3.0",
+  "feature_schema_version": "feature_registry_v1.0.0",
+  "spatial_product_version": "spatial_product_v1.0.0",
+  "boundary_version": "boundaries_v1.0.0",
+  "data_mode": "SYNTHETIC_DEMO",
+  "random_seed": 42,
+  "bootstrap_samples": 300,
+  "python_version": "3.14.2 (tags/v3.14.2:df79316, Dec  5 2025, 17:18:21) [MSC v.1944 64 bit (AMD64)]",
+  "timestamp": "2026-09-26T05:59:56.747473+00:00",
+  "phase_versions": {
+    "phase_1": "production_foundation_v1.0.0",
+    "phase_2": "meteorological_data_v1.0.0",
+    "phase_3": "training_dataset_v1.0.0",
+    "phase_4": "regime_engine_v1.0.0",
+    "phase_5": "baseline_benchmarks_v1.0.0",
+    "phase_6": "ramp_moe_v1.0.0",
+    "phase_7": "extreme_prob_engine_v1.0.0",
+    "phase_8": "operational_verification_v1.0.0",
+    "phase_9": "spatial_products_v1.0.0",
+    "phase_10": "scientific_v1.0.0"
+  },
+  "metric_config": {
+    "continuous": [
+      "rmse",
+      "mae",
+      "bias",
+      "pearson_r",
+      "spearman_r",
+      "normalized_rmse",
+      "normalized_mae"
+    ],
+    "threshold": [
+      "pod",
+      "far",
+      "csi",
+      "ets",
+      "bias_score",
+      "frequency_bias",
+      "success_ratio",
+      "threat_score"
+    ],
+    "probability": [
+      "brier",
+      "bss",
+      "reliability",
+      "ece",
+      "mce",
+      "roc_auc",
+      "pr_auc",
+      "log_loss"
+    ]
+  },
+  "threshold_config": [
+    0.1,
+    64.5,
+    115.6,
+    204.5
+  ],
+  "bootstrap_config": {
+    "n_samples": 300,
+    "random_seed": 42,
+    "confidence_level": 0.95,
+    "method": "paired_bootstrap"
+  }
+}

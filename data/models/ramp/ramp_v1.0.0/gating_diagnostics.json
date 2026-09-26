@@ -1,0 +1,327 @@
+{
+  "sample_count": 63,
+  "high_uncertainty_samples": 0,
+  "mean_entropy": 0.234,
+  "samples": [
+    {
+      "sample_id": "beb63898945bcbe3",
+      "top_regime": "ACTIVE_MONSOON",
+      "top_probability": 1.0,
+      "entropy": 0.0,
+      "uncertainty": "LOW",
+      "gate_weights": {
+        "ACTIVE_MONSOON": 1.0,
+        "BREAK_MONSOON": 0.0,
+        "LOW_DEPRESSION": 0.0,
+        "COASTAL": 0.0,
+        "OROGRAPHIC": 0.0,
+        "WESTERN_DISTURBANCE": 0.0,
+        "TRANSITION_OTHER": 0.0
+      }
+    },
+    {
+      "sample_id": "5ea1fe381f827e49",
+      "top_regime": "LOW_DEPRESSION",
+      "top_probability": 1.0,
+      "entropy": 0.0,
+      "uncertainty": "LOW",
+      "gate_weights": {
+        "ACTIVE_MONSOON": 0.0,
+        "BREAK_MONSOON": 0.0,
+        "LOW_DEPRESSION": 1.0,
+        "COASTAL": 0.0,
+        "OROGRAPHIC": 0.0,
+        "WESTERN_DISTURBANCE": 0.0,
+        "TRANSITION_OTHER": 0.0
+      }
+    },
+    {
+      "sample_id": "e4c1fb4c09d6a7a4",
+      "top_regime": "TRANSITION_OTHER",
+      "top_probability": 1.0,
+      "entropy": 0.0,
+      "uncertainty": "LOW",
+      "gate_weights": {
+        "ACTIVE_MONSOON": 0.0,
+        "BREAK_MONSOON": 0.0,
+        "LOW_DEPRESSION": 0.0,
+        "COASTAL": 0.0,
+        "OROGRAPHIC": 0.0,
+        "WESTERN_DISTURBANCE": 0.0,
+        "TRANSITION_OTHER": 1.0
+      }
+    },
+    {
+      "sample_id": "ee26ca094f79d5f9",
+      "top_regime": "ACTIVE_MONSOON",
+      "top_probability": 0.7659,
+      "entropy": 0.785,
+      "uncertainty": "LOW",
+      "gate_weights": {
+        "ACTIVE_MONSOON": 0.7659,
+        "BREAK_MONSOON": 0.0,
+        "LOW_DEPRESSION": 0.2341,
+        "COASTAL": 0.0,
+        "OROGRAPHIC": 0.0,
+        "WESTERN_DISTURBANCE": 0.0,
+        "TRANSITION_OTHER": 0.0
+      }
+    },
+    {
+      "sample_id": "9651d61918bfe325",
+      "top_regime": "ACTIVE_MONSOON",
+      "top_probability": 1.0,
+      "entropy": 0.0,
+      "uncertainty": "LOW",
+      "gate_weights": {
+        "ACTIVE_MONSOON": 1.0,
+        "BREAK_MONSOON": 0.0,
+        "LOW_DEPRESSION": 0.0,
+        "COASTAL": 0.0,
+        "OROGRAPHIC": 0.0,
+        "WESTERN_DISTURBANCE": 0.0,
+        "TRANSITION_OTHER": 0.0
+      }
+    },
+    {
+      "sample_id": "c471d5ba2abc81e6",
+      "top_regime": "ACTIVE_MONSOON",
+      "top_probability": 1.0,
+      "entropy": 0.0,
+      "uncertainty": "LOW",
+      "gate_weights": {
+        "ACTIVE_MONSOON": 1.0,
+        "BREAK_MONSOON": 0.0,
+        "LOW_DEPRESSION": 0.0,
+        "COASTAL": 0.0,
+        "OROGRAPHIC": 0.0,
+        "WESTERN_DISTURBANCE": 0.0,
+        "TRANSITION_OTHER": 0.0
+      }
+    },
+    {
+      "sample_id": "51cb5ba87361b540",
+      "top_regime": "ACTIVE_MONSOON",
+      "top_probability": 0.8585,
+      "entropy": 0.5882,
+      "uncertainty": "LOW",
+      "gate_weights": {
+        "ACTIVE_MONSOON": 0.8585,
+        "BREAK_MONSOON": 0.0,
+        "LOW_DEPRESSION": 0.1415,
+        "COASTAL": 0.0,
+        "OROGRAPHIC": 0.0,
+        "WESTERN_DISTURBANCE": 0.0,
+        "TRANSITION_OTHER": 0.0
+      }
+    },
+    {
+      "sample_id": "a5031ef9bee3a1f6",
+      "top_regime": "ACTIVE_MONSOON",
+      "top_probability": 0.7117,
+      "entropy": 1.1163,
+      "uncertainty": "LOW",
+      "gate_weights": {
+        "ACTIVE_MONSOON": 0.7117,
+        "BREAK_MONSOON": 0.2053,
+        "LOW_DEPRESSION": 0.0,
+        "COASTAL": 0.0,
+        "OROGRAPHIC": 0.0,
+        "WESTERN_DISTURBANCE": 0.0,
+        "TRANSITION_OTHER": 0.0831
+      }
+    },
+    {
+      "sample_id": "68fc886259b8117f",
+      "top_regime": "ACTIVE_MONSOON",
+      "top_probability": 1.0,
+      "entropy": 0.0,
+      "uncertainty": "LOW",
+      "gate_weights": {
+        "ACTIVE_MONSOON": 1.0,
+        "BREAK_MONSOON": 0.0,
+        "LOW_DEPRESSION": 0.0,
+        "COASTAL": 0.0,
+        "OROGRAPHIC": 0.0,
+        "WESTERN_DISTURBANCE": 0.0,
+        "TRANSITION_OTHER": 0.0
+      }
+    },
+    {
+      "sample_id": "e3bc9d5d16f08f1b",
+      "top_regime": "LOW_DEPRESSION",
+      "top_probability": 0.738,
+      "entropy": 0.8297,
+      "uncertainty": "LOW",
+      "gate_weights": {
+        "ACTIVE_MONSOON": 0.0,
+        "BREAK_MONSOON": 0.262,
+        "LOW_DEPRESSION": 0.738,
+        "COASTAL": 0.0,
+        "OROGRAPHIC": 0.0,
+        "WESTERN_DISTURBANCE": 0.0,
+        "TRANSITION_OTHER": 0.0
+      }
+    },
+    {
+      "sample_id": "8cd7dcd90b5aa36e",
+      "top_regime": "ACTIVE_MONSOON",
+      "top_probability": 1.0,
+      "entropy": 0.0,
+      "uncertainty": "LOW",
+      "gate_weights": {
+        "ACTIVE_MONSOON": 1.0,
+        "BREAK_MONSOON": 0.0,
+        "LOW_DEPRESSION": 0.0,
+        "COASTAL": 0.0,
+        "OROGRAPHIC": 0.0,
+        "WESTERN_DISTURBANCE": 0.0,
+        "TRANSITION_OTHER": 0.0
+      }
+    },
+    {
+      "sample_id": "b23864a3ed7a42e1",
+      "top_regime": "ACTIVE_MONSOON",
+      "top_probability": 0.7761,
+      "entropy": 0.7672,
+      "uncertainty": "LOW",
+      "gate_weights": {
+        "ACTIVE_MONSOON": 0.7761,
+        "BREAK_MONSOON": 0.2239,
+        "LOW_DEPRESSION": 0.0,
+        "COASTAL": 0.0,
+        "OROGRAPHIC": 0.0,
+        "WESTERN_DISTURBANCE": 0.0,
+        "TRANSITION_OTHER": 0.0
+      }
+    },
+    {
+      "sample_id": "dc05274b6c9fdf6a",
+      "top_regime": "ACTIVE_MONSOON",
+      "top_probability": 1.0,
+      "entropy": 0.0,
+      "uncertainty": "LOW",
+      "gate_weights": {
+        "ACTIVE_MONSOON": 1.0,
+        "BREAK_MONSOON": 0.0,
+        "LOW_DEPRESSION": 0.0,
+        "COASTAL": 0.0,
+        "OROGRAPHIC": 0.0,
+        "WESTERN_DISTURBANCE": 0.0,
+        "TRANSITION_OTHER": 0.0
+      }
+    },
+    {
+      "sample_id": "8ce7110fcd911af1",
+      "top_regime": "ACTIVE_MONSOON",
+      "top_probability": 0.8,
+      "entropy": 0.7219,
+      "uncertainty": "LOW",
+      "gate_weights": {
+        "ACTIVE_MONSOON": 0.8,
+        "BREAK_MONSOON": 0.2,
+        "LOW_DEPRESSION": 0.0,
+        "COASTAL": 0.0,
+        "OROGRAPHIC": 0.0,
+        "WESTERN_DISTURBANCE": 0.0,
+        "TRANSITION_OTHER": 0.0
+      }
+    },
+    {
+      "sample_id": "5df4587a9c7336e6",
+      "top_regime": "LOW_DEPRESSION",
+      "top_probability": 1.0,
+      "entropy": 0.0,
+      "uncertainty": "LOW",
+      "gate_weights": {
+        "ACTIVE_MONSOON": 0.0,
+        "BREAK_MONSOON": 0.0,
+        "LOW_DEPRESSION": 1.0,
+        "COASTAL": 0.0,
+        "OROGRAPHIC": 0.0,
+        "WESTERN_DISTURBANCE": 0.0,
+        "TRANSITION_OTHER": 0.0
+      }
+    },
+    {
+      "sample_id": "c8a4828fb8fcbf2d",
+      "top_regime": "LOW_DEPRESSION",
+      "top_probability": 0.8421,
+      "entropy": 0.6292,
+      "uncertainty": "LOW",
+      "gate_weights": {
+        "ACTIVE_MONSOON": 0.0,
+        "BREAK_MONSOON": 0.1579,
+        "LOW_DEPRESSION": 0.8421,
+        "COASTAL": 0.0,
+        "OROGRAPHIC": 0.0,
+        "WESTERN_DISTURBANCE": 0.0,
+        "TRANSITION_OTHER": 0.0
+      }
+    },
+    {
+      "sample_id": "63c8b8564dc79751",
+      "top_regime": "ACTIVE_MONSOON",
+      "top_probability": 0.7761,
+      "entropy": 0.7672,
+      "uncertainty": "LOW",
+      "gate_weights": {
+        "ACTIVE_MONSOON": 0.7761,
+        "BREAK_MONSOON": 0.2239,
+        "LOW_DEPRESSION": 0.0,
+        "COASTAL": 0.0,
+        "OROGRAPHIC": 0.0,
+        "WESTERN_DISTURBANCE": 0.0,
+        "TRANSITION_OTHER": 0.0
+      }
+    },
+    {
+      "sample_id": "84a5ec9a962ff56e",
+      "top_regime": "ACTIVE_MONSOON",
+      "top_probability": 1.0,
+      "entropy": 0.0,
+      "uncertainty": "LOW",
+      "gate_weights": {
+        "ACTIVE_MONSOON": 1.0,
+        "BREAK_MONSOON": 0.0,
+        "LOW_DEPRESSION": 0.0,
+        "COASTAL": 0.0,
+        "OROGRAPHIC": 0.0,
+        "WESTERN_DISTURBANCE": 0.0,
+        "TRANSITION_OTHER": 0.0
+      }
+    },
+    {
+      "sample_id": "ecbda8e8edf3ef9e",
+      "top_regime": "ACTIVE_MONSOON",
+      "top_probability": 1.0,
+      "entropy": 0.0,
+      "uncertainty": "LOW",
+      "gate_weights": {
+        "ACTIVE_MONSOON": 1.0,
+        "BREAK_MONSOON": 0.0,
+        "LOW_DEPRESSION": 0.0,
+        "COASTAL": 0.0,
+        "OROGRAPHIC": 0.0,
+        "WESTERN_DISTURBANCE": 0.0,
+        "TRANSITION_OTHER": 0.0
+      }
+    },
+    {
+      "sample_id": "70221d254365fad2",
+      "top_regime": "ACTIVE_MONSOON",
+      "top_probability": 1.0,
+      "entropy": 0.0,
+      "uncertainty": "LOW",
+      "gate_weights": {
+        "ACTIVE_MONSOON": 1.0,
+        "BREAK_MONSOON": 0.0,
+        "LOW_DEPRESSION": 0.0,
+        "COASTAL": 0.0,
+        "OROGRAPHIC": 0.0,
+        "WESTERN_DISTURBANCE": 0.0,
+        "TRANSITION_OTHER": 0.0
+      }
+    }
+  ]
+}

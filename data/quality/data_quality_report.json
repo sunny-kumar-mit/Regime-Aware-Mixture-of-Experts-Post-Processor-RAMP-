@@ -1,0 +1,169 @@
+{
+  "dataset_id": "ramp_synthetic_monsoon_demo_v1",
+  "dataset_version": "v1.0.0",
+  "data_mode": "SYNTHETIC_DEMO",
+  "generated_at": "2026-09-26T04:47:52.929372Z",
+  "total_records": 360,
+  "valid_records": 360,
+  "invalid_records": 0,
+  "missing_target_records": 0,
+  "duplicate_records": 0,
+  "physical_invalid_rain_count": 0,
+  "extreme_but_valid_rain_count": 2,
+  "time_coverage": {
+    "start": "2025-07-02 00:00:00+00:00",
+    "end": "2025-07-22 00:00:00+00:00",
+    "unique_cycles": 20
+  },
+  "spatial_coverage": {
+    "lat_min": 21.0,
+    "lat_max": 21.5,
+    "lon_min": 78.0,
+    "lon_max": 78.5,
+    "unique_grid_cells": 9
+  },
+  "variable_coverage": {
+    "lead_time_hours": 1.0,
+    "latitude": 1.0,
+    "longitude": 1.0,
+    "raw_nwp_rainfall": 1.0,
+    "u850": 1.0,
+    "v850": 1.0,
+    "mslp": 1.0,
+    "temperature": 1.0,
+    "relative_humidity": 1.0,
+    "precipitable_water": 1.0,
+    "cape": 1.0,
+    "geopotential_height": 1.0,
+    "observed_rainfall_mm": 1.0,
+    "day_of_year": 1.0,
+    "month": 1.0,
+    "day_of_year_sin": 1.0,
+    "day_of_year_cos": 1.0,
+    "valid_hour": 1.0,
+    "valid_hour_sin": 1.0,
+    "valid_hour_cos": 1.0,
+    "initialization_hour": 1.0,
+    "pre_monsoon": 1.0,
+    "monsoon": 1.0,
+    "post_monsoon": 1.0,
+    "winter": 1.0,
+    "wind_speed_850": 1.0,
+    "wind_direction_850": 1.0,
+    "mslp_anomaly": 1.0,
+    "rainfall_mean_3x3": 1.0,
+    "rainfall_max_3x3": 1.0,
+    "rainfall_std_3x3": 1.0,
+    "rainfall_occurrence": 1.0,
+    "heavy_rainfall": 1.0,
+    "very_heavy_rainfall": 1.0,
+    "extremely_heavy_rainfall": 1.0,
+    "climatology_rainfall_mm": 1.0,
+    "rainfall_anomaly": 1.0,
+    "nwp_rainfall_mm": 1.0
+  },
+  "lead_time_coverage": [
+    24,
+    48
+  ],
+  "checks_summary": [
+    {
+      "check_id": 1,
+      "name": "Missing Mandatory Coordinates",
+      "passed": true,
+      "severity": "INFO",
+      "affected_count": 0,
+      "details": "0 records have missing latitude or longitude."
+    },
+    {
+      "check_id": 2,
+      "name": "NaN in NWP Rainfall",
+      "passed": true,
+      "severity": "INFO",
+      "affected_count": 0,
+      "details": "0 records have NaN in nwp_rainfall_mm."
+    },
+    {
+      "check_id": 3,
+      "name": "Infinity Detection",
+      "passed": true,
+      "severity": "INFO",
+      "affected_count": 0,
+      "details": "0 records contain infinite values across numeric columns."
+    },
+    {
+      "check_id": 4,
+      "name": "Rainfall Sanity & Extreme Preservation",
+      "passed": true,
+      "severity": "INFO",
+      "affected_count": 0,
+      "details": "0 records failed physical limits (<0 or >1500.0 mm). Distinguished 2 EXTREME_BUT_VALID records (>=204.5 mm) preserved."
+    },
+    {
+      "check_id": 5,
+      "name": "Duplicate Timestamp & Spatial Point Detection",
+      "passed": true,
+      "severity": "INFO",
+      "affected_count": 0,
+      "details": "0 duplicate records identified on (forecast_valid_time, latitude, longitude, lead_time_hours)."
+    },
+    {
+      "check_id": 7,
+      "name": "Global Coordinate Range Check",
+      "passed": true,
+      "severity": "INFO",
+      "affected_count": 0,
+      "details": "0 records outside [-90,90] lat or [-180,180] lon."
+    },
+    {
+      "check_id": 8,
+      "name": "Indian Regional Domain Diagnostic",
+      "passed": true,
+      "severity": "INFO",
+      "affected_count": 0,
+      "details": "0 records lie outside primary Indian subcontinent box. Preserved."
+    },
+    {
+      "check_id": 9,
+      "name": "Rainfall Unit Consistency Check",
+      "passed": true,
+      "severity": "INFO",
+      "affected_count": 0,
+      "details": "Rainfall magnitude consistent with mm."
+    },
+    {
+      "check_id": 10,
+      "name": "Timezone Consistency Audit",
+      "passed": true,
+      "severity": "INFO",
+      "affected_count": 0,
+      "details": "Timestamps successfully verified as UTC / consistent."
+    },
+    {
+      "check_id": 11,
+      "name": "Forecast Temporal Progression Alignment",
+      "passed": true,
+      "severity": "INFO",
+      "affected_count": 0,
+      "details": "0 records had valid_time before initialization_time."
+    },
+    {
+      "check_id": 12,
+      "name": "Lead-Time Integrity",
+      "passed": true,
+      "severity": "INFO",
+      "affected_count": 0,
+      "details": "0 records missing lead_time_hours."
+    },
+    {
+      "check_id": 13,
+      "name": "Ground-Truth Observation Availability",
+      "passed": true,
+      "severity": "INFO",
+      "affected_count": 0,
+      "details": "0 records lack ground truth observed_rainfall_mm. Marked EVALUATION_UNAVAILABLE (NOT assumed zero)."
+    }
+  ],
+  "rejection_reasons": {},
+  "overall_status": "PASS"
+}

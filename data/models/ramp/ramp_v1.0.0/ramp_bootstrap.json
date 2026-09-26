@@ -1,0 +1,34 @@
+{
+  "ramp_vs_raw_nwp": {
+    "n_bootstraps": 300,
+    "confidence_level": 0.95,
+    "observed_delta_rmse": -2.325,
+    "ci_delta_rmse": [
+      -7.7242,
+      1.7294
+    ],
+    "statistically_significant_rmse": false,
+    "observed_delta_mae": -1.1293,
+    "ci_delta_mae": [
+      -3.7668,
+      0.8394
+    ],
+    "statistically_significant_mae": false
+  },
+  "ramp_vs_global_ml": {
+    "n_bootstraps": 300,
+    "confidence_level": 0.95,
+    "observed_delta_rmse": -1.6232,
+    "ci_delta_rmse": [
+      -5.5889,
+      0.1932
+    ],
+    "statistically_significant_rmse": false,
+    "observed_delta_mae": -1.0587,
+    "ci_delta_mae": [
+      -2.6042,
+      0.0855
+    ],
+    "statistically_significant_mae": false
+  }
+}

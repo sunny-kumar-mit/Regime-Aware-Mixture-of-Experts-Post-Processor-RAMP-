@@ -1,0 +1,149 @@
+# =============================================================================
+# RAMP — Regime-Aware Mixture-of-Experts Post-Processor
+# SIH26080 | .gitignore
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Python
+# -----------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.Python
+.venv/
+venv/
+ENV/
+env/
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+*.log
+*.pot
+*.pyo
+.tox/
+.nox/
+
+# -----------------------------------------------------------------------------
+# Node / Frontend
+# -----------------------------------------------------------------------------
+node_modules/
+dist/
+.next/
+out/
+*.local
+.npm
+.yarn-integrity
+.pnp.*
+.pnp.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.eslintcache
+.stylelintcache
+
+# -----------------------------------------------------------------------------
+# Meteorological / Scientific Data Files
+# Large binary files — never commit to git; use DVC or object storage instead
+# -----------------------------------------------------------------------------
+*.nc
+*.nc4
+*.netcdf
+*.grib
+*.grib2
+*.grb
+*.grb2
+*.idx
+*.hdf
+*.hdf5
+*.h5
+*.zarr/
+*.npy
+*.npz
+
+# Shapefiles (vector data — commit only if small and essential)
+# *.shp
+# *.dbf
+# *.prj
+# *.shx
+
+# Digital Elevation Model tiles
+data/dem/
+data/raw/
+data/processed/
+
+# -----------------------------------------------------------------------------
+# MLflow
+# -----------------------------------------------------------------------------
+mlflow/mlartifacts/
+mlruns/
+*.mlmodel
+
+# -----------------------------------------------------------------------------
+# Environment & Secrets
+# IMPORTANT: Never commit real credentials.
+# dev.env is a template — it must NOT contain real secrets.
+# -----------------------------------------------------------------------------
+.env
+*.env
+!configs/dev.env
+
+# Terraform state / secrets
+*.tfstate
+*.tfstate.*
+*.tfvars
+.terraform/
+
+# -----------------------------------------------------------------------------
+# IDE / OS
+# -----------------------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# -----------------------------------------------------------------------------
+# Docker
+# -----------------------------------------------------------------------------
+*.env.docker
+
+# -----------------------------------------------------------------------------
+# Alembic
+# -----------------------------------------------------------------------------
+# Keep migrations, but not generated SQLite test DBs
+*.db
+*.sqlite3
+
+# -----------------------------------------------------------------------------
+# Jupyter Notebooks (outputs only — keep notebook structure)
+# -----------------------------------------------------------------------------
+.ipynb_checkpoints/
+
+# -----------------------------------------------------------------------------
+# Coverage / Test Artefacts
+# -----------------------------------------------------------------------------
+.hypothesis/
+test-results/
+junit.xml
+
+# -----------------------------------------------------------------------------
+# Misc
+# -----------------------------------------------------------------------------
+*.bak
+*.tmp
+*.orig
+scratch/

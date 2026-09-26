@@ -1,0 +1,12 @@
+{
+  "calibration_method": "isotonic",
+  "fitted_on": "VALIDATION",
+  "uncalibrated": {
+    "brier_score": 0.1393,
+    "log_loss": 0.3158
+  },
+  "calibrated": {
+    "brier_score": 0.1568,
+    "log_loss": 1.4013
+  }
+}

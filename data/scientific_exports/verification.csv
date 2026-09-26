@@ -1,0 +1,7 @@
+model,n_samples,availability_status,rmse,mae,bias,pearson_r,spearman_r,normalized_rmse,normalized_mae,data_mode,dataset_version,model_version
+RAW_NWP,200,AVAILABLE,6.3675,4.8874,3.0299,0.7716,0.6755,0.8418,0.6461,SYNTHETIC_DEMO,ramp_dataset_v0.3.0,nwp_raw
+MEAN_BIAS,200,AVAILABLE,5.0641,3.8681,0.8806,0.8201,0.687,0.6695,0.5114,SYNTHETIC_DEMO,ramp_dataset_v0.3.0,mean_bias_v1.0.0
+QUANTILE_MAPPING,200,AVAILABLE,4.5227,3.4395,0.679,0.8387,0.7175,0.5979,0.4547,SYNTHETIC_DEMO,ramp_dataset_v0.3.0,quantile_mapping_v1.0.0
+GLOBAL_ML,200,AVAILABLE,4.0706,3.1038,1.0689,0.8766,0.7781,0.5382,0.4103,SYNTHETIC_DEMO,ramp_dataset_v0.3.0,global_ml_v1.0.0
+RAMP_MOE,200,AVAILABLE,3.6069,2.8091,0.9418,0.9012,0.7902,0.4769,0.3714,SYNTHETIC_DEMO,ramp_dataset_v0.3.0,ramp_v1.0.0
+RAMP_EXTREME,200,AVAILABLE,3.6268,2.7379,0.5206,0.8886,0.7925,0.4795,0.362,SYNTHETIC_DEMO,ramp_dataset_v0.3.0,extreme_prob_v1.0.0

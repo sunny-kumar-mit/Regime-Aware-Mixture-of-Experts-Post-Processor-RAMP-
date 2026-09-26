@@ -1,0 +1,38 @@
+[
+  {
+    "ablation_tier": "A_global_ml_only",
+    "rmse": 15.4772,
+    "mae": 7.9035,
+    "mean_bias": -5.2214,
+    "heavy_rain_csi_64_5": 0.0,
+    "heavy_rain_pod_64_5": 0.0,
+    "heavy_rain_ets_64_5": 0.0
+  },
+  {
+    "ablation_tier": "B_hard_regime_argmax",
+    "rmse": 13.8548,
+    "mae": 6.8243,
+    "mean_bias": -4.3301,
+    "heavy_rain_csi_64_5": 0.0,
+    "heavy_rain_pod_64_5": 0.0,
+    "heavy_rain_ets_64_5": 0.0
+  },
+  {
+    "ablation_tier": "C_soft_ramp_gating",
+    "rmse": 13.854,
+    "mae": 6.8448,
+    "mean_bias": -4.517,
+    "heavy_rain_csi_64_5": 0.0,
+    "heavy_rain_pod_64_5": 0.0,
+    "heavy_rain_ets_64_5": 0.0
+  },
+  {
+    "ablation_tier": "E_uniform_gating",
+    "rmse": 16.5752,
+    "mae": 8.6718,
+    "mean_bias": -6.7457,
+    "heavy_rain_csi_64_5": 0.0,
+    "heavy_rain_pod_64_5": 0.0,
+    "heavy_rain_ets_64_5": 0.0
+  }
+]

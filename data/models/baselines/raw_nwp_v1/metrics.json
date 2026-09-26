@@ -1,0 +1,7 @@
+{
+  "rmse": 16.179,
+  "mae": 7.9741,
+  "mean_bias": -0.8779,
+  "pearson_r": 0.539,
+  "sample_count": 63
+}

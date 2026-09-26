@@ -1,0 +1,25 @@
+model,threshold_mm,threshold_name,n_samples,n_events,availability_status,data_mode,model_version,hit,miss,false_alarm,correct_negative,n_total,pod,far,csi,ets,bias_score,success_ratio,threat_score,frequency_bias
+RAW_NWP,0.1,Rain,200,198,AVAILABLE,SYNTHETIC_DEMO,nwp_raw,171,27,1,1,200,0.8636,0.0058,0.8593,0.0251,0.8687,0.9942,0.8593,0.8687
+RAW_NWP,64.5,Heavy,200,0,NO_EVENTS_IN_DOMAIN,SYNTHETIC_DEMO,nwp_raw,,,,,,None,None,None,None,None,None,None,None
+RAW_NWP,115.6,Very Heavy,200,0,NO_EVENTS_IN_DOMAIN,SYNTHETIC_DEMO,nwp_raw,,,,,,None,None,None,None,None,None,None,None
+RAW_NWP,204.5,Extremely Heavy,200,0,NO_EVENTS_IN_DOMAIN,SYNTHETIC_DEMO,nwp_raw,,,,,,None,None,None,None,None,None,None,None
+MEAN_BIAS,0.1,Rain,200,198,AVAILABLE,SYNTHETIC_DEMO,mean_bias_v1.0.0,152,46,1,1,200,0.7677,0.0065,0.7638,0.0112,0.7727,0.9935,0.7638,0.7727
+MEAN_BIAS,64.5,Heavy,200,0,NO_EVENTS_IN_DOMAIN,SYNTHETIC_DEMO,mean_bias_v1.0.0,,,,,,None,None,None,None,None,None,None,None
+MEAN_BIAS,115.6,Very Heavy,200,0,NO_EVENTS_IN_DOMAIN,SYNTHETIC_DEMO,mean_bias_v1.0.0,,,,,,None,None,None,None,None,None,None,None
+MEAN_BIAS,204.5,Extremely Heavy,200,0,NO_EVENTS_IN_DOMAIN,SYNTHETIC_DEMO,mean_bias_v1.0.0,,,,,,None,None,None,None,None,None,None,None
+QUANTILE_MAPPING,0.1,Rain,200,198,AVAILABLE,SYNTHETIC_DEMO,quantile_mapping_v1.0.0,155,43,2,0,200,0.7828,0.0127,0.775,-0.0096,0.7929,0.9873,0.775,0.7929
+QUANTILE_MAPPING,64.5,Heavy,200,0,NO_EVENTS_IN_DOMAIN,SYNTHETIC_DEMO,quantile_mapping_v1.0.0,,,,,,None,None,None,None,None,None,None,None
+QUANTILE_MAPPING,115.6,Very Heavy,200,0,NO_EVENTS_IN_DOMAIN,SYNTHETIC_DEMO,quantile_mapping_v1.0.0,,,,,,None,None,None,None,None,None,None,None
+QUANTILE_MAPPING,204.5,Extremely Heavy,200,0,NO_EVENTS_IN_DOMAIN,SYNTHETIC_DEMO,quantile_mapping_v1.0.0,,,,,,None,None,None,None,None,None,None,None
+GLOBAL_ML,0.1,Rain,200,198,AVAILABLE,SYNTHETIC_DEMO,global_ml_v1.0.0,164,34,1,1,200,0.8283,0.0061,0.8241,0.0182,0.8333,0.9939,0.8241,0.8333
+GLOBAL_ML,64.5,Heavy,200,0,NO_EVENTS_IN_DOMAIN,SYNTHETIC_DEMO,global_ml_v1.0.0,,,,,,None,None,None,None,None,None,None,None
+GLOBAL_ML,115.6,Very Heavy,200,0,NO_EVENTS_IN_DOMAIN,SYNTHETIC_DEMO,global_ml_v1.0.0,,,,,,None,None,None,None,None,None,None,None
+GLOBAL_ML,204.5,Extremely Heavy,200,0,NO_EVENTS_IN_DOMAIN,SYNTHETIC_DEMO,global_ml_v1.0.0,,,,,,None,None,None,None,None,None,None,None
+RAMP_MOE,0.1,Rain,200,198,AVAILABLE,SYNTHETIC_DEMO,ramp_v1.0.0,165,33,1,1,200,0.8333,0.006,0.8291,0.019,0.8384,0.994,0.8291,0.8384
+RAMP_MOE,64.5,Heavy,200,0,NO_EVENTS_IN_DOMAIN,SYNTHETIC_DEMO,ramp_v1.0.0,,,,,,None,None,None,None,None,None,None,None
+RAMP_MOE,115.6,Very Heavy,200,0,NO_EVENTS_IN_DOMAIN,SYNTHETIC_DEMO,ramp_v1.0.0,,,,,,None,None,None,None,None,None,None,None
+RAMP_MOE,204.5,Extremely Heavy,200,0,NO_EVENTS_IN_DOMAIN,SYNTHETIC_DEMO,ramp_v1.0.0,,,,,,None,None,None,None,None,None,None,None
+RAMP_EXTREME,0.1,Rain,200,198,AVAILABLE,SYNTHETIC_DEMO,extreme_prob_v1.0.0,165,33,1,1,200,0.8333,0.006,0.8291,0.019,0.8384,0.994,0.8291,0.8384
+RAMP_EXTREME,64.5,Heavy,200,0,NO_EVENTS_IN_DOMAIN,SYNTHETIC_DEMO,extreme_prob_v1.0.0,,,,,,None,None,None,None,None,None,None,None
+RAMP_EXTREME,115.6,Very Heavy,200,0,NO_EVENTS_IN_DOMAIN,SYNTHETIC_DEMO,extreme_prob_v1.0.0,,,,,,None,None,None,None,None,None,None,None
+RAMP_EXTREME,204.5,Extremely Heavy,200,0,NO_EVENTS_IN_DOMAIN,SYNTHETIC_DEMO,extreme_prob_v1.0.0,,,,,,None,None,None,None,None,None,None,None

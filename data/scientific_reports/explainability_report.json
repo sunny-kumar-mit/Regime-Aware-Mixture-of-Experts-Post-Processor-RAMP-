@@ -1,0 +1,245 @@
+{
+  "sample_id": "SYNTH_DEMO_001",
+  "explanation_version": "explainability_v1.0.0",
+  "raw_nwp_mm": 18.4,
+  "lead_time_hours": 24,
+  "dominant_regime": "ACTIVE_MONSOON",
+  "regime_probabilities": {
+    "ACTIVE_MONSOON": 0.52,
+    "BREAK_MONSOON": 0.08,
+    "LOW_DEPRESSION": 0.15,
+    "COASTAL": 0.09,
+    "OROGRAPHIC": 0.06,
+    "WESTERN_DISTURBANCE": 0.05,
+    "TRANSITION_OTHER": 0.05
+  },
+  "regime_entropy": 1.5118,
+  "ramp_prediction_mm": 17.244,
+  "global_ml_prediction_mm": 18.4,
+  "gate_weights": {
+    "ACTIVE_MONSOON": 0.52,
+    "BREAK_MONSOON": 0.08,
+    "LOW_DEPRESSION": 0.15,
+    "COASTAL": 0.09,
+    "OROGRAPHIC": 0.06,
+    "WESTERN_DISTURBANCE": 0.05,
+    "TRANSITION_OTHER": 0.05
+  },
+  "expert_predictions": {
+    "ACTIVE_MONSOON": 16.2,
+    "BREAK_MONSOON": 11.5,
+    "LOW_DEPRESSION": 22.1,
+    "COASTAL": 17.8,
+    "OROGRAPHIC": 24.3,
+    "WESTERN_DISTURBANCE": 14.6,
+    "TRANSITION_OTHER": 15.9
+  },
+  "weighted_contributions": {
+    "ACTIVE_MONSOON": 8.424,
+    "BREAK_MONSOON": 0.92,
+    "LOW_DEPRESSION": 3.315,
+    "COASTAL": 1.602,
+    "OROGRAPHIC": 1.458,
+    "WESTERN_DISTURBANCE": 0.73,
+    "TRANSITION_OTHER": 0.795
+  },
+  "top_expert": "ACTIVE_MONSOON",
+  "top_expert_weight": 0.52,
+  "fallback_used": false,
+  "rain_probability": 0.84,
+  "heavy_probability": 0.12,
+  "very_heavy_probability": 0.03,
+  "extreme_probability": 0.005,
+  "top_features": [
+    {
+      "feature_name": "raw_nwp_rainfall",
+      "feature_group": "NWP_METEOROLOGY",
+      "gain_importance": 0.283745,
+      "split_importance": null,
+      "permutation_importance": null,
+      "shap_mean_abs": null,
+      "rank_gain": 1,
+      "availability": "SYNTHETIC_DEMO"
+    },
+    {
+      "feature_name": "p_active_monsoon",
+      "feature_group": "REGIME_FEATURES",
+      "gain_importance": 0.132507,
+      "split_importance": null,
+      "permutation_importance": null,
+      "shap_mean_abs": null,
+      "rank_gain": 2,
+      "availability": "SYNTHETIC_DEMO"
+    },
+    {
+      "feature_name": "cape",
+      "feature_group": "NWP_METEOROLOGY",
+      "gain_importance": 0.09132,
+      "split_importance": null,
+      "permutation_importance": null,
+      "shap_mean_abs": null,
+      "rank_gain": 3,
+      "availability": "SYNTHETIC_DEMO"
+    },
+    {
+      "feature_name": "lead_time_hours",
+      "feature_group": "TEMPORAL_CONTEXT",
+      "gain_importance": 0.078987,
+      "split_importance": null,
+      "permutation_importance": null,
+      "shap_mean_abs": null,
+      "rank_gain": 4,
+      "availability": "SYNTHETIC_DEMO"
+    },
+    {
+      "feature_name": "q850",
+      "feature_group": "NWP_METEOROLOGY",
+      "gain_importance": 0.06756,
+      "split_importance": null,
+      "permutation_importance": null,
+      "shap_mean_abs": null,
+      "rank_gain": 5,
+      "availability": "SYNTHETIC_DEMO"
+    },
+    {
+      "feature_name": "regime_entropy",
+      "feature_group": "REGIME_FEATURES",
+      "gain_importance": 0.05956,
+      "split_importance": null,
+      "permutation_importance": null,
+      "shap_mean_abs": null,
+      "rank_gain": 6,
+      "availability": "SYNTHETIC_DEMO"
+    },
+    {
+      "feature_name": "v850",
+      "feature_group": "NWP_METEOROLOGY",
+      "gain_importance": 0.053581,
+      "split_importance": null,
+      "permutation_importance": null,
+      "shap_mean_abs": null,
+      "rank_gain": 7,
+      "availability": "SYNTHETIC_DEMO"
+    },
+    {
+      "feature_name": "pw",
+      "feature_group": "NWP_METEOROLOGY",
+      "gain_importance": 0.054662,
+      "split_importance": null,
+      "permutation_importance": null,
+      "shap_mean_abs": null,
+      "rank_gain": 8,
+      "availability": "SYNTHETIC_DEMO"
+    },
+    {
+      "feature_name": "p_low_depression",
+      "feature_group": "REGIME_FEATURES",
+      "gain_importance": 0.046011,
+      "split_importance": null,
+      "permutation_importance": null,
+      "shap_mean_abs": null,
+      "rank_gain": 9,
+      "availability": "SYNTHETIC_DEMO"
+    },
+    {
+      "feature_name": "dist_coast",
+      "feature_group": "SPATIAL_CONTEXT",
+      "gain_importance": 0.041081,
+      "split_importance": null,
+      "permutation_importance": null,
+      "shap_mean_abs": null,
+      "rank_gain": 10,
+      "availability": "SYNTHETIC_DEMO"
+    }
+  ],
+  "shap_available": false,
+  "base_value": 18.4,
+  "positive_contributions": [
+    {
+      "feature_name": "raw_nwp_rainfall",
+      "feature_group": "NWP_METEOROLOGY",
+      "gain_importance": 0.283745,
+      "split_importance": null,
+      "permutation_importance": null,
+      "shap_mean_abs": null,
+      "rank_gain": 1,
+      "availability": "SYNTHETIC_DEMO"
+    },
+    {
+      "feature_name": "p_active_monsoon",
+      "feature_group": "REGIME_FEATURES",
+      "gain_importance": 0.132507,
+      "split_importance": null,
+      "permutation_importance": null,
+      "shap_mean_abs": null,
+      "rank_gain": 2,
+      "availability": "SYNTHETIC_DEMO"
+    },
+    {
+      "feature_name": "cape",
+      "feature_group": "NWP_METEOROLOGY",
+      "gain_importance": 0.09132,
+      "split_importance": null,
+      "permutation_importance": null,
+      "shap_mean_abs": null,
+      "rank_gain": 3,
+      "availability": "SYNTHETIC_DEMO"
+    },
+    {
+      "feature_name": "lead_time_hours",
+      "feature_group": "TEMPORAL_CONTEXT",
+      "gain_importance": 0.078987,
+      "split_importance": null,
+      "permutation_importance": null,
+      "shap_mean_abs": null,
+      "rank_gain": 4,
+      "availability": "SYNTHETIC_DEMO"
+    },
+    {
+      "feature_name": "q850",
+      "feature_group": "NWP_METEOROLOGY",
+      "gain_importance": 0.06756,
+      "split_importance": null,
+      "permutation_importance": null,
+      "shap_mean_abs": null,
+      "rank_gain": 5,
+      "availability": "SYNTHETIC_DEMO"
+    },
+    {
+      "feature_name": "regime_entropy",
+      "feature_group": "REGIME_FEATURES",
+      "gain_importance": 0.05956,
+      "split_importance": null,
+      "permutation_importance": null,
+      "shap_mean_abs": null,
+      "rank_gain": 6,
+      "availability": "SYNTHETIC_DEMO"
+    },
+    {
+      "feature_name": "v850",
+      "feature_group": "NWP_METEOROLOGY",
+      "gain_importance": 0.053581,
+      "split_importance": null,
+      "permutation_importance": null,
+      "shap_mean_abs": null,
+      "rank_gain": 7,
+      "availability": "SYNTHETIC_DEMO"
+    },
+    {
+      "feature_name": "pw",
+      "feature_group": "NWP_METEOROLOGY",
+      "gain_importance": 0.054662,
+      "split_importance": null,
+      "permutation_importance": null,
+      "shap_mean_abs": null,
+      "rank_gain": 8,
+      "availability": "SYNTHETIC_DEMO"
+    }
+  ],
+  "negative_contributions": [],
+  "model_version": "ramp_v1.0.0",
+  "dataset_version": "ramp_dataset_v0.3.0",
+  "feature_schema_version": "feature_registry_v1.0.0",
+  "leakage_detected": false,
+  "data_mode": "SYNTHETIC_DEMO"
+}

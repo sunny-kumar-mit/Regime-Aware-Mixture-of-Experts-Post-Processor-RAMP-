@@ -1,0 +1,68 @@
+{
+  "regime": "BREAK_MONSOON",
+  "version": "break_monsoon_v1",
+  "status": "TRAINED",
+  "is_fitted": true,
+  "train_sample_count": 11,
+  "use_log1p_target": true,
+  "hyperparameters": {
+    "n_estimators": 100,
+    "learning_rate": 0.05,
+    "max_depth": 5,
+    "num_leaves": 24,
+    "min_child_samples": 5,
+    "random_state": 42
+  },
+  "feature_columns": [
+    "raw_nwp_rainfall",
+    "lead_time_hours",
+    "u850",
+    "v850",
+    "wind_speed_850",
+    "wind_direction_850",
+    "mslp",
+    "mslp_anomaly",
+    "temperature",
+    "relative_humidity",
+    "precipitable_water",
+    "cape",
+    "geopotential_height",
+    "rainfall_mean_3x3",
+    "rainfall_max_3x3",
+    "rainfall_std_3x3",
+    "elevation",
+    "distance_to_coast",
+    "monsoon",
+    "winter",
+    "pre_monsoon",
+    "post_monsoon",
+    "day_of_year_sin",
+    "day_of_year_cos",
+    "valid_hour_sin",
+    "valid_hour_cos",
+    "latitude",
+    "longitude"
+  ],
+  "top_features": [
+    [
+      "geopotential_height",
+      0.36
+    ],
+    [
+      "cape",
+      0.2
+    ],
+    [
+      "precipitable_water",
+      0.18
+    ],
+    [
+      "mslp",
+      0.14
+    ],
+    [
+      "relative_humidity",
+      0.09
+    ]
+  ]
+}

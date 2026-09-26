@@ -1,0 +1,248 @@
+{
+  "total_points": 9,
+  "spatial_points": [
+    {
+      "latitude": 21.0,
+      "longitude": 78.0,
+      "sample_count": 7,
+      "models": {
+        "raw_nwp": {
+          "rmse": 6.3304,
+          "mae": 4.6514,
+          "mean_bias": 1.6743
+        },
+        "mean_bias": {
+          "rmse": 6.3655,
+          "mae": 4.7315,
+          "mean_bias": 1.4393
+        },
+        "quantile_mapping": {
+          "rmse": 6.0964,
+          "mae": 5.1324,
+          "mean_bias": 0.1779
+        },
+        "global_ml": {
+          "rmse": 2.8525,
+          "mae": 2.41,
+          "mean_bias": 0.1362
+        }
+      }
+    },
+    {
+      "latitude": 21.0,
+      "longitude": 78.25,
+      "sample_count": 7,
+      "models": {
+        "raw_nwp": {
+          "rmse": 34.2276,
+          "mae": 18.9014,
+          "mean_bias": -12.4986
+        },
+        "mean_bias": {
+          "rmse": 34.2234,
+          "mae": 18.8361,
+          "mean_bias": -12.7205
+        },
+        "quantile_mapping": {
+          "rmse": 34.3436,
+          "mae": 18.9795,
+          "mean_bias": -14.3634
+        },
+        "global_ml": {
+          "rmse": 39.3086,
+          "mae": 26.4658,
+          "mean_bias": -23.8098
+        }
+      }
+    },
+    {
+      "latitude": 21.0,
+      "longitude": 78.5,
+      "sample_count": 7,
+      "models": {
+        "raw_nwp": {
+          "rmse": 11.1826,
+          "mae": 8.1357,
+          "mean_bias": -2.8243
+        },
+        "mean_bias": {
+          "rmse": 11.1985,
+          "mae": 8.1487,
+          "mean_bias": -3.1245
+        },
+        "quantile_mapping": {
+          "rmse": 11.3924,
+          "mae": 8.1448,
+          "mean_bias": -4.4417
+        },
+        "global_ml": {
+          "rmse": 8.8321,
+          "mae": 6.2662,
+          "mean_bias": -4.0985
+        }
+      }
+    },
+    {
+      "latitude": 21.25,
+      "longitude": 78.0,
+      "sample_count": 7,
+      "models": {
+        "raw_nwp": {
+          "rmse": 8.5299,
+          "mae": 6.1343,
+          "mean_bias": -1.3514
+        },
+        "mean_bias": {
+          "rmse": 8.5328,
+          "mae": 6.1047,
+          "mean_bias": -1.6091
+        },
+        "quantile_mapping": {
+          "rmse": 8.476,
+          "mae": 6.211,
+          "mean_bias": -2.7466
+        },
+        "global_ml": {
+          "rmse": 10.1731,
+          "mae": 6.602,
+          "mean_bias": -4.5455
+        }
+      }
+    },
+    {
+      "latitude": 21.25,
+      "longitude": 78.25,
+      "sample_count": 7,
+      "models": {
+        "raw_nwp": {
+          "rmse": 8.3101,
+          "mae": 5.5486,
+          "mean_bias": -2.3771
+        },
+        "mean_bias": {
+          "rmse": 8.2927,
+          "mae": 5.3167,
+          "mean_bias": -2.6774
+        },
+        "quantile_mapping": {
+          "rmse": 9.337,
+          "mae": 5.2369,
+          "mean_bias": -4.3557
+        },
+        "global_ml": {
+          "rmse": 15.8591,
+          "mae": 10.9003,
+          "mean_bias": -6.8806
+        }
+      }
+    },
+    {
+      "latitude": 21.25,
+      "longitude": 78.5,
+      "sample_count": 7,
+      "models": {
+        "raw_nwp": {
+          "rmse": 5.6522,
+          "mae": 3.1229,
+          "mean_bias": 2.8886
+        },
+        "mean_bias": {
+          "rmse": 5.6154,
+          "mae": 3.1488,
+          "mean_bias": 2.7189
+        },
+        "quantile_mapping": {
+          "rmse": 5.2959,
+          "mae": 3.1302,
+          "mean_bias": 1.7017
+        },
+        "global_ml": {
+          "rmse": 1.8874,
+          "mae": 1.704,
+          "mean_bias": 0.9351
+        }
+      }
+    },
+    {
+      "latitude": 21.5,
+      "longitude": 78.0,
+      "sample_count": 7,
+      "models": {
+        "raw_nwp": {
+          "rmse": 27.1041,
+          "mae": 15.6671,
+          "mean_bias": 12.2271
+        },
+        "mean_bias": {
+          "rmse": 27.0502,
+          "mae": 15.5235,
+          "mean_bias": 11.9269
+        },
+        "quantile_mapping": {
+          "rmse": 27.6825,
+          "mae": 15.0849,
+          "mean_bias": 10.802
+        },
+        "global_ml": {
+          "rmse": 5.2095,
+          "mae": 4.3537,
+          "mean_bias": -0.093
+        }
+      }
+    },
+    {
+      "latitude": 21.5,
+      "longitude": 78.25,
+      "sample_count": 7,
+      "models": {
+        "raw_nwp": {
+          "rmse": 7.5805,
+          "mae": 4.8771,
+          "mean_bias": -4.6029
+        },
+        "mean_bias": {
+          "rmse": 7.6417,
+          "mae": 4.9815,
+          "mean_bias": -4.8378
+        },
+        "quantile_mapping": {
+          "rmse": 9.0967,
+          "mae": 6.7426,
+          "mean_bias": -6.7426
+        },
+        "global_ml": {
+          "rmse": 8.8036,
+          "mae": 6.7091,
+          "mean_bias": -6.7091
+        }
+      }
+    },
+    {
+      "latitude": 21.5,
+      "longitude": 78.5,
+      "sample_count": 7,
+      "models": {
+        "raw_nwp": {
+          "rmse": 7.3032,
+          "mae": 4.7286,
+          "mean_bias": -1.0371
+        },
+        "mean_bias": {
+          "rmse": 7.3397,
+          "mae": 4.7286,
+          "mean_bias": -1.1938
+        },
+        "quantile_mapping": {
+          "rmse": 7.9893,
+          "mae": 5.1783,
+          "mean_bias": -2.2244
+        },
+        "global_ml": {
+          "rmse": 7.8337,
+          "mae": 5.7203,
+          "mean_bias": -1.9273
+        }
+      }
+    }
+  ]
+}

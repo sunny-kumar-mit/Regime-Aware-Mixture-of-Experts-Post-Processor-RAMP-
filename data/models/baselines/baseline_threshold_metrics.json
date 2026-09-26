@@ -1,0 +1,250 @@
+{
+  "raw_nwp": {
+    "rain_occurrence": {
+      "threshold_mm": 0.1,
+      "contingency_table": {
+        "hits": 51,
+        "misses": 7,
+        "false_alarms": 2,
+        "correct_negatives": 3,
+        "total": 63
+      },
+      "pod": 0.8793,
+      "far": 0.0377,
+      "csi": 0.85,
+      "ets": 0.1969,
+      "fbias": 0.9138
+    },
+    "heavy_rainfall": {
+      "threshold_mm": 64.5,
+      "contingency_table": {
+        "hits": 1,
+        "misses": 1,
+        "false_alarms": 1,
+        "correct_negatives": 60,
+        "total": 63
+      },
+      "pod": 0.5,
+      "far": 0.5,
+      "csi": 0.3333,
+      "ets": 0.3189,
+      "fbias": 1.0
+    },
+    "very_heavy_rainfall": {
+      "threshold_mm": 115.6,
+      "contingency_table": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 0,
+        "correct_negatives": 63,
+        "total": 63
+      },
+      "pod": null,
+      "far": null,
+      "csi": null,
+      "ets": 0.0,
+      "fbias": null
+    },
+    "extremely_heavy_rainfall": {
+      "threshold_mm": 204.5,
+      "contingency_table": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 0,
+        "correct_negatives": 63,
+        "total": 63
+      },
+      "pod": null,
+      "far": null,
+      "csi": null,
+      "ets": 0.0,
+      "fbias": null
+    }
+  },
+  "mean_bias": {
+    "rain_occurrence": {
+      "threshold_mm": 0.1,
+      "contingency_table": {
+        "hits": 50,
+        "misses": 8,
+        "false_alarms": 2,
+        "correct_negatives": 3,
+        "total": 63
+      },
+      "pod": 0.8621,
+      "far": 0.0385,
+      "csi": 0.8333,
+      "ets": 0.1754,
+      "fbias": 0.8966
+    },
+    "heavy_rainfall": {
+      "threshold_mm": 64.5,
+      "contingency_table": {
+        "hits": 1,
+        "misses": 1,
+        "false_alarms": 1,
+        "correct_negatives": 60,
+        "total": 63
+      },
+      "pod": 0.5,
+      "far": 0.5,
+      "csi": 0.3333,
+      "ets": 0.3189,
+      "fbias": 1.0
+    },
+    "very_heavy_rainfall": {
+      "threshold_mm": 115.6,
+      "contingency_table": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 0,
+        "correct_negatives": 63,
+        "total": 63
+      },
+      "pod": null,
+      "far": null,
+      "csi": null,
+      "ets": 0.0,
+      "fbias": null
+    },
+    "extremely_heavy_rainfall": {
+      "threshold_mm": 204.5,
+      "contingency_table": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 0,
+        "correct_negatives": 63,
+        "total": 63
+      },
+      "pod": null,
+      "far": null,
+      "csi": null,
+      "ets": 0.0,
+      "fbias": null
+    }
+  },
+  "quantile_mapping": {
+    "rain_occurrence": {
+      "threshold_mm": 0.1,
+      "contingency_table": {
+        "hits": 50,
+        "misses": 8,
+        "false_alarms": 2,
+        "correct_negatives": 3,
+        "total": 63
+      },
+      "pod": 0.8621,
+      "far": 0.0385,
+      "csi": 0.8333,
+      "ets": 0.1754,
+      "fbias": 0.8966
+    },
+    "heavy_rainfall": {
+      "threshold_mm": 64.5,
+      "contingency_table": {
+        "hits": 1,
+        "misses": 1,
+        "false_alarms": 1,
+        "correct_negatives": 60,
+        "total": 63
+      },
+      "pod": 0.5,
+      "far": 0.5,
+      "csi": 0.3333,
+      "ets": 0.3189,
+      "fbias": 1.0
+    },
+    "very_heavy_rainfall": {
+      "threshold_mm": 115.6,
+      "contingency_table": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 0,
+        "correct_negatives": 63,
+        "total": 63
+      },
+      "pod": null,
+      "far": null,
+      "csi": null,
+      "ets": 0.0,
+      "fbias": null
+    },
+    "extremely_heavy_rainfall": {
+      "threshold_mm": 204.5,
+      "contingency_table": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 0,
+        "correct_negatives": 63,
+        "total": 63
+      },
+      "pod": null,
+      "far": null,
+      "csi": null,
+      "ets": 0.0,
+      "fbias": null
+    }
+  },
+  "global_ml": {
+    "rain_occurrence": {
+      "threshold_mm": 0.1,
+      "contingency_table": {
+        "hits": 58,
+        "misses": 0,
+        "false_alarms": 5,
+        "correct_negatives": 0,
+        "total": 63
+      },
+      "pod": 1.0,
+      "far": 0.0794,
+      "csi": 0.9206,
+      "ets": 0.0,
+      "fbias": 1.0862
+    },
+    "heavy_rainfall": {
+      "threshold_mm": 64.5,
+      "contingency_table": {
+        "hits": 0,
+        "misses": 2,
+        "false_alarms": 0,
+        "correct_negatives": 61,
+        "total": 63
+      },
+      "pod": 0.0,
+      "far": null,
+      "csi": 0.0,
+      "ets": 0.0,
+      "fbias": 0.0
+    },
+    "very_heavy_rainfall": {
+      "threshold_mm": 115.6,
+      "contingency_table": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 0,
+        "correct_negatives": 63,
+        "total": 63
+      },
+      "pod": null,
+      "far": null,
+      "csi": null,
+      "ets": 0.0,
+      "fbias": null
+    },
+    "extremely_heavy_rainfall": {
+      "threshold_mm": 204.5,
+      "contingency_table": {
+        "hits": 0,
+        "misses": 0,
+        "false_alarms": 0,
+        "correct_negatives": 63,
+        "total": 63
+      },
+      "pod": null,
+      "far": null,
+      "csi": null,
+      "ets": 0.0,
+      "fbias": null
+    }
+  }
+}

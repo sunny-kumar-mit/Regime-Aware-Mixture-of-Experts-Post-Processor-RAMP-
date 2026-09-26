@@ -1,0 +1,961 @@
+{
+  "evaluation_timestamp": "2026-09-26T03:03:21.014863",
+  "data_mode": "SYNTHETIC_DEMO",
+  "performance_notice": "SYNTHETIC DEMONSTRATION ONLY \u2014 Real training data is not available. These benchmarks establish relative algorithm ladders under synthetic demonstration conditions.",
+  "dataset_version": "v0.3.0",
+  "model_version": "ramp_v1.0.0",
+  "test_sample_count": 63,
+  "benchmark_matrix": [
+    {
+      "model": "raw_nwp",
+      "rmse": 16.179,
+      "mae": 7.9741,
+      "mean_bias": -0.8779,
+      "pearson_r": 0.539,
+      "rain_occurrence_csi": 0.85,
+      "heavy_rain_csi_64_5": 0.3333,
+      "heavy_rain_pod_64_5": 0.5,
+      "heavy_rain_far_64_5": 0.5,
+      "heavy_rain_ets_64_5": 0.3189,
+      "very_heavy_csi_115_6": null,
+      "extremely_heavy_csi_204_5": null
+    },
+    {
+      "model": "mean_bias",
+      "rmse": 16.1736,
+      "mae": 7.9467,
+      "mean_bias": -1.1198,
+      "pearson_r": 0.5391,
+      "rain_occurrence_csi": 0.8333,
+      "heavy_rain_csi_64_5": 0.3333,
+      "heavy_rain_pod_64_5": 0.5,
+      "heavy_rain_far_64_5": 0.5,
+      "heavy_rain_ets_64_5": 0.3189,
+      "very_heavy_csi_115_6": null,
+      "extremely_heavy_csi_204_5": null
+    },
+    {
+      "model": "quantile_mapping",
+      "rmse": 16.4871,
+      "mae": 8.2045,
+      "mean_bias": -2.4659,
+      "pearson_r": 0.5247,
+      "rain_occurrence_csi": 0.8333,
+      "heavy_rain_csi_64_5": 0.3333,
+      "heavy_rain_pod_64_5": 0.5,
+      "heavy_rain_far_64_5": 0.5,
+      "heavy_rain_ets_64_5": 0.3189,
+      "very_heavy_csi_115_6": null,
+      "extremely_heavy_csi_204_5": null
+    },
+    {
+      "model": "global_ml",
+      "rmse": 15.4772,
+      "mae": 7.9035,
+      "mean_bias": -5.2214,
+      "pearson_r": 0.5995,
+      "rain_occurrence_csi": 0.9206,
+      "heavy_rain_csi_64_5": 0.0,
+      "heavy_rain_pod_64_5": 0.0,
+      "heavy_rain_far_64_5": null,
+      "heavy_rain_ets_64_5": 0.0,
+      "very_heavy_csi_115_6": null,
+      "extremely_heavy_csi_204_5": null
+    },
+    {
+      "model": "ramp",
+      "rmse": 13.854,
+      "mae": 6.8448,
+      "mean_bias": -4.517,
+      "pearson_r": 0.6697,
+      "rain_occurrence_csi": 0.9206,
+      "heavy_rain_csi_64_5": 0.0,
+      "heavy_rain_pod_64_5": 0.0,
+      "heavy_rain_far_64_5": null,
+      "heavy_rain_ets_64_5": 0.0,
+      "very_heavy_csi_115_6": null,
+      "extremely_heavy_csi_204_5": null
+    }
+  ],
+  "overall_metrics": {
+    "raw_nwp": {
+      "rmse": 16.179,
+      "mae": 7.9741,
+      "mean_bias": -0.8779,
+      "pearson_r": 0.539,
+      "sample_count": 63
+    },
+    "mean_bias": {
+      "rmse": 16.1736,
+      "mae": 7.9467,
+      "mean_bias": -1.1198,
+      "pearson_r": 0.5391,
+      "sample_count": 63
+    },
+    "quantile_mapping": {
+      "rmse": 16.4871,
+      "mae": 8.2045,
+      "mean_bias": -2.4659,
+      "pearson_r": 0.5247,
+      "sample_count": 63
+    },
+    "global_ml": {
+      "rmse": 15.4772,
+      "mae": 7.9035,
+      "mean_bias": -5.2214,
+      "pearson_r": 0.5995,
+      "sample_count": 63
+    },
+    "ramp": {
+      "rmse": 13.854,
+      "mae": 6.8448,
+      "mean_bias": -4.517,
+      "pearson_r": 0.6697,
+      "sample_count": 63
+    }
+  },
+  "threshold_metrics": {
+    "raw_nwp": {
+      "rain_occurrence": {
+        "threshold_mm": 0.1,
+        "contingency_table": {
+          "hits": 51,
+          "misses": 7,
+          "false_alarms": 2,
+          "correct_negatives": 3,
+          "total": 63
+        },
+        "pod": 0.8793,
+        "far": 0.0377,
+        "csi": 0.85,
+        "ets": 0.1969,
+        "fbias": 0.9138
+      },
+      "heavy_rainfall": {
+        "threshold_mm": 64.5,
+        "contingency_table": {
+          "hits": 1,
+          "misses": 1,
+          "false_alarms": 1,
+          "correct_negatives": 60,
+          "total": 63
+        },
+        "pod": 0.5,
+        "far": 0.5,
+        "csi": 0.3333,
+        "ets": 0.3189,
+        "fbias": 1.0
+      },
+      "very_heavy_rainfall": {
+        "threshold_mm": 115.6,
+        "contingency_table": {
+          "hits": 0,
+          "misses": 0,
+          "false_alarms": 0,
+          "correct_negatives": 63,
+          "total": 63
+        },
+        "pod": null,
+        "far": null,
+        "csi": null,
+        "ets": 0.0,
+        "fbias": null
+      },
+      "extremely_heavy_rainfall": {
+        "threshold_mm": 204.5,
+        "contingency_table": {
+          "hits": 0,
+          "misses": 0,
+          "false_alarms": 0,
+          "correct_negatives": 63,
+          "total": 63
+        },
+        "pod": null,
+        "far": null,
+        "csi": null,
+        "ets": 0.0,
+        "fbias": null
+      }
+    },
+    "mean_bias": {
+      "rain_occurrence": {
+        "threshold_mm": 0.1,
+        "contingency_table": {
+          "hits": 50,
+          "misses": 8,
+          "false_alarms": 2,
+          "correct_negatives": 3,
+          "total": 63
+        },
+        "pod": 0.8621,
+        "far": 0.0385,
+        "csi": 0.8333,
+        "ets": 0.1754,
+        "fbias": 0.8966
+      },
+      "heavy_rainfall": {
+        "threshold_mm": 64.5,
+        "contingency_table": {
+          "hits": 1,
+          "misses": 1,
+          "false_alarms": 1,
+          "correct_negatives": 60,
+          "total": 63
+        },
+        "pod": 0.5,
+        "far": 0.5,
+        "csi": 0.3333,
+        "ets": 0.3189,
+        "fbias": 1.0
+      },
+      "very_heavy_rainfall": {
+        "threshold_mm": 115.6,
+        "contingency_table": {
+          "hits": 0,
+          "misses": 0,
+          "false_alarms": 0,
+          "correct_negatives": 63,
+          "total": 63
+        },
+        "pod": null,
+        "far": null,
+        "csi": null,
+        "ets": 0.0,
+        "fbias": null
+      },
+      "extremely_heavy_rainfall": {
+        "threshold_mm": 204.5,
+        "contingency_table": {
+          "hits": 0,
+          "misses": 0,
+          "false_alarms": 0,
+          "correct_negatives": 63,
+          "total": 63
+        },
+        "pod": null,
+        "far": null,
+        "csi": null,
+        "ets": 0.0,
+        "fbias": null
+      }
+    },
+    "quantile_mapping": {
+      "rain_occurrence": {
+        "threshold_mm": 0.1,
+        "contingency_table": {
+          "hits": 50,
+          "misses": 8,
+          "false_alarms": 2,
+          "correct_negatives": 3,
+          "total": 63
+        },
+        "pod": 0.8621,
+        "far": 0.0385,
+        "csi": 0.8333,
+        "ets": 0.1754,
+        "fbias": 0.8966
+      },
+      "heavy_rainfall": {
+        "threshold_mm": 64.5,
+        "contingency_table": {
+          "hits": 1,
+          "misses": 1,
+          "false_alarms": 1,
+          "correct_negatives": 60,
+          "total": 63
+        },
+        "pod": 0.5,
+        "far": 0.5,
+        "csi": 0.3333,
+        "ets": 0.3189,
+        "fbias": 1.0
+      },
+      "very_heavy_rainfall": {
+        "threshold_mm": 115.6,
+        "contingency_table": {
+          "hits": 0,
+          "misses": 0,
+          "false_alarms": 0,
+          "correct_negatives": 63,
+          "total": 63
+        },
+        "pod": null,
+        "far": null,
+        "csi": null,
+        "ets": 0.0,
+        "fbias": null
+      },
+      "extremely_heavy_rainfall": {
+        "threshold_mm": 204.5,
+        "contingency_table": {
+          "hits": 0,
+          "misses": 0,
+          "false_alarms": 0,
+          "correct_negatives": 63,
+          "total": 63
+        },
+        "pod": null,
+        "far": null,
+        "csi": null,
+        "ets": 0.0,
+        "fbias": null
+      }
+    },
+    "global_ml": {
+      "rain_occurrence": {
+        "threshold_mm": 0.1,
+        "contingency_table": {
+          "hits": 58,
+          "misses": 0,
+          "false_alarms": 5,
+          "correct_negatives": 0,
+          "total": 63
+        },
+        "pod": 1.0,
+        "far": 0.0794,
+        "csi": 0.9206,
+        "ets": 0.0,
+        "fbias": 1.0862
+      },
+      "heavy_rainfall": {
+        "threshold_mm": 64.5,
+        "contingency_table": {
+          "hits": 0,
+          "misses": 2,
+          "false_alarms": 0,
+          "correct_negatives": 61,
+          "total": 63
+        },
+        "pod": 0.0,
+        "far": null,
+        "csi": 0.0,
+        "ets": 0.0,
+        "fbias": 0.0
+      },
+      "very_heavy_rainfall": {
+        "threshold_mm": 115.6,
+        "contingency_table": {
+          "hits": 0,
+          "misses": 0,
+          "false_alarms": 0,
+          "correct_negatives": 63,
+          "total": 63
+        },
+        "pod": null,
+        "far": null,
+        "csi": null,
+        "ets": 0.0,
+        "fbias": null
+      },
+      "extremely_heavy_rainfall": {
+        "threshold_mm": 204.5,
+        "contingency_table": {
+          "hits": 0,
+          "misses": 0,
+          "false_alarms": 0,
+          "correct_negatives": 63,
+          "total": 63
+        },
+        "pod": null,
+        "far": null,
+        "csi": null,
+        "ets": 0.0,
+        "fbias": null
+      }
+    },
+    "ramp": {
+      "rain_occurrence": {
+        "threshold_mm": 0.1,
+        "contingency_table": {
+          "hits": 58,
+          "misses": 0,
+          "false_alarms": 5,
+          "correct_negatives": 0,
+          "total": 63
+        },
+        "pod": 1.0,
+        "far": 0.0794,
+        "csi": 0.9206,
+        "ets": 0.0,
+        "fbias": 1.0862
+      },
+      "heavy_rainfall": {
+        "threshold_mm": 64.5,
+        "contingency_table": {
+          "hits": 0,
+          "misses": 2,
+          "false_alarms": 0,
+          "correct_negatives": 61,
+          "total": 63
+        },
+        "pod": 0.0,
+        "far": null,
+        "csi": 0.0,
+        "ets": 0.0,
+        "fbias": 0.0
+      },
+      "very_heavy_rainfall": {
+        "threshold_mm": 115.6,
+        "contingency_table": {
+          "hits": 0,
+          "misses": 0,
+          "false_alarms": 0,
+          "correct_negatives": 63,
+          "total": 63
+        },
+        "pod": null,
+        "far": null,
+        "csi": null,
+        "ets": 0.0,
+        "fbias": null
+      },
+      "extremely_heavy_rainfall": {
+        "threshold_mm": 204.5,
+        "contingency_table": {
+          "hits": 0,
+          "misses": 0,
+          "false_alarms": 0,
+          "correct_negatives": 63,
+          "total": 63
+        },
+        "pod": null,
+        "far": null,
+        "csi": null,
+        "ets": 0.0,
+        "fbias": null
+      }
+    }
+  },
+  "lead_time_metrics": {
+    "Day_1_24h": {
+      "lead_time_hours": 24,
+      "lead_time_label": "Day_1_24h",
+      "sample_count": 27,
+      "models": {
+        "raw_nwp": {
+          "rmse": 24.5329,
+          "mae": 15.917,
+          "mean_bias": -2.1119,
+          "heavy_csi": 0.0,
+          "heavy_pod": 0.0,
+          "heavy_far": 1.0
+        },
+        "mean_bias": {
+          "rmse": 24.5266,
+          "mae": 15.917,
+          "mean_bias": -2.1928,
+          "heavy_csi": 0.0,
+          "heavy_pod": 0.0,
+          "heavy_far": 1.0
+        },
+        "quantile_mapping": {
+          "rmse": 24.9472,
+          "mae": 16.1932,
+          "mean_bias": -3.5482,
+          "heavy_csi": 0.0,
+          "heavy_pod": 0.0,
+          "heavy_far": 1.0
+        },
+        "global_ml": {
+          "rmse": 19.9243,
+          "mae": 11.43,
+          "mean_bias": -7.1398,
+          "heavy_csi": 0.0,
+          "heavy_pod": 0.0,
+          "heavy_far": null
+        },
+        "ramp": {
+          "rmse": 20.2433,
+          "mae": 11.5308,
+          "mean_bias": -8.0441,
+          "heavy_csi": 0.0,
+          "heavy_pod": 0.0,
+          "heavy_far": null
+        }
+      }
+    },
+    "Day_2_48h": {
+      "lead_time_hours": 48,
+      "lead_time_label": "Day_2_48h",
+      "sample_count": 36,
+      "models": {
+        "raw_nwp": {
+          "rmse": 2.5854,
+          "mae": 2.0169,
+          "mean_bias": 0.0475,
+          "heavy_csi": 1.0,
+          "heavy_pod": 1.0,
+          "heavy_far": 0.0
+        },
+        "mean_bias": {
+          "rmse": 2.5701,
+          "mae": 1.9689,
+          "mean_bias": -0.315,
+          "heavy_csi": 1.0,
+          "heavy_pod": 1.0,
+          "heavy_far": 0.0
+        },
+        "quantile_mapping": {
+          "rmse": 2.9861,
+          "mae": 2.213,
+          "mean_bias": -1.6542,
+          "heavy_csi": 1.0,
+          "heavy_pod": 1.0,
+          "heavy_far": 0.0
+        },
+        "global_ml": {
+          "rmse": 11.0212,
+          "mae": 5.2586,
+          "mean_bias": -3.7826,
+          "heavy_csi": 0.0,
+          "heavy_pod": 0.0,
+          "heavy_far": null
+        },
+        "ramp": {
+          "rmse": 5.3422,
+          "mae": 3.3303,
+          "mean_bias": -1.8717,
+          "heavy_csi": 0.0,
+          "heavy_pod": 0.0,
+          "heavy_far": null
+        }
+      }
+    }
+  },
+  "regime_metrics": {
+    "ACTIVE_MONSOON": {
+      "regime": "ACTIVE_MONSOON",
+      "sample_count": 50,
+      "models": {
+        "raw_nwp": {
+          "rmse": 17.4114,
+          "mae": 8.33,
+          "mean_bias": 0.4648,
+          "pearson_r": 0.5444,
+          "rain_occurrence_csi": 0.8723,
+          "heavy_rain_csi": 0.3333,
+          "heavy_rain_pod": 0.5,
+          "heavy_rain_far": 0.5
+        },
+        "global_ml": {
+          "rmse": 16.7842,
+          "mae": 8.4382,
+          "mean_bias": -5.3202,
+          "pearson_r": 0.6003,
+          "rain_occurrence_csi": 0.9,
+          "heavy_rain_csi": 0.0,
+          "heavy_rain_pod": 0.0,
+          "heavy_rain_far": null
+        },
+        "ramp": {
+          "rmse": 14.5747,
+          "mae": 6.7794,
+          "mean_bias": -4.0316,
+          "pearson_r": 0.6881,
+          "rain_occurrence_csi": 0.9,
+          "heavy_rain_csi": 0.0,
+          "heavy_rain_pod": 0.0,
+          "heavy_rain_far": null
+        }
+      }
+    },
+    "BREAK_MONSOON": {
+      "regime": "BREAK_MONSOON",
+      "sample_count": 3,
+      "models": {
+        "raw_nwp": {
+          "rmse": 11.8251,
+          "mae": 9.6367,
+          "mean_bias": -9.6367,
+          "pearson_r": 0.9773,
+          "rain_occurrence_csi": 0.6667,
+          "heavy_rain_csi": null,
+          "heavy_rain_pod": null,
+          "heavy_rain_far": null
+        },
+        "global_ml": {
+          "rmse": 10.5251,
+          "mae": 7.8959,
+          "mean_bias": -7.5261,
+          "pearson_r": 0.9948,
+          "rain_occurrence_csi": 1.0,
+          "heavy_rain_csi": null,
+          "heavy_rain_pod": null,
+          "heavy_rain_far": null
+        },
+        "ramp": {
+          "rmse": 13.5133,
+          "mae": 10.6825,
+          "mean_bias": -10.6825,
+          "pearson_r": 0.8489,
+          "rain_occurrence_csi": 1.0,
+          "heavy_rain_csi": null,
+          "heavy_rain_pod": null,
+          "heavy_rain_far": null
+        }
+      }
+    },
+    "LOW_DEPRESSION": {
+      "regime": "LOW_DEPRESSION",
+      "sample_count": 8,
+      "models": {
+        "raw_nwp": {
+          "rmse": 10.6278,
+          "mae": 6.6263,
+          "mean_bias": -6.4688,
+          "pearson_r": -0.3607,
+          "rain_occurrence_csi": 0.75,
+          "heavy_rain_csi": null,
+          "heavy_rain_pod": null,
+          "heavy_rain_far": null
+        },
+        "global_ml": {
+          "rmse": 8.9953,
+          "mae": 5.8274,
+          "mean_bias": -5.758,
+          "pearson_r": 0.8191,
+          "rain_occurrence_csi": 1.0,
+          "heavy_rain_csi": null,
+          "heavy_rain_pod": null,
+          "heavy_rain_far": null
+        },
+        "ramp": {
+          "rmse": 10.6387,
+          "mae": 6.8893,
+          "mean_bias": -6.7436,
+          "pearson_r": -0.5241,
+          "rain_occurrence_csi": 1.0,
+          "heavy_rain_csi": null,
+          "heavy_rain_pod": null,
+          "heavy_rain_far": null
+        }
+      }
+    },
+    "COASTAL": {
+      "regime": "COASTAL",
+      "sample_count": 0,
+      "models": {}
+    },
+    "OROGRAPHIC": {
+      "regime": "OROGRAPHIC",
+      "sample_count": 0,
+      "models": {}
+    },
+    "WESTERN_DISTURBANCE": {
+      "regime": "WESTERN_DISTURBANCE",
+      "sample_count": 0,
+      "models": {}
+    },
+    "TRANSITION_OTHER": {
+      "regime": "TRANSITION_OTHER",
+      "sample_count": 2,
+      "models": {
+        "raw_nwp": {
+          "rmse": 2.2391,
+          "mae": 1.975,
+          "mean_bias": 1.055,
+          "pearson_r": 1.0,
+          "rain_occurrence_csi": 1.0,
+          "heavy_rain_csi": null,
+          "heavy_rain_pod": null,
+          "heavy_rain_far": null
+        },
+        "global_ml": {
+          "rmse": 3.6116,
+          "mae": 2.852,
+          "mean_bias": 2.852,
+          "pearson_r": 1.0,
+          "rain_occurrence_csi": 1.0,
+          "heavy_rain_csi": null,
+          "heavy_rain_pod": null,
+          "heavy_rain_far": null
+        },
+        "ramp": {
+          "rmse": 2.9566,
+          "mae": 2.5461,
+          "mean_bias": 1.5029,
+          "pearson_r": -1.0,
+          "rain_occurrence_csi": 1.0,
+          "heavy_rain_csi": null,
+          "heavy_rain_pod": null,
+          "heavy_rain_far": null
+        }
+      }
+    }
+  },
+  "spatial_metrics": {
+    "total_points": 9,
+    "spatial_points": [
+      {
+        "latitude": 21.0,
+        "longitude": 78.0,
+        "sample_count": 7,
+        "models": {
+          "raw_nwp": {
+            "rmse": 6.3304,
+            "mae": 4.6514,
+            "mean_bias": 1.6743
+          },
+          "global_ml": {
+            "rmse": 2.8525,
+            "mae": 2.41,
+            "mean_bias": 0.1362
+          },
+          "ramp": {
+            "rmse": 2.9013,
+            "mae": 2.6438,
+            "mean_bias": -0.3199
+          }
+        }
+      },
+      {
+        "latitude": 21.0,
+        "longitude": 78.25,
+        "sample_count": 7,
+        "models": {
+          "raw_nwp": {
+            "rmse": 34.2276,
+            "mae": 18.9014,
+            "mean_bias": -12.4986
+          },
+          "global_ml": {
+            "rmse": 39.3086,
+            "mae": 26.4658,
+            "mean_bias": -23.8098
+          },
+          "ramp": {
+            "rmse": 34.1988,
+            "mae": 20.5264,
+            "mean_bias": -17.9859
+          }
+        }
+      },
+      {
+        "latitude": 21.0,
+        "longitude": 78.5,
+        "sample_count": 7,
+        "models": {
+          "raw_nwp": {
+            "rmse": 11.1826,
+            "mae": 8.1357,
+            "mean_bias": -2.8243
+          },
+          "global_ml": {
+            "rmse": 8.8321,
+            "mae": 6.2662,
+            "mean_bias": -4.0985
+          },
+          "ramp": {
+            "rmse": 9.9221,
+            "mae": 6.433,
+            "mean_bias": -4.4454
+          }
+        }
+      },
+      {
+        "latitude": 21.25,
+        "longitude": 78.0,
+        "sample_count": 7,
+        "models": {
+          "raw_nwp": {
+            "rmse": 8.5299,
+            "mae": 6.1343,
+            "mean_bias": -1.3514
+          },
+          "global_ml": {
+            "rmse": 10.1731,
+            "mae": 6.602,
+            "mean_bias": -4.5455
+          },
+          "ramp": {
+            "rmse": 8.1598,
+            "mae": 5.2348,
+            "mean_bias": -3.8906
+          }
+        }
+      },
+      {
+        "latitude": 21.25,
+        "longitude": 78.25,
+        "sample_count": 7,
+        "models": {
+          "raw_nwp": {
+            "rmse": 8.3101,
+            "mae": 5.5486,
+            "mean_bias": -2.3771
+          },
+          "global_ml": {
+            "rmse": 15.8591,
+            "mae": 10.9003,
+            "mean_bias": -6.8806
+          },
+          "ramp": {
+            "rmse": 14.5633,
+            "mae": 8.1531,
+            "mean_bias": -5.7425
+          }
+        }
+      },
+      {
+        "latitude": 21.25,
+        "longitude": 78.5,
+        "sample_count": 7,
+        "models": {
+          "raw_nwp": {
+            "rmse": 5.6522,
+            "mae": 3.1229,
+            "mean_bias": 2.8886
+          },
+          "global_ml": {
+            "rmse": 1.8874,
+            "mae": 1.704,
+            "mean_bias": 0.9351
+          },
+          "ramp": {
+            "rmse": 2.9632,
+            "mae": 2.5163,
+            "mean_bias": 1.4799
+          }
+        }
+      },
+      {
+        "latitude": 21.5,
+        "longitude": 78.0,
+        "sample_count": 7,
+        "models": {
+          "raw_nwp": {
+            "rmse": 27.1041,
+            "mae": 15.6671,
+            "mean_bias": 12.2271
+          },
+          "global_ml": {
+            "rmse": 5.2095,
+            "mae": 4.3537,
+            "mean_bias": -0.093
+          },
+          "ramp": {
+            "rmse": 5.7718,
+            "mae": 4.961,
+            "mean_bias": -2.1222
+          }
+        }
+      },
+      {
+        "latitude": 21.5,
+        "longitude": 78.25,
+        "sample_count": 7,
+        "models": {
+          "raw_nwp": {
+            "rmse": 7.5805,
+            "mae": 4.8771,
+            "mean_bias": -4.6029
+          },
+          "global_ml": {
+            "rmse": 8.8036,
+            "mae": 6.7091,
+            "mean_bias": -6.7091
+          },
+          "ramp": {
+            "rmse": 8.8598,
+            "mae": 5.7498,
+            "mean_bias": -5.6522
+          }
+        }
+      },
+      {
+        "latitude": 21.5,
+        "longitude": 78.5,
+        "sample_count": 7,
+        "models": {
+          "raw_nwp": {
+            "rmse": 7.3032,
+            "mae": 4.7286,
+            "mean_bias": -1.0371
+          },
+          "global_ml": {
+            "rmse": 7.8337,
+            "mae": 5.7203,
+            "mean_bias": -1.9273
+          },
+          "ramp": {
+            "rmse": 7.1913,
+            "mae": 5.3851,
+            "mean_bias": -1.9742
+          }
+        }
+      }
+    ]
+  },
+  "bootstrap_significance": {
+    "ramp_vs_raw_nwp": {
+      "n_bootstraps": 300,
+      "confidence_level": 0.95,
+      "observed_delta_rmse": -2.325,
+      "ci_delta_rmse": [
+        -7.7242,
+        1.7294
+      ],
+      "statistically_significant_rmse": false,
+      "observed_delta_mae": -1.1293,
+      "ci_delta_mae": [
+        -3.7668,
+        0.8394
+      ],
+      "statistically_significant_mae": false
+    },
+    "ramp_vs_global_ml": {
+      "n_bootstraps": 300,
+      "confidence_level": 0.95,
+      "observed_delta_rmse": -1.6232,
+      "ci_delta_rmse": [
+        -5.5889,
+        0.1932
+      ],
+      "statistically_significant_rmse": false,
+      "observed_delta_mae": -1.0587,
+      "ci_delta_mae": [
+        -2.6042,
+        0.0855
+      ],
+      "statistically_significant_mae": false
+    }
+  },
+  "ablation_comparison": [
+    {
+      "ablation_tier": "A_global_ml_only",
+      "rmse": 15.4772,
+      "mae": 7.9035,
+      "mean_bias": -5.2214,
+      "heavy_rain_csi_64_5": 0.0,
+      "heavy_rain_pod_64_5": 0.0,
+      "heavy_rain_ets_64_5": 0.0
+    },
+    {
+      "ablation_tier": "B_hard_regime_argmax",
+      "rmse": 13.8548,
+      "mae": 6.8243,
+      "mean_bias": -4.3301,
+      "heavy_rain_csi_64_5": 0.0,
+      "heavy_rain_pod_64_5": 0.0,
+      "heavy_rain_ets_64_5": 0.0
+    },
+    {
+      "ablation_tier": "C_soft_ramp_gating",
+      "rmse": 13.854,
+      "mae": 6.8448,
+      "mean_bias": -4.517,
+      "heavy_rain_csi_64_5": 0.0,
+      "heavy_rain_pod_64_5": 0.0,
+      "heavy_rain_ets_64_5": 0.0
+    },
+    {
+      "ablation_tier": "E_uniform_gating",
+      "rmse": 16.5752,
+      "mae": 8.6718,
+      "mean_bias": -6.7457,
+      "heavy_rain_csi_64_5": 0.0,
+      "heavy_rain_pod_64_5": 0.0,
+      "heavy_rain_ets_64_5": 0.0
+    }
+  ]
+}

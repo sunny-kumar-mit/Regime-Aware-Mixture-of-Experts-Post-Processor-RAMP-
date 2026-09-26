@@ -1,0 +1,161 @@
+{
+  "ACTIVE_MONSOON": {
+    "regime": "ACTIVE_MONSOON",
+    "sample_count": 50,
+    "models": {
+      "raw_nwp": {
+        "rmse": 17.4114,
+        "mae": 8.33,
+        "mean_bias": 0.4648,
+        "pearson_r": 0.5444,
+        "rain_occurrence_csi": 0.8723,
+        "heavy_rain_csi": 0.3333,
+        "heavy_rain_pod": 0.5,
+        "heavy_rain_far": 0.5
+      },
+      "global_ml": {
+        "rmse": 16.7842,
+        "mae": 8.4382,
+        "mean_bias": -5.3202,
+        "pearson_r": 0.6003,
+        "rain_occurrence_csi": 0.9,
+        "heavy_rain_csi": 0.0,
+        "heavy_rain_pod": 0.0,
+        "heavy_rain_far": null
+      },
+      "ramp": {
+        "rmse": 14.5747,
+        "mae": 6.7794,
+        "mean_bias": -4.0316,
+        "pearson_r": 0.6881,
+        "rain_occurrence_csi": 0.9,
+        "heavy_rain_csi": 0.0,
+        "heavy_rain_pod": 0.0,
+        "heavy_rain_far": null
+      }
+    }
+  },
+  "BREAK_MONSOON": {
+    "regime": "BREAK_MONSOON",
+    "sample_count": 3,
+    "models": {
+      "raw_nwp": {
+        "rmse": 11.8251,
+        "mae": 9.6367,
+        "mean_bias": -9.6367,
+        "pearson_r": 0.9773,
+        "rain_occurrence_csi": 0.6667,
+        "heavy_rain_csi": null,
+        "heavy_rain_pod": null,
+        "heavy_rain_far": null
+      },
+      "global_ml": {
+        "rmse": 10.5251,
+        "mae": 7.8959,
+        "mean_bias": -7.5261,
+        "pearson_r": 0.9948,
+        "rain_occurrence_csi": 1.0,
+        "heavy_rain_csi": null,
+        "heavy_rain_pod": null,
+        "heavy_rain_far": null
+      },
+      "ramp": {
+        "rmse": 13.5133,
+        "mae": 10.6825,
+        "mean_bias": -10.6825,
+        "pearson_r": 0.8489,
+        "rain_occurrence_csi": 1.0,
+        "heavy_rain_csi": null,
+        "heavy_rain_pod": null,
+        "heavy_rain_far": null
+      }
+    }
+  },
+  "LOW_DEPRESSION": {
+    "regime": "LOW_DEPRESSION",
+    "sample_count": 8,
+    "models": {
+      "raw_nwp": {
+        "rmse": 10.6278,
+        "mae": 6.6263,
+        "mean_bias": -6.4688,
+        "pearson_r": -0.3607,
+        "rain_occurrence_csi": 0.75,
+        "heavy_rain_csi": null,
+        "heavy_rain_pod": null,
+        "heavy_rain_far": null
+      },
+      "global_ml": {
+        "rmse": 8.9953,
+        "mae": 5.8274,
+        "mean_bias": -5.758,
+        "pearson_r": 0.8191,
+        "rain_occurrence_csi": 1.0,
+        "heavy_rain_csi": null,
+        "heavy_rain_pod": null,
+        "heavy_rain_far": null
+      },
+      "ramp": {
+        "rmse": 10.6387,
+        "mae": 6.8893,
+        "mean_bias": -6.7436,
+        "pearson_r": -0.5241,
+        "rain_occurrence_csi": 1.0,
+        "heavy_rain_csi": null,
+        "heavy_rain_pod": null,
+        "heavy_rain_far": null
+      }
+    }
+  },
+  "COASTAL": {
+    "regime": "COASTAL",
+    "sample_count": 0,
+    "models": {}
+  },
+  "OROGRAPHIC": {
+    "regime": "OROGRAPHIC",
+    "sample_count": 0,
+    "models": {}
+  },
+  "WESTERN_DISTURBANCE": {
+    "regime": "WESTERN_DISTURBANCE",
+    "sample_count": 0,
+    "models": {}
+  },
+  "TRANSITION_OTHER": {
+    "regime": "TRANSITION_OTHER",
+    "sample_count": 2,
+    "models": {
+      "raw_nwp": {
+        "rmse": 2.2391,
+        "mae": 1.975,
+        "mean_bias": 1.055,
+        "pearson_r": 1.0,
+        "rain_occurrence_csi": 1.0,
+        "heavy_rain_csi": null,
+        "heavy_rain_pod": null,
+        "heavy_rain_far": null
+      },
+      "global_ml": {
+        "rmse": 3.6116,
+        "mae": 2.852,
+        "mean_bias": 2.852,
+        "pearson_r": 1.0,
+        "rain_occurrence_csi": 1.0,
+        "heavy_rain_csi": null,
+        "heavy_rain_pod": null,
+        "heavy_rain_far": null
+      },
+      "ramp": {
+        "rmse": 2.9566,
+        "mae": 2.5461,
+        "mean_bias": 1.5029,
+        "pearson_r": -1.0,
+        "rain_occurrence_csi": 1.0,
+        "heavy_rain_csi": null,
+        "heavy_rain_pod": null,
+        "heavy_rain_far": null
+      }
+    }
+  }
+}

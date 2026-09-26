@@ -1,0 +1,385 @@
+{
+  "transition_state": "HIGH_VARIANCE",
+  "transitions_detected": 11,
+  "max_tvd": 1.0,
+  "history": [
+    {
+      "from_step": "2025-07-19T00:00:00+00:00",
+      "to_step": "2025-07-19T00:00:00+00:00",
+      "from_regime": "ACTIVE_MONSOON",
+      "to_regime": "LOW_DEPRESSION",
+      "tvd": 1.0,
+      "regime_switched": true,
+      "is_transition": true,
+      "prob_prev": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "prob_curr": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "from_step": "2025-07-19T00:00:00+00:00",
+      "to_step": "2025-07-19T00:00:00+00:00",
+      "from_regime": "LOW_DEPRESSION",
+      "to_regime": "TRANSITION_OTHER",
+      "tvd": 1.0,
+      "regime_switched": true,
+      "is_transition": true,
+      "prob_prev": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "prob_curr": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    {
+      "from_step": "2025-07-19T00:00:00+00:00",
+      "to_step": "2025-07-19T00:00:00+00:00",
+      "from_regime": "TRANSITION_OTHER",
+      "to_regime": "ACTIVE_MONSOON",
+      "tvd": 1.0,
+      "regime_switched": true,
+      "is_transition": true,
+      "prob_prev": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "prob_curr": [
+        0.7659,
+        0.0,
+        0.2341,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "from_step": "2025-07-19T00:00:00+00:00",
+      "to_step": "2025-07-19T00:00:00+00:00",
+      "from_regime": "ACTIVE_MONSOON",
+      "to_regime": "ACTIVE_MONSOON",
+      "tvd": 0.2341,
+      "regime_switched": false,
+      "is_transition": true,
+      "prob_prev": [
+        0.7659,
+        0.0,
+        0.2341,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "prob_curr": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "from_step": "2025-07-19T00:00:00+00:00",
+      "to_step": "2025-07-19T00:00:00+00:00",
+      "from_regime": "ACTIVE_MONSOON",
+      "to_regime": "ACTIVE_MONSOON",
+      "tvd": 0.0,
+      "regime_switched": false,
+      "is_transition": false,
+      "prob_prev": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "prob_curr": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "from_step": "2025-07-19T00:00:00+00:00",
+      "to_step": "2025-07-19T00:00:00+00:00",
+      "from_regime": "ACTIVE_MONSOON",
+      "to_regime": "ACTIVE_MONSOON",
+      "tvd": 0.1415,
+      "regime_switched": false,
+      "is_transition": false,
+      "prob_prev": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "prob_curr": [
+        0.8585,
+        0.0,
+        0.1415,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "from_step": "2025-07-19T00:00:00+00:00",
+      "to_step": "2025-07-19T00:00:00+00:00",
+      "from_regime": "ACTIVE_MONSOON",
+      "to_regime": "ACTIVE_MONSOON",
+      "tvd": 0.2883,
+      "regime_switched": false,
+      "is_transition": true,
+      "prob_prev": [
+        0.8585,
+        0.0,
+        0.1415,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "prob_curr": [
+        0.7117,
+        0.2053,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0831
+      ]
+    },
+    {
+      "from_step": "2025-07-19T00:00:00+00:00",
+      "to_step": "2025-07-19T00:00:00+00:00",
+      "from_regime": "ACTIVE_MONSOON",
+      "to_regime": "ACTIVE_MONSOON",
+      "tvd": 0.2883,
+      "regime_switched": false,
+      "is_transition": true,
+      "prob_prev": [
+        0.7117,
+        0.2053,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0831
+      ],
+      "prob_curr": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "from_step": "2025-07-19T00:00:00+00:00",
+      "to_step": "2025-07-19T00:00:00+00:00",
+      "from_regime": "ACTIVE_MONSOON",
+      "to_regime": "LOW_DEPRESSION",
+      "tvd": 1.0,
+      "regime_switched": true,
+      "is_transition": true,
+      "prob_prev": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "prob_curr": [
+        0.0,
+        0.262,
+        0.738,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "from_step": "2025-07-19T00:00:00+00:00",
+      "to_step": "2025-07-19T00:00:00+00:00",
+      "from_regime": "LOW_DEPRESSION",
+      "to_regime": "ACTIVE_MONSOON",
+      "tvd": 1.0,
+      "regime_switched": true,
+      "is_transition": true,
+      "prob_prev": [
+        0.0,
+        0.262,
+        0.738,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "prob_curr": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "from_step": "2025-07-19T00:00:00+00:00",
+      "to_step": "2025-07-19T00:00:00+00:00",
+      "from_regime": "ACTIVE_MONSOON",
+      "to_regime": "ACTIVE_MONSOON",
+      "tvd": 0.2239,
+      "regime_switched": false,
+      "is_transition": true,
+      "prob_prev": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "prob_curr": [
+        0.7761,
+        0.2239,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "from_step": "2025-07-19T00:00:00+00:00",
+      "to_step": "2025-07-19T00:00:00+00:00",
+      "from_regime": "ACTIVE_MONSOON",
+      "to_regime": "ACTIVE_MONSOON",
+      "tvd": 0.2239,
+      "regime_switched": false,
+      "is_transition": true,
+      "prob_prev": [
+        0.7761,
+        0.2239,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "prob_curr": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "from_step": "2025-07-19T00:00:00+00:00",
+      "to_step": "2025-07-19T00:00:00+00:00",
+      "from_regime": "ACTIVE_MONSOON",
+      "to_regime": "ACTIVE_MONSOON",
+      "tvd": 0.2,
+      "regime_switched": false,
+      "is_transition": false,
+      "prob_prev": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "prob_curr": [
+        0.8,
+        0.2,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "from_step": "2025-07-19T00:00:00+00:00",
+      "to_step": "2025-07-19T00:00:00+00:00",
+      "from_regime": "ACTIVE_MONSOON",
+      "to_regime": "LOW_DEPRESSION",
+      "tvd": 1.0,
+      "regime_switched": true,
+      "is_transition": true,
+      "prob_prev": [
+        0.8,
+        0.2,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "prob_curr": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  ]
+}

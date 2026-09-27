@@ -1,0 +1,63 @@
+{
+  "dataset_version": "1.0.0",
+  "dataset_id": "ramp_dataset_real_v1.0.0",
+  "creation_timestamp": "2026-09-26T18:09:52.073926+00:00Z",
+  "source_providers": [
+    "NCMRWF_NCUM",
+    "NCMRWF_NEPS",
+    "IMD_OBS"
+  ],
+  "source_models": [
+    "NCUM-12km",
+    "NEPS-12km",
+    "IMD-0.25"
+  ],
+  "source_files": [],
+  "file_hashes": {},
+  "date_range": {
+    "start": null,
+    "end": null
+  },
+  "lead_times": [
+    6,
+    12,
+    18,
+    24,
+    48,
+    72,
+    96,
+    120
+  ],
+  "spatial_extent": {
+    "lat_min": 6.5,
+    "lat_max": 38.5,
+    "lon_min": 66.5,
+    "lon_max": 100.5,
+    "resolution_deg": 0.25
+  },
+  "resolution": {
+    "native_ncmrwf_deg": 0.12,
+    "canonical_ramp_deg": 0.25
+  },
+  "sample_count": 0,
+  "feature_count": 18,
+  "target_count": 5,
+  "split_counts": {
+    "train": 0,
+    "validation": 0,
+    "test": 0
+  },
+  "event_counts": {
+    "rain": 0,
+    "heavy": 0,
+    "very_heavy": 0,
+    "extreme": 0
+  },
+  "quality_summary": {
+    "status": "AWAITING_FILES",
+    "quarantined_files": 0
+  },
+  "data_mode": "NOT_AVAILABLE",
+  "status": "NOT_AVAILABLE",
+  "honesty_notice": "Real NCMRWF/IMD operational archives are not currently mounted in local raw directories. Pipeline is verified and ready for ingestion."
+}

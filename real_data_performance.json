@@ -1,0 +1,73 @@
+{
+  "timestamp_utc": "2026-09-26T20:21:57.425010+00:00",
+  "phase": "PHASE_16",
+  "project": "SIH26080_RAMP",
+  "organization": "MoES / NCMRWF",
+  "system_status": "WAITING_FOR_AUTHORITATIVE_DATA",
+  "test_fixture_mode": true,
+  "metrics": {
+    "source_discovery": {
+      "latency_ms": 5.392,
+      "files_scanned": 0,
+      "search_roots_scanned": 4,
+      "test_fixture_files_count": 0,
+      "authoritative_files_count": 0,
+      "status": "PASS"
+    },
+    "metadata_parsing": {
+      "latency_ms": 52.395,
+      "file_evaluated": "tests\\fixtures\\phase16\\ncum_test_fixture_20260927_00Z_t24.nc",
+      "variables_present": 20,
+      "is_valid": false,
+      "status": "PASS"
+    },
+    "meteorological_qc": {
+      "latency_ms": 0.777,
+      "total_cells_checked": 70692,
+      "variables_passed": 4,
+      "variables_failed": 0,
+      "overall_status": "PASSED",
+      "is_acceptable": true,
+      "status": "PASS"
+    },
+    "forecast_observation_pairing": {
+      "latency_ms": 0.066,
+      "pairing_status": "PAIRED",
+      "zero_leakage_verified": true,
+      "status": "PASS"
+    },
+    "activation_evaluation": {
+      "latency_ms": 0.527,
+      "total_gates": 15,
+      "gates_passed": 7,
+      "lifecycle_state": "WAITING_FOR_AUTHORITATIVE_DATA",
+      "operational_verdict": "BLOCKED",
+      "status": "PASS"
+    },
+    "forecast_execution": {
+      "latency_ms": 328.611,
+      "lead_time_hours": 24,
+      "cycle_id": "DEMO_20260927_00Z",
+      "grid_points_inferred": 482,
+      "status": "PASS"
+    },
+    "verification_calculation": {
+      "latency_ms": 2.489,
+      "samples_evaluated": 100,
+      "verification_status": "VERIFIED",
+      "models_verified": [
+        "RAMP_MoE",
+        "NCUM_Raw",
+        "NEPS_Mean"
+      ],
+      "ramp_rmse": 3.6863,
+      "status": "PASS"
+    }
+  },
+  "summary": {
+    "total_pipeline_latency_ms": 390.257,
+    "all_benchmarks_successful": true,
+    "authoritative_data_present": false,
+    "scientific_integrity_note": "Timing measurements taken under strictly controlled test fixture environment; no authoritative real data performance fabricated."
+  }
+}

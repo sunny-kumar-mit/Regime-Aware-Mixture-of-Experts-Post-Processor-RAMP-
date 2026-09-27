@@ -1,0 +1,28 @@
+# Production Dockerfile for RAMP Scheduled Inference Worker
+# SIH26080 | MoES / NCMRWF
+FROM python:3.11-slim
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libnetcdf-dev \
+    libhdf5-dev \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY backend/ ./backend/
+COPY ml/ ./ml/
+COPY configs/ ./configs/
+COPY deployment/ ./deployment/
+
+ENV PYTHONPATH="/app:/app/backend/src"
+ENV APP_ENV="PRODUCTION"
+
+HEALTHCHECK --interval=60s --timeout=5s --retries=3 \
+    CMD python -c "import os; exit(0 if os.path.exists('data/audit') else 1)"
+
+CMD ["python", "-m", "ml.inference.cli", "--mode", "daemon"]

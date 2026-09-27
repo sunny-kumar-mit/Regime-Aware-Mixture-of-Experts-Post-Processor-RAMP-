@@ -1,0 +1,67 @@
+{
+  "model_id": "ramp_regime_v2.0.0",
+  "model_type": "WEATHER_REGIME_CLASSIFIER",
+  "lifecycle_status": "DEVELOPMENT",
+  "dataset_version": "ramp_dataset_real_v1.0.0",
+  "data_mode": "SYNTHETIC_DEMO",
+  "feature_schema_version": "ramp_features_v1.0.0",
+  "target_schema_version": "ramp_targets_v1.0.0",
+  "model_checksum_sha256": "5237e3a5fed42abacb52b607bd1cf13d0ae3d8da2e8b30b060ce7fa8da9a4fc3",
+  "promotion_gates": {
+    "all_gates_passed": true,
+    "synthetic_block_applied": true,
+    "promotion_eligible": false,
+    "recommended_lifecycle": "DEVELOPMENT",
+    "gate_evaluations": {
+      "DATASET_VALID": {
+        "passed": true,
+        "status": "PASS"
+      },
+      "LEAKAGE_FREE": {
+        "passed": true,
+        "status": "PASS"
+      },
+      "FEATURE_SCHEMA_VALID": {
+        "passed": true,
+        "status": "PASS"
+      },
+      "TARGET_SCHEMA_VALID": {
+        "passed": true,
+        "status": "PASS"
+      },
+      "TEMPORAL_SPLIT_VALID": {
+        "passed": true,
+        "status": "PASS"
+      },
+      "TRAINING_COMPLETED": {
+        "passed": true,
+        "status": "PASS"
+      },
+      "VALIDATION_COMPLETED": {
+        "passed": true,
+        "status": "PASS"
+      },
+      "TEST_EVALUATION_COMPLETED": {
+        "passed": true,
+        "status": "PASS"
+      },
+      "CALIBRATION_COMPLETED": {
+        "passed": true,
+        "status": "PASS"
+      },
+      "MONOTONICITY_VALID": {
+        "passed": true,
+        "status": "PASS"
+      },
+      "PROVENANCE_COMPLETE": {
+        "passed": true,
+        "status": "PASS"
+      },
+      "CHECKSUM_VALID": {
+        "passed": true,
+        "status": "PASS"
+      }
+    }
+  },
+  "registered_at": "2026-09-27T10:22:36.126759+00:00"
+}

@@ -1,0 +1,20 @@
+{
+  "forecast_id": "FCST_20260927_00Z_t24",
+  "cycle_id": "20260927_00Z",
+  "initialization_time": "2026-09-27T00:00:00Z",
+  "valid_time": "2026-09-28T00:00:00Z",
+  "lead_time_hours": 24,
+  "ncum_source_checksum": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+  "neps_source_checksum": "N/A",
+  "dataset_version": "ramp_dataset_real_v1.0.0",
+  "feature_contract": "ramp_features_v1.0.0",
+  "target_contract": "ramp_targets_v1.0.0",
+  "model_version": "ramp_moe_v2.0.0",
+  "git_commit": "e932b14",
+  "inference_timestamp": "2026-09-27T03:52:53.264664+00:00",
+  "data_mode": "STAGING_REAL_DATA",
+  "activation_id": "STG_20260927_00Z_t24_035253",
+  "operator_approval": "OPERATOR_MOES_01",
+  "output_checksum": "005b54fccaad0e1a53675d33735eb61141a6074bd937a6d90ea43958e817b4b4",
+  "publication_status": "DISABLED_FOR_STAGING"
+}

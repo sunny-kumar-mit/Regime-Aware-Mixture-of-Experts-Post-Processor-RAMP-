@@ -1,0 +1,74 @@
+{
+  "thresholds": {
+    "rain_0p1mm": {
+      "threshold_mm": 0.1,
+      "event_count": 22,
+      "non_event_count": 1,
+      "prevalence": 0.95652,
+      "status": "SAMPLE_LIMITED",
+      "brier_score": null,
+      "brier_skill_score": null,
+      "roc_auc": null,
+      "pr_auc": null,
+      "ece": null,
+      "mce": null
+    },
+    "heavy_64p5mm": {
+      "threshold_mm": 64.5,
+      "event_count": 3,
+      "non_event_count": 20,
+      "prevalence": 0.13043,
+      "status": "SAMPLE_LIMITED",
+      "brier_score": null,
+      "brier_skill_score": null,
+      "roc_auc": null,
+      "pr_auc": null,
+      "ece": null,
+      "mce": null
+    },
+    "very_heavy_115p6mm": {
+      "threshold_mm": 115.6,
+      "event_count": 1,
+      "non_event_count": 22,
+      "prevalence": 0.04348,
+      "status": "SAMPLE_LIMITED",
+      "brier_score": null,
+      "brier_skill_score": null,
+      "roc_auc": null,
+      "pr_auc": null,
+      "ece": null,
+      "mce": null
+    },
+    "extreme_204p5mm": {
+      "threshold_mm": 204.5,
+      "event_count": 0,
+      "non_event_count": 23,
+      "prevalence": 0.0,
+      "status": "SAMPLE_LIMITED",
+      "brier_score": null,
+      "brier_skill_score": null,
+      "roc_auc": null,
+      "pr_auc": null,
+      "ece": null,
+      "mce": null
+    }
+  },
+  "monotonicity": {
+    "total_samples": 23,
+    "number_of_violations": 0,
+    "violation_rate": 0.0,
+    "maximum_violation": 0.0,
+    "is_monotonic": true,
+    "violation_locations": [],
+    "thresholds_evaluated": [
+      0.1,
+      64.5,
+      115.6,
+      204.5
+    ],
+    "correction_applied": "cumulative_min",
+    "violations_before": 6,
+    "max_violation_before": 0.13704
+  },
+  "test_sample_count": 23
+}

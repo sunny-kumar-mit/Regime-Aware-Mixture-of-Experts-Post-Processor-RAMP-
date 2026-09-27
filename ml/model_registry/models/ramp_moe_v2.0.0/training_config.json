@@ -1,0 +1,51 @@
+{
+  "model_id": "ramp_moe_v2.0.0",
+  "model_type": "REGIME_AWARE_MOE",
+  "dataset_version": "ramp_dataset_real_v1.0.0",
+  "data_mode": "SYNTHETIC_DEMO",
+  "feature_schema_version": "ramp_features_v1.0.0",
+  "target_schema_version": "ramp_targets_v1.0.0",
+  "number_of_experts": 7,
+  "expert_regimes": [
+    "ACTIVE_MONSOON",
+    "BREAK_MONSOON",
+    "LOW_DEPRESSION",
+    "COASTAL",
+    "OROGRAPHIC",
+    "WESTERN_DISTURBANCE",
+    "TRANSITION_OTHER"
+  ],
+  "gating_temperature": 1.0,
+  "expert_fit_stats": {
+    "ACTIVE_MONSOON": {
+      "training_samples": 25,
+      "fit_strategy": "SPECIALIZED_FIT"
+    },
+    "BREAK_MONSOON": {
+      "training_samples": 0,
+      "fit_strategy": "FALLBACK_GLOBAL_FIT"
+    },
+    "LOW_DEPRESSION": {
+      "training_samples": 0,
+      "fit_strategy": "FALLBACK_GLOBAL_FIT"
+    },
+    "COASTAL": {
+      "training_samples": 31,
+      "fit_strategy": "SPECIALIZED_FIT"
+    },
+    "OROGRAPHIC": {
+      "training_samples": 0,
+      "fit_strategy": "FALLBACK_GLOBAL_FIT"
+    },
+    "WESTERN_DISTURBANCE": {
+      "training_samples": 0,
+      "fit_strategy": "FALLBACK_GLOBAL_FIT"
+    },
+    "TRANSITION_OTHER": {
+      "training_samples": 49,
+      "fit_strategy": "SPECIALIZED_FIT"
+    }
+  },
+  "training_duration_seconds": 0.512,
+  "trained_at": "2026-09-27T10:22:34.967931+00:00"
+}

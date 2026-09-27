@@ -27,7 +27,11 @@ from typing import Any, Dict, List, Optional, Sequence
 
 class DataMode(str, Enum):
     """Operational integrity tag propagated through the full pipeline."""
+    REAL_OPERATIONAL = "REAL_OPERATIONAL"
+    REAL_ARCHIVE = "REAL_ARCHIVE"
+    PUBLIC_PROXY = "PUBLIC_PROXY"
     SYNTHETIC_DEMO = "SYNTHETIC_DEMO"
+    NOT_AVAILABLE = "NOT_AVAILABLE"
     REAL = "REAL"
 
 

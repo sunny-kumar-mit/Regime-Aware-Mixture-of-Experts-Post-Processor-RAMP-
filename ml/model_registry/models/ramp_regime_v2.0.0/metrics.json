@@ -1,0 +1,131 @@
+{
+  "accuracy": 0.1304,
+  "balanced_accuracy": 0.3333,
+  "macro_f1": 0.1714,
+  "per_class": {
+    "ACTIVE_MONSOON": {
+      "support": 3,
+      "status": "SAMPLE_LIMITED",
+      "precision": null,
+      "recall": null,
+      "f1": null
+    },
+    "BREAK_MONSOON": {
+      "support": 0,
+      "status": "SAMPLE_LIMITED",
+      "precision": null,
+      "recall": null,
+      "f1": null
+    },
+    "LOW_DEPRESSION": {
+      "support": 0,
+      "status": "SAMPLE_LIMITED",
+      "precision": null,
+      "recall": null,
+      "f1": null
+    },
+    "COASTAL": {
+      "support": 8,
+      "status": "SAMPLE_LIMITED",
+      "precision": null,
+      "recall": null,
+      "f1": null
+    },
+    "OROGRAPHIC": {
+      "support": 0,
+      "status": "SAMPLE_LIMITED",
+      "precision": null,
+      "recall": null,
+      "f1": null
+    },
+    "WESTERN_DISTURBANCE": {
+      "support": 0,
+      "status": "SAMPLE_LIMITED",
+      "precision": null,
+      "recall": null,
+      "f1": null
+    },
+    "TRANSITION_OTHER": {
+      "support": 12,
+      "status": "VALIDATED",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      3,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      7,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      12,
+      0,
+      0,
+      0,
+      0
+    ]
+  ],
+  "class_names": [
+    "ACTIVE_MONSOON",
+    "BREAK_MONSOON",
+    "LOW_DEPRESSION",
+    "COASTAL",
+    "OROGRAPHIC",
+    "WESTERN_DISTURBANCE",
+    "TRANSITION_OTHER"
+  ],
+  "test_sample_count": 23
+}

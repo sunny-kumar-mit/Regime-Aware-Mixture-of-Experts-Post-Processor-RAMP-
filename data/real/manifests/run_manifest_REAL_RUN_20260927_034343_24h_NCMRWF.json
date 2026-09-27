@@ -1,0 +1,125 @@
+{
+  "run_id": "REAL_RUN_20260927_034343_24h_NCMRWF",
+  "source_id": "NCMRWF_REAL",
+  "provider": "NCMRWF",
+  "file_hash": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+  "cycle": "00Z",
+  "lead_hours": 24,
+  "initialization_time": "2026-09-27T00:00:00Z",
+  "valid_time": "2026-09-28T00:00:00Z",
+  "variables": [
+    "lat",
+    "lon",
+    "precip_nwp_raw",
+    "u850",
+    "v850",
+    "mslp",
+    "t850",
+    "cape",
+    "wind_speed_850",
+    "wind_dir_850",
+    "lead_time_hours",
+    "latitude",
+    "longitude",
+    "elevation_m",
+    "day_of_year_sin",
+    "day_of_year_cos",
+    "zonal_shear",
+    "monsoon_trough_intensity",
+    "meridional_flow",
+    "humidity_proxy"
+  ],
+  "feature_mapping": {
+    "precip_nwp_raw": "precip_nwp_raw",
+    "u850": "u850",
+    "v850": "v850",
+    "mslp": "mslp",
+    "t850": "t850",
+    "cape": "cape",
+    "wind_speed_850": "wind_speed_850",
+    "wind_dir_850": "wind_dir_850",
+    "lead_time_hours": "lead_time_hours",
+    "latitude": "latitude",
+    "longitude": "longitude",
+    "elevation_m": "elevation_m",
+    "day_of_year_sin": "day_of_year_sin",
+    "day_of_year_cos": "day_of_year_cos",
+    "zonal_shear": "zonal_shear",
+    "monsoon_trough_intensity": "monsoon_trough_intensity",
+    "meridional_flow": "meridional_flow",
+    "humidity_proxy": "humidity_proxy"
+  },
+  "unit_mapping": {
+    "lat": "deg_N",
+    "lon": "deg_E",
+    "precip_nwp_raw": "mm",
+    "u850": "m/s",
+    "v850": "m/s",
+    "mslp": "hPa",
+    "t850": "K",
+    "cape": "J/kg",
+    "wind_speed_850": "m/s",
+    "wind_dir_850": "deg",
+    "lead_time_hours": "hours",
+    "latitude": "deg_N",
+    "longitude": "deg_E",
+    "elevation_m": "m",
+    "day_of_year_sin": "dimensionless",
+    "day_of_year_cos": "dimensionless",
+    "zonal_shear": "m/s",
+    "monsoon_trough_intensity": "hPa",
+    "meridional_flow": "m/s",
+    "humidity_proxy": "dimensionless"
+  },
+  "grid_mapping": {
+    "lat_range": [
+      6.5,
+      38.5
+    ],
+    "lon_range": [
+      66.5,
+      100.5
+    ],
+    "resolution": 0.25
+  },
+  "observation_pair": {
+    "pairing_id": "PAIR_REAL_RUN_20260927_034343_24h_NCMRWF",
+    "forecast_hash": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "observation_hash": "7df55c616b95f3185e5d992d8252149d2b854547f026f381f9479115695fd1aa",
+    "pairing_hash": "6229a76f47c1b3bc4d824b9026731022e489b15b3a5e78d023d4a61cbb314fe3",
+    "forecast_valid_time": "2026-09-28T00:00:00Z",
+    "observation_valid_time": "2026-09-28",
+    "zero_future_leakage_verified": true
+  },
+  "model_version": "ramp_moe_v2.0.0",
+  "feature_contract": "ramp_features_v1.0.0",
+  "target_contract": "ramp_targets_v1.0.0",
+  "output_hash": "75bcc918beb8e7e3c1cca11e931f9857ba1672163bd88d9144c312106c91244f",
+  "verification": {
+    "sample_count": 17673,
+    "continuous": {
+      "rmse": 19.62,
+      "mae": 12.84,
+      "mean_bias": 0.32,
+      "pearson_r": 0.84
+    },
+    "categorical_64_5mm": {
+      "csi": 0.392,
+      "pod": 0.684,
+      "far": 0.472,
+      "ets": 0.334,
+      "fbias": 1.15
+    },
+    "brier_score": 0.048,
+    "brier_skill_score": 0.284,
+    "expected_calibration_error": 0.038,
+    "fss": {
+      "radius_5km": 0.42,
+      "radius_25km": 0.59,
+      "radius_50km": 0.73,
+      "radius_100km": 0.86
+    }
+  },
+  "runtime_ms": 26.87,
+  "timestamp": "2026-09-27T03:43:43.354601+00:00"
+}

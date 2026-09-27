@@ -1,0 +1,88 @@
+{
+  "pair_20260928_a82d9d3a24d4": {
+    "pairing_id": "pair_20260928_a82d9d3a24d4",
+    "forecast_id": "forecast.nc",
+    "forecast_filepath": "C:\\Users\\Sunny\\AppData\\Local\\Temp\\pytest-of-Sunny\\pytest-22\\test_temporal_pairing_and_anti0\\forecast.nc",
+    "forecast_hash": "8e15c132782c60cac927700f48475be689fd9a5b06be20f68e822f6724e7c209",
+    "forecast_cycle": "00Z",
+    "forecast_lead_hours": 24,
+    "forecast_valid_time": "2026-09-28T00:00:00Z",
+    "observation_id": "obs.nc",
+    "observation_filepath": "C:\\Users\\Sunny\\AppData\\Local\\Temp\\pytest-of-Sunny\\pytest-22\\test_temporal_pairing_and_anti0\\obs.nc",
+    "observation_hash": "65215f52c6d2180e230ee36d5ec688f72568000e54cfb0848cb98c738d5ee241",
+    "observation_valid_time": "2026-09-28",
+    "pairing_hash": "a82d9d3a24d46818b9865a5bccfa297ef02068830953d04e437d383cd5fcf5a4",
+    "zero_future_leakage_verified": true,
+    "is_ground_truth_only": true,
+    "paired_at": "2026-09-27T06:43:07.469152+00:00",
+    "status": "VALID_PAIR",
+    "validation_notes": [
+      "Anti-leakage audit: Observation valid time equals forecast valid time.",
+      "Strict isolation confirmed: Observation data isolated for GROUND_TRUTH_ONLY verification."
+    ]
+  },
+  "pair_20260928_11f3dee3b0d2": {
+    "pairing_id": "pair_20260928_11f3dee3b0d2",
+    "forecast_id": "forecast.nc",
+    "forecast_filepath": "C:\\Users\\Sunny\\AppData\\Local\\Temp\\pytest-of-Sunny\\pytest-22\\test_temporal_pairing_and_anti0\\forecast.nc",
+    "forecast_hash": "8e15c132782c60cac927700f48475be689fd9a5b06be20f68e822f6724e7c209",
+    "forecast_cycle": null,
+    "forecast_lead_hours": null,
+    "forecast_valid_time": "2026-09-28T00:00:00Z",
+    "observation_id": "obs.nc",
+    "observation_filepath": "C:\\Users\\Sunny\\AppData\\Local\\Temp\\pytest-of-Sunny\\pytest-22\\test_temporal_pairing_and_anti0\\obs.nc",
+    "observation_hash": "65215f52c6d2180e230ee36d5ec688f72568000e54cfb0848cb98c738d5ee241",
+    "observation_valid_time": "2026-09-29",
+    "pairing_hash": "11f3dee3b0d21896208b8b5a909ef5a4c5841c8313f158586e6736da1f094681",
+    "zero_future_leakage_verified": false,
+    "is_ground_truth_only": true,
+    "paired_at": "2026-09-27T06:43:07.472107+00:00",
+    "status": "INVALID_PAIR_TEMPORAL_MISMATCH",
+    "validation_notes": [
+      "Temporal mismatch: forecast valid date 2026-09-28 != observation date 2026-09-29"
+    ]
+  },
+  "pair_20260928_7b1786c576cd": {
+    "pairing_id": "pair_20260928_7b1786c576cd",
+    "forecast_id": "ncum_bad_coordinates.nc",
+    "forecast_filepath": "D:\\SIH26080\\tests\\fixtures\\phase18\\ncum_bad_coordinates.nc",
+    "forecast_hash": "fe362f459c4de32df58cab9293f8625d4b3400ced4a55bb62957220fef022412",
+    "forecast_cycle": "00Z",
+    "forecast_lead_hours": 24,
+    "forecast_valid_time": "2026-09-28T00:00:00Z",
+    "observation_id": "imd_invalid_negative_rain.nc",
+    "observation_filepath": "D:\\SIH26080\\tests\\fixtures\\phase18\\imd_invalid_negative_rain.nc",
+    "observation_hash": "7df55c616b95f3185e5d992d8252149d2b854547f026f381f9479115695fd1aa",
+    "observation_valid_time": "2026-09-28",
+    "pairing_hash": "7b1786c576cde2998eaf6a93e6feb716a005a2f6ce00e124be19b00c547b6544",
+    "zero_future_leakage_verified": true,
+    "is_ground_truth_only": true,
+    "paired_at": "2026-09-27T05:33:36.991149+00:00",
+    "status": "VALID_PAIR",
+    "validation_notes": [
+      "Anti-leakage audit: Observation valid time equals forecast valid time.",
+      "Strict isolation confirmed: Observation data isolated for GROUND_TRUTH_ONLY verification."
+    ]
+  },
+  "pair_20260928_ffbb618b0f05": {
+    "pairing_id": "pair_20260928_ffbb618b0f05",
+    "forecast_id": "ncum_bad_coordinates.nc",
+    "forecast_filepath": "D:\\SIH26080\\tests\\fixtures\\phase18\\ncum_bad_coordinates.nc",
+    "forecast_hash": "fe362f459c4de32df58cab9293f8625d4b3400ced4a55bb62957220fef022412",
+    "forecast_cycle": "00Z",
+    "forecast_lead_hours": 24,
+    "forecast_valid_time": "2026-09-28T00:00:00Z",
+    "observation_id": "imd_rainfall_20260927_1790486835.nc",
+    "observation_filepath": "D:\\SIH26080\\data\\real\\incoming\\imd_rainfall_20260927_1790486835.nc",
+    "observation_hash": "0df64c09311bc6840a7d95fc5ba873d71e87715ce35dd44f4b8aa95f3c63e48c",
+    "observation_valid_time": "2026-09-27",
+    "pairing_hash": "ffbb618b0f05295baf0d86c61854f435c74b56d247dc1c0faede6585790a6f8d",
+    "zero_future_leakage_verified": false,
+    "is_ground_truth_only": true,
+    "paired_at": "2026-09-27T06:08:36.694214+00:00",
+    "status": "INVALID_PAIR_TEMPORAL_MISMATCH",
+    "validation_notes": [
+      "Temporal mismatch: forecast valid date 2026-09-28 != observation date 2026-09-27"
+    ]
+  }
+}

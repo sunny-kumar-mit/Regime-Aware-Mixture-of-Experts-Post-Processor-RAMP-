@@ -1,0 +1,98 @@
+{
+  "overall": {
+    "mae": 9.8919,
+    "rmse": 16.9975,
+    "bias": 4.8628,
+    "correlation": 0.8622,
+    "r2": 0.7186
+  },
+  "expert_usage": {
+    "ACTIVE_MONSOON": {
+      "average_gate_probability": 0.1731,
+      "dominant_usage_frequency": 0.1739
+    },
+    "BREAK_MONSOON": {
+      "average_gate_probability": 0.3055,
+      "dominant_usage_frequency": 0.3043
+    },
+    "LOW_DEPRESSION": {
+      "average_gate_probability": 0.5214,
+      "dominant_usage_frequency": 0.5217
+    },
+    "COASTAL": {
+      "average_gate_probability": 0.0,
+      "dominant_usage_frequency": 0.0
+    },
+    "OROGRAPHIC": {
+      "average_gate_probability": 0.0,
+      "dominant_usage_frequency": 0.0
+    },
+    "WESTERN_DISTURBANCE": {
+      "average_gate_probability": 0.0,
+      "dominant_usage_frequency": 0.0
+    },
+    "TRANSITION_OTHER": {
+      "average_gate_probability": 0.0,
+      "dominant_usage_frequency": 0.0
+    }
+  },
+  "regime_conditioned": {
+    "ACTIVE_MONSOON": {
+      "sample_count": 3,
+      "status": "SAMPLE_LIMITED",
+      "mae": null,
+      "rmse": null,
+      "bias": null,
+      "correlation": null
+    },
+    "BREAK_MONSOON": {
+      "sample_count": 0,
+      "status": "SAMPLE_LIMITED",
+      "mae": null,
+      "rmse": null,
+      "bias": null,
+      "correlation": null
+    },
+    "LOW_DEPRESSION": {
+      "sample_count": 0,
+      "status": "SAMPLE_LIMITED",
+      "mae": null,
+      "rmse": null,
+      "bias": null,
+      "correlation": null
+    },
+    "COASTAL": {
+      "sample_count": 8,
+      "mae": 16.2758,
+      "rmse": 20.9754,
+      "bias": 16.2758,
+      "correlation": 0.9267,
+      "r2": -5.4686
+    },
+    "OROGRAPHIC": {
+      "sample_count": 0,
+      "status": "SAMPLE_LIMITED",
+      "mae": null,
+      "rmse": null,
+      "bias": null,
+      "correlation": null
+    },
+    "WESTERN_DISTURBANCE": {
+      "sample_count": 0,
+      "status": "SAMPLE_LIMITED",
+      "mae": null,
+      "rmse": null,
+      "bias": null,
+      "correlation": null
+    },
+    "TRANSITION_OTHER": {
+      "sample_count": 12,
+      "mae": 2.1175,
+      "rmse": 2.893,
+      "bias": 1.211,
+      "correlation": 0.4997,
+      "r2": -0.3986
+    }
+  },
+  "test_sample_count": 23
+}

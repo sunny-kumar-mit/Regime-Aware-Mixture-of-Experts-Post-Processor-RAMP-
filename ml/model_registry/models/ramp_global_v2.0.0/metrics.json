@@ -1,0 +1,80 @@
+{
+  "overall": {
+    "mae": 10.5942,
+    "rmse": 18.8118,
+    "bias": 5.3506,
+    "correlation": 0.8357,
+    "r2": 0.6553
+  },
+  "stratified": {
+    "all_rainfall": {
+      "count": 23,
+      "mae": 10.5942,
+      "rmse": 18.8118,
+      "bias": 5.3506,
+      "correlation": 0.8357,
+      "r2": 0.6553
+    },
+    "light_lt_2_5mm": {
+      "count": 4,
+      "status": "SAMPLE_LIMITED",
+      "mae": null,
+      "rmse": null,
+      "bias": null,
+      "correlation": null
+    },
+    "moderate_2_5_to_64_5mm": {
+      "count": 16,
+      "mae": 10.1242,
+      "rmse": 17.7721,
+      "bias": 9.3248,
+      "correlation": 0.9445,
+      "r2": -3.6791
+    },
+    "heavy_64_5_to_115_6mm": {
+      "count": 2,
+      "status": "SAMPLE_LIMITED",
+      "mae": null,
+      "rmse": null,
+      "bias": null,
+      "correlation": null
+    },
+    "very_heavy_115_6_to_204_5mm": {
+      "count": 1,
+      "status": "SAMPLE_LIMITED",
+      "mae": null,
+      "rmse": null,
+      "bias": null,
+      "correlation": null
+    },
+    "extreme_ge_204_5mm": {
+      "count": 0,
+      "status": "SAMPLE_LIMITED",
+      "mae": null,
+      "rmse": null,
+      "bias": null,
+      "correlation": null
+    }
+  },
+  "feature_importance": {
+    "precip_nwp_raw": 0.3722,
+    "u850": 0.0327,
+    "v850": 0.0204,
+    "mslp": 0.0327,
+    "t850": 0.0552,
+    "cape": 0.0777,
+    "wind_speed_850": 0.0225,
+    "wind_dir_850": 0.0245,
+    "lead_time_hours": 0.0123,
+    "latitude": 0.0838,
+    "longitude": 0.0184,
+    "elevation_m": 0.0491,
+    "day_of_year_sin": 0.0123,
+    "day_of_year_cos": 0.002,
+    "zonal_shear": 0.0859,
+    "monsoon_trough_intensity": 0.0266,
+    "meridional_flow": 0.0307,
+    "convective_instability": 0.0409
+  },
+  "test_sample_count": 23
+}

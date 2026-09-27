@@ -1,0 +1,43 @@
+{
+  "model_id": "ramp_extreme_v2.0.0",
+  "model_type": "EXTREME_PROBABILITY_MODELS",
+  "dataset_version": "ramp_dataset_real_v1.0.0",
+  "data_mode": "SYNTHETIC_DEMO",
+  "feature_schema_version": "ramp_features_v1.0.0",
+  "target_schema_version": "ramp_targets_v1.0.0",
+  "thresholds_mm": [
+    0.1,
+    64.5,
+    115.6,
+    204.5
+  ],
+  "calibration_method": "isotonic",
+  "head_stats": {
+    "rain_0p1mm": {
+      "threshold_mm": 0.1,
+      "train_positives": 93,
+      "train_prevalence": 0.88571,
+      "status": "VALIDATED"
+    },
+    "heavy_64p5mm": {
+      "threshold_mm": 64.5,
+      "train_positives": 16,
+      "train_prevalence": 0.15238,
+      "status": "VALIDATED"
+    },
+    "very_heavy_115p6mm": {
+      "threshold_mm": 115.6,
+      "train_positives": 5,
+      "train_prevalence": 0.04762,
+      "status": "VALIDATED"
+    },
+    "extreme_204p5mm": {
+      "threshold_mm": 204.5,
+      "train_positives": 2,
+      "train_prevalence": 0.01905,
+      "status": "SAMPLE_LIMITED"
+    }
+  },
+  "training_duration_seconds": 0.65,
+  "trained_at": "2026-09-27T10:22:35.705404+00:00"
+}

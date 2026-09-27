@@ -1,0 +1,18 @@
+[
+  {
+    "manifest_id": "PAIR_2026-09-27_00Z",
+    "generated_at": "2026-09-27T03:52:52.832417+00:00",
+    "forecast_cycle": "00Z",
+    "valid_time": "2026-09-27T00:00:00Z",
+    "lead_time_hours": 24,
+    "forecast_source": "NCMRWF_NCUM",
+    "observation_source": "IMD_GRIDDED_RAINFALL",
+    "matched_cells": 17673,
+    "unmatched_cells": 0,
+    "coverage_percent": 100.0,
+    "zero_leakage_verified": true,
+    "status": "PAIRED",
+    "error_message": null,
+    "metadata": {}
+  }
+]

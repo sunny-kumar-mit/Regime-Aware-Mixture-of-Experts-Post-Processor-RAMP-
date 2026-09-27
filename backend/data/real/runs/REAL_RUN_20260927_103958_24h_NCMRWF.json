@@ -1,0 +1,23 @@
+{
+  "run_id": "REAL_RUN_20260927_103958_24h_NCMRWF",
+  "source_id": "NCMRWF_REAL",
+  "provider": "NCMRWF",
+  "file_hash": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+  "cycle": "00Z",
+  "lead_hours": 24,
+  "initialization_time": "2026-09-27T00:00:00Z",
+  "valid_time": "2026-09-28T00:00:00Z",
+  "features_count": 20,
+  "missing_features": [],
+  "model_version": "v2.0.0",
+  "status": "FAILED",
+  "failure_stage": "MODEL_LOAD_FAILED",
+  "failure_detail": "Frozen models missing in ModelRegistry: ['ramp_global_v2.0.0', 'ramp_regime_v2.0.0', 'ramp_moe_v2.0.0', 'ramp_extreme_v2.0.0']",
+  "runtime_ms": 59.8,
+  "output_hash": null,
+  "verification_status": "AVAILABLE",
+  "data_mode": "REAL_DATA_EXPERIMENT",
+  "created_at": "2026-09-27T10:39:58.718728+00:00",
+  "manifest_path": null,
+  "report_path": null
+}

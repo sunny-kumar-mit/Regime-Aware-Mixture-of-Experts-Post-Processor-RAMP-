@@ -1,0 +1,10 @@
+{
+  "schema_version": "ramp_targets_v1.0.0",
+  "continuous_target": "observed_rainfall_mm",
+  "threshold_targets": [
+    0.1,
+    64.5,
+    115.6,
+    204.5
+  ]
+}

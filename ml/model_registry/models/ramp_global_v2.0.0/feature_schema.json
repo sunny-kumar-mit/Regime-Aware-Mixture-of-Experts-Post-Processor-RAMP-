@@ -1,0 +1,24 @@
+{
+  "schema_version": "ramp_features_v1.0.0",
+  "approved_predictor_count": 18,
+  "approved_predictors": [
+    "precip_nwp_raw",
+    "u850",
+    "v850",
+    "mslp",
+    "t850",
+    "cape",
+    "wind_speed_850",
+    "wind_dir_850",
+    "lead_time_hours",
+    "latitude",
+    "longitude",
+    "elevation_m",
+    "day_of_year_sin",
+    "day_of_year_cos",
+    "zonal_shear",
+    "monsoon_trough_intensity",
+    "meridional_flow",
+    "convective_instability"
+  ]
+}

@@ -1,0 +1,17 @@
+[Unit]
+Description=RAMP Operational Cycle Scheduler (MoES / NCMRWF)
+After=network.target ramp-backend.service
+
+[Service]
+Type=simple
+User=ramp
+Group=ramp
+WorkingDirectory=/opt/ramp
+Environment="PATH=/opt/ramp/venv/bin"
+EnvironmentFile=/etc/ramp/production.env
+ExecStart=/opt/ramp/venv/bin/python -m ml.operations.scheduler --daemon
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

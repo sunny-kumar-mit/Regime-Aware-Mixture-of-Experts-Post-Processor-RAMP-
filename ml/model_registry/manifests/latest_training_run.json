@@ -1,0 +1,44 @@
+{
+  "run_id": "run_20260927_102236_46d451",
+  "created_at": "2026-09-27T10:22:36.475367+00:00",
+  "status": "SUCCESS",
+  "dataset": {
+    "version": "ramp_dataset_real_v1.0.0",
+    "checksum": "VALID",
+    "data_mode": "SYNTHETIC_DEMO"
+  },
+  "schemas": {
+    "feature_schema_version": "ramp_features_v1.0.0",
+    "target_schema_version": "ramp_targets_v1.0.0"
+  },
+  "models_trained": [
+    "ramp_global_v2.0.0",
+    "ramp_regime_v2.0.0",
+    "ramp_moe_v2.0.0",
+    "ramp_extreme_v2.0.0"
+  ],
+  "hyperparameters": {},
+  "random_seed": 42,
+  "duration_seconds": 5.462,
+  "environment": {
+    "git_commit": "8c1191e4d8a5094d295c315ca43b8f86f0f94159",
+    "libraries": {
+      "python": "3.14.2",
+      "numpy": "2.4.4",
+      "pandas": "3.0.2",
+      "scipy": "1.17.1",
+      "sklearn": "1.8.0",
+      "lightgbm": "4.7.0",
+      "pydantic": "2.13.4",
+      "fastapi": "0.141.1"
+    },
+    "hardware": {
+      "os": "Windows",
+      "os_release": "11",
+      "os_version": "10.0.26200",
+      "architecture": "AMD64",
+      "processor": "AMD64 Family 25 Model 68 Stepping 1, AuthenticAMD",
+      "python_implementation": "CPython"
+    }
+  }
+}

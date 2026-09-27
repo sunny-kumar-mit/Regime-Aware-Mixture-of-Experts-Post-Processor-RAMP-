@@ -1,0 +1,87 @@
+version: "3.8"
+
+services:
+  reverse-proxy:
+    image: nginx:alpine
+    container_name: ramp-reverse-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ../nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ../nginx/conf.d/ramp.conf:/etc/nginx/conf.d/ramp.conf:ro
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - ramp-network
+
+  frontend:
+    build:
+      context: ../../
+      dockerfile: deployment/docker/Dockerfile.frontend
+    container_name: ramp-frontend
+    restart: always
+    expose:
+      - "80"
+    networks:
+      - ramp-network
+
+  backend:
+    build:
+      context: ../../
+      dockerfile: deployment/docker/Dockerfile.backend
+    container_name: ramp-backend
+    restart: always
+    expose:
+      - "8000"
+    environment:
+      - APP_ENV=PRODUCTION
+      - RAMP_DATA_MODE=REAL_OPERATIONAL
+      - NCMRWF_DATA_ROOT=/data/ncmrwf
+      - IMD_DATA_ROOT=/data/imd
+      - MODEL_REGISTRY_ROOT=/app/ml/model_registry
+      - FORECAST_OUTPUT_ROOT=/data/processed/forecasts
+      - AUDIT_ROOT=/data/audit
+      - LOG_ROOT=/data/logs
+    volumes:
+      - ncmrwf-data:/data/ncmrwf:ro
+      - imd-data:/data/imd:ro
+      - ramp-audit:/data/audit
+      - ramp-forecasts:/data/processed/forecasts
+      - ramp-logs:/data/logs
+    networks:
+      - ramp-network
+
+  worker:
+    build:
+      context: ../../
+      dockerfile: deployment/docker/Dockerfile.worker
+    container_name: ramp-inference-worker
+    restart: always
+    environment:
+      - APP_ENV=PRODUCTION
+      - RAMP_DATA_MODE=REAL_OPERATIONAL
+      - NCMRWF_DATA_ROOT=/data/ncmrwf
+      - IMD_DATA_ROOT=/data/imd
+    volumes:
+      - ncmrwf-data:/data/ncmrwf:ro
+      - imd-data:/data/imd:ro
+      - ramp-audit:/data/audit
+      - ramp-forecasts:/data/processed/forecasts
+    depends_on:
+      - backend
+    networks:
+      - ramp-network
+
+networks:
+  ramp-network:
+    driver: bridge
+
+volumes:
+  ncmrwf-data:
+  imd-data:
+  ramp-audit:
+  ramp-forecasts:
+  ramp-logs:

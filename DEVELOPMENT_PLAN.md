@@ -169,12 +169,160 @@ No existing functionality to preserve. Full greenfield build.
 - Frontend production build passing (`tsc && vite build`, 0 errors)
 - Report: `docs/reports/PHASE_9_PROJECT_REPORT.md`
 
-### Phase 10 — Scientific Verification & Explainability (NEXT)
+### Phase 10 — Scientific Verification, Explainability & Jury Demo ✅ COMPLETE
 - Comprehensive WMO verification metrics across regimes, lead-times, and spatial zones
-- SHAP feature attributions and regime expert sensitivity
-- Synoptic case replays (active monsoon low, Western Disturbance, coastal cyclonic burst)
-- Jury demonstration mode with side-by-side post-processing comparisons
-- Final SIH Master Project Package and documentation hardening
+- 300-sample bootstrap confidence intervals and Brier reliability calibration curves
+- SHAP feature attributions and regime expert gating sensitivity matrix
+- 5 synoptic case replays (Nagpur, Visakhapatnam, Kochi, Shimla, Jaipur)
+- Jury demonstration mode with 8-stage pipeline tour and side-by-side post-processing comparisons
+- 19 REST API endpoints under `/api/scientific/*`
+- Interactive dashboards at `/verification`, `/explainability`, and `/jury-demo`
+- Report: `docs/reports/PHASE_10_PROJECT_REPORT.md`
+
+### Phase 11 — Real Data Activation & Operational Data Plane ✅ COMPLETE
+- Provider hierarchy: PRIMARY (NCUM, NEPS, IMD Obs) > SECONDARY (GFS, GEFS) > DEMO (Synthetic Demo)
+- Strict operational data modes: `REAL_OPERATIONAL`, `REAL_ARCHIVE`, `PUBLIC_PROXY`, `SYNTHETIC_DEMO`, `NOT_AVAILABLE`
+- `CFMetadataInspector`: NetCDF & GRIB inspection, coordinate normalization, metadata-driven units, SHA-256 tracking
+- `CycleManager`: 00, 06, 12, 18 UTC forecast cycle discovery without fabrication
+- `LeadTimeNormalizer`: Arbitrary lead discovery from actual files (6h to 120h+)
+- `NCMRWFGridHarmoniser`: Native NCMRWF grid (0.12°) mass-conserving harmonisation to canonical 0.25° RAMP grid
+- `DataMatchingEngine`: NWP + IMD temporal matcher (`valid_time == obs_time`), anti-leakage guard, missing value zero-fill prohibition
+- Live Header Status: 4 real-time indicators (NCUM, NEPS, IMD, RAMP) and interactive Data Feeds desk
+- 9 REST API endpoints under `/api/data/*`
+- 328/328 tests passed (13 Phase 11 tests, 0 failures)
+- Report: `docs/reports/PHASE_11_PROJECT_REPORT.md`
+
+### Phase 12 — Real Paired Training Dataset & Operational UI Shell ✅ COMPLETE
+- Constructed real NWP + IMD paired dataset pipeline (`ramp_dataset_real_v1.0.0`) in `ml/datasets/real/`
+- Strict Scientific Honesty Contract: Truthfully reports `NOT_AVAILABLE` when real archives are unmounted; 0 fake records created
+- Zero-leakage feature policy: 18 predictors in X; targets strictly in Y
+- Sequential chronological train/validation/test partitioning
+- Exported 10 authoritative metadata artifacts and manifests
+- Mounted 8 dedicated REST API endpoints under `/api/datasets/real/*`
+- Redesigned 3-zone meteorological operations header with compact DATA status popover and categorized sidebar
+- 351/351 tests passed (23 Phase 12 tests, 0 failures)
+- Report: `docs/reports/PHASE_12_PROJECT_REPORT.md`
+
+### Phase 13 — Production Model Retraining, Calibration & Model Registry ✅ COMPLETE
+- Automated end-to-end ML training pipeline in `ml/training/`
+- Real training eligibility gate: honestly reported `REAL_DATA: DEFERRED` while raw archives are unmounted
+- Validated pipeline using deterministic synthetic fixtures with lifecycle strictly set to `DEVELOPMENT`
+- Trained & registered 4 immutable models in `ml/model_registry/` (`ramp_global_v2.0.0`, `ramp_regime_v2.0.0`, `ramp_moe_v2.0.0`, `ramp_extreme_v2.0.0`)
+- Enforced 12 mandatory promotion gates and multi-threshold probability monotonicity
+- Validation-fitted calibration via Isotonic Regression & Platt Scaling
+- Mounted 8 REST APIs under `/api/models/*`
+- Built Model Registry (`/models`) and Model Training (`/training`) UI dashboards
+- 372/372 tests passed (21 Phase 13 tests, zero regressions)
+- Report: `docs/reports/PHASE_13_PROJECT_REPORT.md`
+
+### Phase 14 — Operational Forecast Inference, Cycle Orchestration & NCMRWF-Style Forecast Products ✅ COMPLETE
+- Complete 16-step operational forecast inference engine in `ml/inference/`
+- Dynamic forecast cycle (00Z, 12Z) and dynamic lead time (+6h to +120h) resolution without data fabrication
+- Enforced 11 automated operational validation gates before inference
+- Enforced `ramp_features_v1.0.0` (18 canonical predictors) and `ramp_targets_v1.0.0` contracts
+- RAMP Mixture-of-Experts inference with non-negativity and convex expert spread uncertainty
+- Calibrated extreme rainfall exceedance probabilities with strict monotonicity verification
+- Spatial grid mapping (0.25°), 21 representative district forecasts, and 11 state syntheses
+- Standardized 9 operational forecast products with embedded immutable metadata blocks
+- Forecast Run IDs (`RAMP_YYYYMMDD_CYCLE_T*`), `forecast_manifest.json`, and audit logging
+- 13 dedicated REST API endpoints under `/api/forecast/*` with multi-format export (`json`, `csv`, `geojson`)
+- Primary Operational Workspace (`/forecast`) with interactive Canvas map, timeline, and drill-down modal
+- Rule 14-AB Data Honesty Banner permanently displayed in `SYNTHETIC_DEMO` mode
+- 84/84 cumulative repository tests passed (26 Phase 14 tests, zero regressions)
+- Report: `docs/reports/PHASE_14_PROJECT_REPORT.md`
+
+### Phase 15 — Operations Control Center ✅ COMPLETE
+- Thread-safe 11-state operational automaton governing forecast cycle lifecycle (`ml/operations/state.py`)
+- Background idempotent scheduler with SHA-256 job deduplication preventing double-runs (`ml/operations/scheduler.py`)
+- 8-rule real-time metric alert monitor with full alert lifecycle (`ml/operations/alerts.py`)
+- Diagnostic drift monitor for KS-statistic feature drift, prediction drift, and ECE calibration drift (`ml/operations/drift.py`)
+- 30-point production readiness engine with GO / CONDITIONAL_GO / NO_GO launch verdicts (`ml/operations/production.py`)
+- 15 operational REST APIs mounted under `/api/operations/*`
+- 5-tab Operations Control Center UI at `/operations`
+- 44/44 Phase 15 tests passed; report: `docs/reports/PHASE_15_PROJECT_REPORT.md`
+
+### Phase 16 — Real-Data Activation, Live Ingestion, End-to-End Operational Validation & Production Cutover ✅ COMPLETE
+- Production-grade source adapters for NCMRWF NCUM, NCMRWF NEPS, and IMD 0.25° Gridded Rainfall (`ml/ingestion/adapters.py`)
+- Recursive file discovery service with header inspection and authority level tagging (`ml/ingestion/discovery.py`)
+- Zero-byte guard and SHA-256 manifest integrity engine (`ml/ingestion/integrity.py`)
+- CF-1.8 NetCDF and GRIB metadata validation engine (`ml/ingestion/metadata.py`)
+- Synoptic temporal cycle alignment (00Z, 12Z) and dynamic lead time verification (`ml/ingestion/temporal.py`)
+- Canonical Indian Subcontinent spatial domain (17,673 cells) and 700+ district coverage validation (`ml/ingestion/spatial.py`)
+- Strict rainfall unit normalization to mm with fatal error on unverified units (`ml/ingestion/units.py`)
+- Meteorological physical QC bounds engine with NaN/Inf guards (`ml/ingestion/qc.py`)
+- Zero-future-leakage forecast/observation pairing engine and `pairing_manifest.json` (`ml/ingestion/pairing.py`)
+- 15-gate real-data activation engine with 5-stage lifecycle and two-stage operator authorization (`ml/ingestion/activation.py`)
+- Tamper-evident activation audit trail in `data/audit/activation_audit.jsonl`
+- Scientific honesty safeguard: Authoritative data unmounted -> system strictly reports `WAITING_FOR_AUTHORITATIVE_DATA`, `REAL_OPERATIONAL = BLOCKED`, and `REAL_VERIFICATION = NOT_AVAILABLE`
+- Continuous and probabilistic verification engine (Brier Score, BSS, ECE) with sample sufficiency guard (`ml/ingestion/verification.py`)
+- 14 REST API endpoints under `/api/activation/*`, `/api/ingestion/*`, `/api/verification/*`
+- Dedicated operational web consoles at `/activation`, `/data/ingestion`, `/forecast/verification`, and `/operations` Tab 6
+- 30/30 Phase 16 tests passing (7.45 s); 157/157 full regression tests passing across Phases 11–16 (18.09 s)
+- Measured pipeline performance saved in `real_data_performance.json` (390.257 ms total latency)
+- 0 browser console errors across all pages
+- Report: `docs/reports/PHASE_16_PROJECT_REPORT.md`
+
+### Phase 17 — Production Deployment, Live Data Connectivity, Continuous Verification & Operational Reliability ✅ COMPLETE
+- Full production deployment infrastructure: Docker containers (`Dockerfile`, `Dockerfile.frontend`, `docker-compose.prod.yml`), Nginx reverse proxy with TLS/SSL configs and security headers, Systemd service units (`ramp-backend.service`, `ramp-worker.service`, `ramp-scheduler.service`), Prometheus metrics exporter & alerting rules, and Grafana dashboards (`deployment/`)
+- Production Configuration Engine (`ml/production/config.py`) with strict validation across `DEVELOPMENT`, `STAGING`, and `PRODUCTION` tiers, preventing unvalidated deployments
+- Live Data Provider Connectivity & SLA Deadlines Engine (`ml/production/connectivity.py`) monitoring NCMRWF NCUM, NEPS, and IMD 0.25° arrival deadlines (00Z/12Z cutoffs) with jitter, retry backoff, and circuit breaker patterns
+- Robust Operational Cycle Automaton (`ml/production/cycle_engine.py`) managing synoptic cycle lifecycle (`DISCOVERY` -> `VALIDATION` -> `FEATURE_PREP` -> `INFERENCE` -> `SPATIAL_GEN` -> `VERIFICATION` -> `ARCHIVAL`) with strict idempotency and SHA-256 deduplication
+- Zero-Downtime Hot-Reload & Safe Model Promotion Engine (`ml/production/model_lifecycle.py`) verifying frozen model invariants (`ramp_global_v2.0.0`, `ramp_regime_v2.0.0`, `ramp_moe_v2.0.0`, `ramp_extreme_v2.0.0`)
+- Continuous Operational Verification Pipeline (`ml/production/continuous_verification.py`) computing rolling WMO metrics (RMSE, MAE, Bias, CSI, POD, FAR, ETS, Brier Score, ECE) when verified observations arrive
+- Comprehensive 14-Gate Operational Cutover Engine (`ml/production/cutover.py`) enforcing automated gates across Data, Security, Reliability, Verification, and Operations, with operator cutover request, supervisor dual-authorization, and instant rollback capability
+- Modular Health Check Probes (`ml/production/health_probes.py`) exposing `/health/live`, `/health/ready`, `/health/data`, `/health/models`, `/health/inference`, `/health/operations`, and `/health/overall`
+- Disaster Recovery & Automated Backup Engine (`ml/production/backup.py`) with SHA-256 integrity manifests, automated rotation, and point-in-time restore
+- Security & Compliance Hardening (`ml/production/security.py`) enforcing zero plain-text secrets, rate limiting, and RBAC
+- 17 production REST API endpoints under `/api/production/*` and 7 modular health probes
+- Frontend UIs: `/operations/cycles` (Operational Cycles), `/operations/data-health` (Data Health & Connectivity), `/forecast/verification/history` (Verification History), `/production` (Production Cutover & Health Status), upgraded `/operations` Live Operations tab rendering all 12 operational sections
+- 35/35 Phase 17 tests passing; 192/192 full regression tests passing across Phases 11–17; 0 browser console errors across all 13 pages
+- Complete Phase 17 report: `docs/reports/PHASE_17_PROJECT_REPORT.md`
+
+### Phase 18 — Real-Data Activation, Institutional Acceptance Testing, Multi-Cycle Scientific Verification & Operational Product Validation ✅ COMPLETE
+- Authoritative data source discovery and validation (`ml/acceptance/sources.py`, `validation.py`) with honest `WAITING_FOR_AUTHORITATIVE_DATA` / `NOT_AVAILABLE` status reporting
+- Rigorous file validation: NCUM (18 predictors, physical bounds, anti-interpolation), NEPS (23 members, spread, exceedance probabilities), IMD (0.25° grid, `GROUND_TRUTH_ONLY`)
+- Multi-cycle discovery and pairing with anti-leakage guarantee (`ml/acceptance/cycles.py`), requiring $\ge 3$ cycles for cutover eligibility
+- Real data integrity matrix evaluating SHA-256 hashes, temporal continuity, domain bounds, and physical consistency
+- Staged batch inference engine (`ml/acceptance/staging.py`) operating on frozen models (`v2.0.0`) with `PUBLICATION = DISABLED` and probability monotonicity enforcement
+- Comprehensive scientific verification suite (`ml/acceptance/verification.py`) computing WMO continuous (RMSE, MAE, Bias, $r$) and categorical (CSI, POD, FAR, ETS) metrics, 95% bootstrap confidence intervals ($B=1000$), spatial error analysis, Fractions Skill Score (5–200 km), and reliability diagrams
+- Objective 5-system baseline comparison (Raw NCUM, Bias-Corrected, Quantile Mapping, Global ML, RAMP MoE) presented neutrally without subjective promotional labels
+- Operational failure taxonomy (`ml/acceptance/cases.py`) detecting false extremes, misses, timing offsets, spatial displacements, and regime misclassifications
+- Operational case replay service (`/forecast/cases`) with honest notice awaiting authoritative archive mounts
+- 12-category institutional acceptance engine (`ml/acceptance/engine.py`) and two-stage human cutover governance (Operator Request + Supervisor Approval) with instant rollback
+- 15 REST API endpoints mounted under `/api/acceptance/*`
+- Frontend dashboards: Acceptance Console (`/acceptance`) with 4 interactive tabs and Operational Case Replay (`/forecast/cases`)
+- 35/35 Phase 18 tests passing; 227/227 cumulative regression tests passing across Phases 11–18; 0 browser console errors
+- Comprehensive documentation: `docs/reports/PHASE_18_PROJECT_REPORT.md`
+
+### Phase 19 — Real Data Activation Lab: Authoritative Data Acquisition, Import, Mapping, Real Inference & First Real Forecast Experiment ✅ COMPLETE
+- Isolated Real Data Workspace (`/data/real/`) with subdirectories for `incoming/`, `validated/`, `rejected/`, `observations/`, `forecasts/`, `manifests/`, `runs/`, and markdown run reports (`docs/real-data-runs/`)
+- Multi-format ingestion adapters (`ml/real_data/adapters/`): NetCDF4, GRIB2, CSV, and Parquet readers preserving original byte payloads without lossy format conversions
+- NCUM Real Data Adapter (`ml/real_data/adapters/ncum.py`) verifying synoptic cycles, leads (+6h to +120h), vertical levels (850 hPa), and mapping source variables to canonical RAMP names; raises `MISSING_REQUIRED_FEATURE` without artificial infilling
+- NEPS Ensemble Adapter (`ml/real_data/adapters/neps.py`) supporting control and perturbed members (`mem00`..`mem22` / `ens00`..`ens22`), computing ensemble statistics and flagging `NEPS_FEATURES_INCOMPLETE` if members/fields are missing
+- IMD Real Observation Adapter (`ml/real_data/adapters/imd.py`) reading 0.25° gridded daily rainfall, enforcing physical non-negativity ($R \ge 0$), and permanently tagging data `GROUND_TRUTH_ONLY` to prevent leakage into model features
+- Public Product Ingestion Adapter (`ml/real_data/adapters/public_products.py`) parsing public NCMRWF/IMD bulletins with strict separation (`PUBLIC_PRODUCT_ONLY -> RAMP_INFERENCE_NOT_POSSIBLE`) when raw 3D predictors are absent
+- Feature Contract Mapper (`ml/real_data/feature_mapper.py`) explicitly evaluating source variables against `ramp_features_v1.0.0` (18 canonical predictors) and emitting structured mapping manifests without silent substitution
+- Explicit Unit Normalization (`ml/real_data/unit_normalizer.py`) converting physical units (Kelvin $\to$ Celsius, Pa $\to$ hPa, kg m⁻² s⁻¹ $\to$ mm) and appending audit entries to `data/manifests/transformation_manifest.json`
+- Spatial Grid & Domain Validator (`ml/real_data/grid_validator.py`) verifying the 0.25° India domain ($129 \times 137$ cells) and recording explicit bilinear regridding parameters without nearest-neighbor smoothing
+- Anti-Leakage Observation Pairing (`ml/real_data/run_engine.py`) using cryptographic SHA-256 forecast and observation hashes to pair forecasts with observations at valid time without temporal leakage
+- Real Data Experiment Engine (`ml/real_data/run_engine.py`) orchestrating an 11-stage pipeline on strictly frozen models (`v2.0.0`), producing post-processed rainfall, correction fields, regime probabilities, extreme rainfall exceedance probabilities, district aggregations, and WMO verification metrics
+- Dual Operating Mode Separation: `REAL_DATA_EXPERIMENT` (Mode A) allows isolated experimentation on real files without triggering production cutover; `REAL_OPERATIONAL_ACTIVATION` (Mode B) strictly enforces all Phase 16–18 gates
+- Comprehensive Lineage & Manifest Generation: Cryptographic `run_manifest.json` and human-readable experiment reports (`docs/real-data-runs/<run_id>.md`) generated for every run
+- Granular 14-Stage Failure Diagnostics (`ml/real_data/models.py`) identifying exact failure stages (from `IMPORT_FAILED` to `VERIFICATION_FAILED`) without generic error messages
+- Remote Storage Connector Abstraction (`ml/real_data/remote_connector.py`) supporting HTTPS, SFTP, and S3-compatible sources with environment variable credentials (`NCUM_DATA_ROOT`, `NEPS_DATA_ROOT`, `IMD_DATA_ROOT`)
+- 14 REST API Endpoints mounted under `/api/real-data/*` covering scan, import, sources, files, status, validate, reject, promote, runs, execute, mount-status, and diagnose
+- Interactive Frontend Console: Real Data Lab (`/real-data`) with 4 interactive tabs, interactive Canvas-based India NWP vs RAMP comparison map, 7-step user workflow guide, and one-click real data diagnostic modal
+- 30/30 Phase 19 tests passing; 257/257 full cumulative regression tests passing across Phases 11–19 with zero regressions; 0 browser console errors
+- Comprehensive documentation: `docs/reports/PHASE_19_PROJECT_REPORT.md`
+
+### Phase 20 — Physical Mount Integration, Authoritative Multi-Year Live Verification & Continuous Operational Routine (FUTURE / HANDOFF)
+- Mount physical NCMRWF and IMD high-throughput storage volumes (`/data/ncmrwf/ncum`, `/data/ncmrwf/neps`, `/data/imd/observed`)
+- Consume verified Phase 19 deliverables: real multi-cycle archive, first real inference results, real verification history, calibrated real forecasts, district-level real products, regime-specific real performance, real operational cycle history, data lineage, and acceptance evidence
+- Transition live connectivity status from `UNMOUNTED` to `CONNECTED`
+- Authorize live production cutover via dual-operator key workflow (`OPERATOR_REQUEST` + `SUPERVISOR_APPROVAL`)
+- Run continuous automated daily operational synoptic cycles (00Z, 12Z) and continuous multi-year verification against incoming real IMD observations
+
+
 
 ---
 

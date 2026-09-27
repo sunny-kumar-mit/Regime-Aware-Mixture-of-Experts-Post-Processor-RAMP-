@@ -1,0 +1,18 @@
+{
+  "backup_id": "BKP_20260926_210203",
+  "created_at": "2026-09-26T21:02:03.550824+00:00",
+  "target_components": [
+    "model_registry",
+    "audit_logs",
+    "configs"
+  ],
+  "archive_filename": "BKP_20260926_210203.tar.gz",
+  "archive_sha256": "b1aa9308d816ff0e1641a9e96741d9709c0a9123d7e28e718bc7d64e155cfa62",
+  "file_count": 82,
+  "total_size_bytes": 1406687,
+  "is_verified": true,
+  "metadata": {
+    "operator_id": "PYTEST_RUNNER",
+    "environment": "PRODUCTION"
+  }
+}

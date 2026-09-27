@@ -11,7 +11,11 @@ from pydantic import BaseModel, Field
 
 class DataMode(str, Enum):
     """Operational data mode tag adhering to scientific integrity rules."""
+    REAL_OPERATIONAL = "REAL_OPERATIONAL"
+    REAL_ARCHIVE = "REAL_ARCHIVE"
+    PUBLIC_PROXY = "PUBLIC_PROXY"
     SYNTHETIC_DEMO = "SYNTHETIC_DEMO"
+    NOT_AVAILABLE = "NOT_AVAILABLE"
     REAL = "REAL"
 
 

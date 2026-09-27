@@ -35,3 +35,32 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #334155;
 }
+
+/* MapLibre hover popup reset */
+.maplibregl-popup.ramp-grid-hover-popup {
+  pointer-events: none;
+  z-index: 100;
+}
+.maplibregl-popup.ramp-grid-hover-popup .maplibregl-popup-content {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  border: none !important;
+}
+.maplibregl-popup.ramp-grid-hover-popup .maplibregl-popup-tip {
+  border-top-color: #334155 !important;
+  border-bottom-color: #334155 !important;
+}
+
+/* Leaflet hover tooltip reset */
+.leaflet-tooltip.ramp-leaflet-tooltip {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  z-index: 100;
+}
+.leaflet-tooltip.ramp-leaflet-tooltip::before {
+  border-top-color: #334155 !important;
+}
+

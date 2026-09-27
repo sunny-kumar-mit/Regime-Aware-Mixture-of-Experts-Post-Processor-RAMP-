@@ -1,0 +1,17 @@
+[Unit]
+Description=RAMP Operational Inference Worker (MoES / NCMRWF)
+After=network.target ramp-scheduler.service
+
+[Service]
+Type=simple
+User=ramp
+Group=ramp
+WorkingDirectory=/opt/ramp
+Environment="PATH=/opt/ramp/venv/bin"
+EnvironmentFile=/etc/ramp/production.env
+ExecStart=/opt/ramp/venv/bin/python -m ml.inference.cli --mode daemon
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

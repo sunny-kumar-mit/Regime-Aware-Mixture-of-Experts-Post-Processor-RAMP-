@@ -1,0 +1,23 @@
+{
+  "run_id": "REAL_RUN_20260927_035254_24h_NCMRWF",
+  "source_id": "NCMRWF_REAL",
+  "provider": "NCMRWF",
+  "file_hash": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+  "cycle": "00Z",
+  "lead_hours": 24,
+  "initialization_time": "2026-09-27T00:00:00Z",
+  "valid_time": "2026-09-28T00:00:00Z",
+  "features_count": 20,
+  "missing_features": [],
+  "model_version": "v2.0.0",
+  "status": "SUCCESS",
+  "failure_stage": "NONE",
+  "failure_detail": null,
+  "runtime_ms": 36.0,
+  "output_hash": "05cc243a9dc65d8ba719698c9e3c9cc6eee73619d1b1b55e0610397328a2c5cb",
+  "verification_status": "AVAILABLE",
+  "data_mode": "REAL_DATA_EXPERIMENT",
+  "created_at": "2026-09-27T03:52:54.055962+00:00",
+  "manifest_path": "data\\real\\manifests\\run_manifest_REAL_RUN_20260927_035254_24h_NCMRWF.json",
+  "report_path": "docs\\real-data-runs\\REAL_RUN_20260927_035254_24h_NCMRWF.md"
+}

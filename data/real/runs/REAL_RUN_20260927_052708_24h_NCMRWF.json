@@ -1,0 +1,23 @@
+{
+  "run_id": "REAL_RUN_20260927_052708_24h_NCMRWF",
+  "source_id": "NCMRWF_REAL",
+  "provider": "NCMRWF",
+  "file_hash": "60d480c86396190575969ebeadc33537dacd9af979f0c0597271d3c1240a074f",
+  "cycle": "00Z",
+  "lead_hours": 24,
+  "initialization_time": "2026-09-27T00:00:00Z",
+  "valid_time": "2026-09-28T00:00:00Z",
+  "features_count": 2,
+  "missing_features": [],
+  "model_version": "v2.0.0",
+  "status": "BLOCKED",
+  "failure_stage": "MISSING_FEATURE",
+  "failure_detail": "NCUM inspection failed: MISSING_REQUIRED_FEATURE: 16 predictors missing (u850, v850, mslp, cape, wind_speed_850...)",
+  "runtime_ms": 6.34,
+  "output_hash": null,
+  "verification_status": "NOT_AVAILABLE",
+  "data_mode": "REAL_DATA_EXPERIMENT",
+  "created_at": "2026-09-27T05:27:08.936965+00:00",
+  "manifest_path": null,
+  "report_path": null
+}

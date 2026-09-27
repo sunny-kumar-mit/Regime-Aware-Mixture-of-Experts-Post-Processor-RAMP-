@@ -1,0 +1,4500 @@
+{
+  "imd_imd_invalid_negative_rain_7df55c61": {
+    "id": "imd_imd_invalid_negative_rain_7df55c61",
+    "provider": "IMD",
+    "dataset": "IMD_OBSERVATION",
+    "original_filename": "imd_invalid_negative_rain.nc",
+    "converted_filename": "imd_invalid_negative_rain.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "canonical/imd/imd_invalid_negative_rain.nc",
+    "file_size": 6544,
+    "sha256": "7df55c616b95f3185e5d992d8252149d2b854547f026f381f9479115695fd1aa",
+    "source_url": "https://www.imdpune.gov.in/",
+    "downloaded_at": "2026-09-27T06:38:10.889124+00:00",
+    "validation_status": "REJECTED",
+    "import_status": "DELETED",
+    "created_at": "2026-09-27T06:38:10.889143+00:00",
+    "metadata": {
+      "import_id": "imd_imd_invalid_negative_rain_7df55c61",
+      "source_id": "IMD_OBSERVATION",
+      "filename": "imd_invalid_negative_rain.nc",
+      "filepath": "data\\real\\rejected\\imd_invalid_negative_rain.nc",
+      "provider": "IMD",
+      "source_type": "IMD_OBSERVATION",
+      "authority_level": "AUTHORITATIVE_PRIMARY",
+      "format": "NETCDF4",
+      "size_bytes": 6544,
+      "sha256": "7df55c616b95f3185e5d992d8252149d2b854547f026f381f9479115695fd1aa",
+      "import_timestamp": "2026-09-27T05:33:51.254696+00:00",
+      "data_mode": "REAL_DATA_EXPERIMENT",
+      "validation_status": "REJECTED",
+      "validation_notes": [
+        "QC_FAILED: Physical violation detected: rainfall contains negative values (-50.0 mm/day)"
+      ],
+      "failure_stage": "QC_FAILED",
+      "cycle": null,
+      "initialization_time": null,
+      "valid_time": "2026-09-28",
+      "lead_time_hours": null,
+      "variables": [
+        "observed_rainfall_mm"
+      ],
+      "dimensions": {
+        "lat": 10,
+        "lon": 10
+      },
+      "lat_range": null,
+      "lon_range": null,
+      "resolution": null,
+      "units_map": {
+        "rain": "mm/day"
+      },
+      "feature_mappings": [],
+      "is_ground_truth_only": true,
+      "promoted_path": "data\\real\\validated\\imd_invalid_negative_rain.nc",
+      "rejected_path": "data\\real\\rejected\\imd_invalid_negative_rain.nc",
+      "rejected_reason": "Fails quality check"
+    },
+    "validation_error_detail": {
+      "source": "IMD",
+      "dataset": "IMD_GRIDDED_RAINFALL",
+      "rule": "NON_NEGATIVE_RAINFALL",
+      "severity": "ERROR",
+      "variable": "observed_rainfall_mm",
+      "message": "Physical violation: invalid negative rainfall detected (-50.0 mm/day).",
+      "expected": "rainfall >= 0.0 mm/day",
+      "actual": "-50.0 mm/day",
+      "location": "Observational grid cells",
+      "remediation": "Reject observational file to maintain ground truth integrity; inspect IMD quality control flag."
+    },
+    "is_deleted": true,
+    "storage_backend": "MINIO"
+  },
+  "imd_imd_valid_025_grid_f01e94c8": {
+    "id": "imd_imd_valid_025_grid_f01e94c8",
+    "provider": "IMD",
+    "dataset": "IMD_OBSERVATION",
+    "original_filename": "imd_valid_025_grid.nc",
+    "converted_filename": "imd_valid_025_grid.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "canonical/imd/imd_valid_025_grid.nc",
+    "file_size": 80358,
+    "sha256": "f01e94c8f1bfbdfbdef63841bdb79bc3fef645766594aef55af811be3a5944f1",
+    "source_url": "https://www.imdpune.gov.in/",
+    "downloaded_at": "2026-09-27T06:38:10.889750+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T06:38:10.889768+00:00",
+    "metadata": {
+      "import_id": "imd_imd_valid_025_grid_f01e94c8",
+      "source_id": "IMD_OBSERVATION",
+      "filename": "imd_valid_025_grid.nc",
+      "filepath": "D:\\SIH26080\\tests\\fixtures\\phase18\\imd_valid_025_grid.nc",
+      "provider": "IMD",
+      "source_type": "IMD_OBSERVATION",
+      "authority_level": "AUTHORITATIVE_PRIMARY",
+      "format": "NETCDF4",
+      "size_bytes": 80358,
+      "sha256": "f01e94c8f1bfbdfbdef63841bdb79bc3fef645766594aef55af811be3a5944f1",
+      "import_timestamp": "2026-09-27T06:32:57.771248+00:00",
+      "data_mode": "REAL_DATA_EXPERIMENT",
+      "validation_status": "PASS",
+      "validation_notes": [
+        "IMD observation satisfies 0.25\u00b0 grid, non-negativity, and metadata standards."
+      ],
+      "failure_stage": "NONE",
+      "cycle": null,
+      "initialization_time": null,
+      "valid_time": "2026-09-28",
+      "lead_time_hours": null,
+      "variables": [
+        "lat",
+        "lon",
+        "observed_rainfall_mm"
+      ],
+      "dimensions": {
+        "lat": 129,
+        "lon": 137
+      },
+      "lat_range": [
+        6.5,
+        38.5
+      ],
+      "lon_range": [
+        66.5,
+        100.5
+      ],
+      "resolution": 0.25,
+      "units_map": {
+        "rain": "mm/day"
+      },
+      "feature_mappings": [],
+      "is_ground_truth_only": true,
+      "promoted_path": null,
+      "rejected_path": null,
+      "rejected_reason": null
+    },
+    "storage_backend": "MINIO"
+  },
+  "ncum_ncum_bad_coordinates_fe362f45": {
+    "id": "ncum_ncum_bad_coordinates_fe362f45",
+    "provider": "NCMRWF",
+    "dataset": "NCUM",
+    "original_filename": "ncum_bad_coordinates.nc",
+    "converted_filename": "ncum_bad_coordinates.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "canonical/ncmrwf/ncum_bad_coordinates.nc",
+    "file_size": 25399,
+    "sha256": "fe362f459c4de32df58cab9293f8625d4b3400ced4a55bb62957220fef022412",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "downloaded_at": "2026-09-27T06:38:10.890242+00:00",
+    "validation_status": "FAIL",
+    "import_status": "DELETED",
+    "created_at": "2026-09-27T06:38:10.890253+00:00",
+    "metadata": {
+      "import_id": "ncum_ncum_bad_coordinates_fe362f45",
+      "source_id": "NCMRWF_NCUM",
+      "filename": "ncum_bad_coordinates.nc",
+      "filepath": "D:\\SIH26080\\tests\\fixtures\\phase18\\ncum_bad_coordinates.nc",
+      "provider": "NCMRWF",
+      "source_type": "NCUM",
+      "authority_level": "AUTHORITATIVE_PRIMARY",
+      "format": "NETCDF4",
+      "size_bytes": 25399,
+      "sha256": "fe362f459c4de32df58cab9293f8625d4b3400ced4a55bb62957220fef022412",
+      "import_timestamp": "2026-09-27T06:32:57.787524+00:00",
+      "data_mode": "BLOCKED",
+      "validation_status": "FAIL",
+      "validation_notes": [
+        "Grid invalid: Domain bounds (50.0-70.0N, 10.0-30.0E) do not enclose India canonical extent"
+      ],
+      "failure_stage": "GRID_FAILED",
+      "cycle": "00Z",
+      "initialization_time": "2026-09-27T00:00:00Z",
+      "valid_time": "2026-09-28T00:00:00Z",
+      "lead_time_hours": 24,
+      "variables": [
+        "lat",
+        "lon",
+        "precip_nwp_raw",
+        "u850",
+        "v850",
+        "mslp",
+        "t850",
+        "cape",
+        "wind_speed_850",
+        "wind_dir_850",
+        "lead_time_hours",
+        "latitude",
+        "longitude",
+        "elevation_m",
+        "day_of_year_sin",
+        "day_of_year_cos",
+        "zonal_shear",
+        "monsoon_trough_intensity",
+        "meridional_flow",
+        "humidity_proxy"
+      ],
+      "dimensions": {
+        "lat": 10,
+        "lon": 10
+      },
+      "lat_range": [
+        50.0,
+        70.0
+      ],
+      "lon_range": [
+        10.0,
+        30.0
+      ],
+      "resolution": 2.2222,
+      "units_map": {},
+      "feature_mappings": [
+        {
+          "ramp_feature": "precip_nwp_raw",
+          "source_variable": "precip_nwp_raw",
+          "unit": "mm",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "u850",
+          "source_variable": "u850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "v850",
+          "source_variable": "v850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "mslp",
+          "source_variable": "mslp",
+          "unit": "hPa",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "t850",
+          "source_variable": "t850",
+          "unit": "degC",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "cape",
+          "source_variable": "cape",
+          "unit": "J/kg",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "wind_speed_850",
+          "source_variable": "wind_speed_850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "wind_dir_850",
+          "source_variable": "wind_dir_850",
+          "unit": "deg",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "lead_time_hours",
+          "source_variable": "lead_time_hours",
+          "unit": "hours",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "latitude",
+          "source_variable": "latitude",
+          "unit": "deg_N",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "longitude",
+          "source_variable": "longitude",
+          "unit": "deg_E",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "elevation_m",
+          "source_variable": "elevation_m",
+          "unit": "m",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "day_of_year_sin",
+          "source_variable": "day_of_year_sin",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "day_of_year_cos",
+          "source_variable": "day_of_year_cos",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "zonal_shear",
+          "source_variable": "zonal_shear",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "monsoon_trough_intensity",
+          "source_variable": "monsoon_trough_intensity",
+          "unit": "hPa",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "meridional_flow",
+          "source_variable": "meridional_flow",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "humidity_proxy",
+          "source_variable": "humidity_proxy",
+          "unit": "%",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        }
+      ],
+      "is_ground_truth_only": false,
+      "promoted_path": null,
+      "rejected_path": null,
+      "rejected_reason": null
+    },
+    "is_deleted": true,
+    "storage_backend": "MINIO"
+  },
+  "ncum_ncum_invalid_missing_predictors_60d480c8": {
+    "id": "ncum_ncum_invalid_missing_predictors_60d480c8",
+    "provider": "NCMRWF",
+    "dataset": "NCUM",
+    "original_filename": "ncum_invalid_missing_predictors.nc",
+    "converted_filename": "ncum_invalid_missing_predictors.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "canonical/ncmrwf/ncum_invalid_missing_predictors.nc",
+    "file_size": 9086,
+    "sha256": "60d480c86396190575969ebeadc33537dacd9af979f0c0597271d3c1240a074f",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "downloaded_at": "2026-09-27T06:38:10.890617+00:00",
+    "validation_status": "BLOCKED",
+    "import_status": "DELETED",
+    "created_at": "2026-09-27T06:38:10.890628+00:00",
+    "metadata": {
+      "import_id": "ncum_ncum_invalid_missing_predictors_60d480c8",
+      "source_id": "NCMRWF_NCUM",
+      "filename": "ncum_invalid_missing_predictors.nc",
+      "filepath": "D:\\SIH26080\\tests\\fixtures\\phase18\\ncum_invalid_missing_predictors.nc",
+      "provider": "NCMRWF",
+      "source_type": "NCUM",
+      "authority_level": "AUTHORITATIVE_PRIMARY",
+      "format": "NETCDF4",
+      "size_bytes": 9086,
+      "sha256": "60d480c86396190575969ebeadc33537dacd9af979f0c0597271d3c1240a074f",
+      "import_timestamp": "2026-09-27T06:32:57.791566+00:00",
+      "data_mode": "BLOCKED",
+      "validation_status": "BLOCKED",
+      "validation_notes": [
+        "MISSING_REQUIRED_FEATURE: 16 predictors missing (u850, v850, mslp, cape, wind_speed_850...)"
+      ],
+      "failure_stage": "MISSING_FEATURE",
+      "cycle": "00Z",
+      "initialization_time": "2026-09-27T00:00:00Z",
+      "valid_time": "2026-09-28T00:00:00Z",
+      "lead_time_hours": 24,
+      "variables": [
+        "precip_nwp_raw",
+        "t850"
+      ],
+      "dimensions": {
+        "lat": 10,
+        "lon": 10
+      },
+      "lat_range": null,
+      "lon_range": null,
+      "resolution": null,
+      "units_map": {
+        "precip_nwp_raw": "mm",
+        "t850": "K"
+      },
+      "feature_mappings": [
+        {
+          "ramp_feature": "precip_nwp_raw",
+          "source_variable": "precip_nwp_raw",
+          "unit": "mm",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "u850",
+          "source_variable": null,
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "v850",
+          "source_variable": null,
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "mslp",
+          "source_variable": null,
+          "unit": "hPa",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "t850",
+          "source_variable": "t850",
+          "unit": "K",
+          "source_grid": null,
+          "status": "UNIT_CONVERSION_REQUIRED",
+          "notes": "Unit conversion needed: K -> degC"
+        },
+        {
+          "ramp_feature": "cape",
+          "source_variable": null,
+          "unit": "J/kg",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "wind_speed_850",
+          "source_variable": null,
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "wind_dir_850",
+          "source_variable": null,
+          "unit": "deg",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "lead_time_hours",
+          "source_variable": null,
+          "unit": "hours",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "latitude",
+          "source_variable": null,
+          "unit": "deg_N",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "longitude",
+          "source_variable": null,
+          "unit": "deg_E",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "elevation_m",
+          "source_variable": null,
+          "unit": "m",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "day_of_year_sin",
+          "source_variable": null,
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "day_of_year_cos",
+          "source_variable": null,
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "zonal_shear",
+          "source_variable": null,
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "monsoon_trough_intensity",
+          "source_variable": null,
+          "unit": "hPa",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "meridional_flow",
+          "source_variable": null,
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "humidity_proxy",
+          "source_variable": null,
+          "unit": "%",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        }
+      ],
+      "is_ground_truth_only": false,
+      "promoted_path": null,
+      "rejected_path": null,
+      "rejected_reason": null
+    },
+    "is_deleted": true,
+    "storage_backend": "MINIO"
+  },
+  "ncum_ncum_valid_test_fixture_07c25a97": {
+    "id": "ncum_ncum_valid_test_fixture_07c25a97",
+    "provider": "NCMRWF",
+    "dataset": "NCUM",
+    "original_filename": "ncum_valid_test_fixture.nc",
+    "converted_filename": "ncum_valid_test_fixture.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "canonical/ncmrwf/ncum_valid_test_fixture.nc",
+    "file_size": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "downloaded_at": "2026-09-27T06:38:10.891106+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T06:38:10.891119+00:00",
+    "metadata": {
+      "import_id": "ncum_ncum_valid_test_fixture_07c25a97",
+      "source_id": "NCMRWF_NCUM",
+      "filename": "ncum_valid_test_fixture.nc",
+      "filepath": "D:\\SIH26080\\tests\\fixtures\\phase18\\ncum_valid_test_fixture.nc",
+      "provider": "NCMRWF",
+      "source_type": "NCUM",
+      "authority_level": "AUTHORITATIVE_PRIMARY",
+      "format": "NETCDF4",
+      "size_bytes": 1293896,
+      "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+      "import_timestamp": "2026-09-27T06:32:57.802924+00:00",
+      "data_mode": "REAL_DATA_EXPERIMENT",
+      "validation_status": "PASS",
+      "validation_notes": [
+        "File satisfies all NCUM operational feature contracts and metadata standards."
+      ],
+      "failure_stage": "NONE",
+      "cycle": "00Z",
+      "initialization_time": "2026-09-27T00:00:00Z",
+      "valid_time": "2026-09-28T00:00:00Z",
+      "lead_time_hours": 24,
+      "variables": [
+        "lat",
+        "lon",
+        "precip_nwp_raw",
+        "u850",
+        "v850",
+        "mslp",
+        "t850",
+        "cape",
+        "wind_speed_850",
+        "wind_dir_850",
+        "lead_time_hours",
+        "latitude",
+        "longitude",
+        "elevation_m",
+        "day_of_year_sin",
+        "day_of_year_cos",
+        "zonal_shear",
+        "monsoon_trough_intensity",
+        "meridional_flow",
+        "humidity_proxy"
+      ],
+      "dimensions": {
+        "lat": 129,
+        "lon": 137
+      },
+      "lat_range": [
+        6.5,
+        38.5
+      ],
+      "lon_range": [
+        66.5,
+        100.5
+      ],
+      "resolution": 0.25,
+      "units_map": {
+        "lat": "deg_N",
+        "lon": "deg_E",
+        "precip_nwp_raw": "mm",
+        "u850": "m/s",
+        "v850": "m/s",
+        "mslp": "hPa",
+        "t850": "K",
+        "cape": "J/kg",
+        "wind_speed_850": "m/s",
+        "wind_dir_850": "deg",
+        "lead_time_hours": "hours",
+        "latitude": "deg_N",
+        "longitude": "deg_E",
+        "elevation_m": "m",
+        "day_of_year_sin": "dimensionless",
+        "day_of_year_cos": "dimensionless",
+        "zonal_shear": "m/s",
+        "monsoon_trough_intensity": "hPa",
+        "meridional_flow": "m/s",
+        "humidity_proxy": "dimensionless"
+      },
+      "feature_mappings": [
+        {
+          "ramp_feature": "precip_nwp_raw",
+          "source_variable": "precip_nwp_raw",
+          "unit": "mm",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "u850",
+          "source_variable": "u850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "v850",
+          "source_variable": "v850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "mslp",
+          "source_variable": "mslp",
+          "unit": "hPa",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "t850",
+          "source_variable": "t850",
+          "unit": "K",
+          "source_grid": null,
+          "status": "UNIT_CONVERSION_REQUIRED",
+          "notes": "Unit conversion needed: K -> degC"
+        },
+        {
+          "ramp_feature": "cape",
+          "source_variable": "cape",
+          "unit": "J/kg",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "wind_speed_850",
+          "source_variable": "wind_speed_850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "wind_dir_850",
+          "source_variable": "wind_dir_850",
+          "unit": "deg",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "lead_time_hours",
+          "source_variable": "lead_time_hours",
+          "unit": "hours",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "latitude",
+          "source_variable": "latitude",
+          "unit": "deg_N",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "longitude",
+          "source_variable": "longitude",
+          "unit": "deg_E",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "elevation_m",
+          "source_variable": "elevation_m",
+          "unit": "m",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "day_of_year_sin",
+          "source_variable": "day_of_year_sin",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "day_of_year_cos",
+          "source_variable": "day_of_year_cos",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "zonal_shear",
+          "source_variable": "zonal_shear",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "monsoon_trough_intensity",
+          "source_variable": "monsoon_trough_intensity",
+          "unit": "hPa",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "meridional_flow",
+          "source_variable": "meridional_flow",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "humidity_proxy",
+          "source_variable": "humidity_proxy",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "UNIT_CONVERSION_REQUIRED",
+          "notes": "Unit conversion needed: dimensionless -> %"
+        }
+      ],
+      "is_ground_truth_only": false,
+      "promoted_path": null,
+      "rejected_path": null,
+      "rejected_reason": null
+    },
+    "storage_backend": "MINIO"
+  },
+  "neps_neps_missing_members_d01a8e21": {
+    "id": "neps_neps_missing_members_d01a8e21",
+    "provider": "NCMRWF",
+    "dataset": "NEPS",
+    "original_filename": "neps_missing_members.nc",
+    "converted_filename": "neps_missing_members.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "canonical/ncmrwf/neps_missing_members.nc",
+    "file_size": 26816,
+    "sha256": "d01a8e21da7ff1777e74af9a6ae90b5aa25e80f673e1c7358084f10a34f5d7e7",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "downloaded_at": "2026-09-27T06:38:10.891607+00:00",
+    "validation_status": "BLOCKED",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T06:38:10.891620+00:00",
+    "metadata": {
+      "import_id": "neps_neps_missing_members_d01a8e21",
+      "source_id": "NCMRWF_NEPS",
+      "filename": "neps_missing_members.nc",
+      "filepath": "D:\\SIH26080\\tests\\fixtures\\phase18\\neps_missing_members.nc",
+      "provider": "NCMRWF",
+      "source_type": "NEPS",
+      "authority_level": "AUTHORITATIVE_PRIMARY",
+      "format": "NETCDF4",
+      "size_bytes": 26816,
+      "sha256": "d01a8e21da7ff1777e74af9a6ae90b5aa25e80f673e1c7358084f10a34f5d7e7",
+      "import_timestamp": "2026-09-27T06:32:57.811701+00:00",
+      "data_mode": "BLOCKED",
+      "validation_status": "BLOCKED",
+      "validation_notes": [
+        "NEPS_FEATURES_INCOMPLETE: Discovered 20/23 ensemble members. Missing: 3 members."
+      ],
+      "failure_stage": "MISSING_FEATURE",
+      "cycle": "00Z",
+      "initialization_time": null,
+      "valid_time": null,
+      "lead_time_hours": 24,
+      "variables": [
+        "ens00",
+        "ens01",
+        "ens02",
+        "ens03",
+        "ens04",
+        "ens05",
+        "ens06",
+        "ens07",
+        "ens08",
+        "ens09",
+        "ens10",
+        "ens11",
+        "ens12",
+        "ens13",
+        "ens14",
+        "ens15",
+        "ens16",
+        "ens17",
+        "ens18",
+        "ens19"
+      ],
+      "dimensions": {
+        "lat": 10,
+        "lon": 10
+      },
+      "lat_range": null,
+      "lon_range": null,
+      "resolution": null,
+      "units_map": {
+        "rainfall": "mm"
+      },
+      "feature_mappings": [],
+      "is_ground_truth_only": false,
+      "promoted_path": null,
+      "rejected_path": null,
+      "rejected_reason": null
+    },
+    "storage_backend": "MINIO"
+  },
+  "neps_neps_valid_23_members_2096c18d": {
+    "id": "neps_neps_valid_23_members_2096c18d",
+    "provider": "NCMRWF",
+    "dataset": "NEPS",
+    "original_filename": "neps_valid_23_members.nc",
+    "converted_filename": "neps_valid_23_members.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "canonical/ncmrwf/neps_valid_23_members.nc",
+    "file_size": 103244,
+    "sha256": "2096c18dfff944715d26bfe7f45da96d93395efb23b81a5ad93e2c241c75c907",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "downloaded_at": "2026-09-27T06:38:10.891985+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T06:38:10.891996+00:00",
+    "metadata": {
+      "import_id": "neps_neps_valid_23_members_2096c18d",
+      "source_id": "NCMRWF_NEPS",
+      "filename": "neps_valid_23_members.nc",
+      "filepath": "D:\\SIH26080\\tests\\fixtures\\phase18\\neps_valid_23_members.nc",
+      "provider": "NCMRWF",
+      "source_type": "NEPS",
+      "authority_level": "AUTHORITATIVE_PRIMARY",
+      "format": "NETCDF4",
+      "size_bytes": 103244,
+      "sha256": "2096c18dfff944715d26bfe7f45da96d93395efb23b81a5ad93e2c241c75c907",
+      "import_timestamp": "2026-09-27T06:32:57.822095+00:00",
+      "data_mode": "REAL_DATA_EXPERIMENT",
+      "validation_status": "PASS",
+      "validation_notes": [
+        "NEPS ensemble satisfies 23-member completeness and spatial requirements."
+      ],
+      "failure_stage": "NONE",
+      "cycle": "00Z",
+      "initialization_time": null,
+      "valid_time": null,
+      "lead_time_hours": 24,
+      "variables": [
+        "ens00",
+        "ens01",
+        "ens02",
+        "ens03",
+        "ens04",
+        "ens05",
+        "ens06",
+        "ens07",
+        "ens08",
+        "ens09",
+        "ens10",
+        "ens11",
+        "ens12",
+        "ens13",
+        "ens14",
+        "ens15",
+        "ens16",
+        "ens17",
+        "ens18",
+        "ens19",
+        "ens20",
+        "ens21",
+        "ens22"
+      ],
+      "dimensions": {
+        "lat": 30,
+        "lon": 30
+      },
+      "lat_range": null,
+      "lon_range": null,
+      "resolution": null,
+      "units_map": {
+        "rainfall": "mm"
+      },
+      "feature_mappings": [],
+      "is_ground_truth_only": false,
+      "promoted_path": null,
+      "rejected_path": null,
+      "rejected_reason": null
+    },
+    "storage_backend": "MINIO"
+  },
+  "imd_imd_rainfall_20260927_0df64c09": {
+    "id": "imd_imd_rainfall_20260927_0df64c09",
+    "provider": "IMD",
+    "dataset": "IMD_OBSERVATION",
+    "original_filename": "imd_rainfall_20260927.nc",
+    "converted_filename": "imd_rainfall_20260927.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "canonical/imd/imd_rainfall_20260927.nc",
+    "file_size": 80180,
+    "sha256": "0df64c09311bc6840a7d95fc5ba873d71e87715ce35dd44f4b8aa95f3c63e48c",
+    "source_url": "https://www.imdpune.gov.in/",
+    "downloaded_at": "2026-09-27T06:38:10.892282+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T06:38:10.892290+00:00",
+    "metadata": {
+      "import_id": "imd_imd_rainfall_20260927_0df64c09",
+      "source_id": "IMD_OBSERVATION",
+      "filename": "imd_rainfall_20260927.nc",
+      "filepath": "D:\\SIH26080\\data\\real\\incoming\\imd_rainfall_20260927.nc",
+      "provider": "IMD",
+      "source_type": "IMD_OBSERVATION",
+      "authority_level": "AUTHORITATIVE_PRIMARY",
+      "format": "NETCDF4",
+      "size_bytes": 80180,
+      "sha256": "0df64c09311bc6840a7d95fc5ba873d71e87715ce35dd44f4b8aa95f3c63e48c",
+      "import_timestamp": "2026-09-27T05:26:27.123477+00:00",
+      "data_mode": "REAL_DATA_EXPERIMENT",
+      "validation_status": "PASS",
+      "validation_notes": [
+        "IMD observation satisfies 0.25\u00b0 grid, non-negativity, and metadata standards."
+      ],
+      "failure_stage": "NONE",
+      "cycle": null,
+      "initialization_time": null,
+      "valid_time": "2026-09-27",
+      "lead_time_hours": null,
+      "variables": [
+        "lat",
+        "lon",
+        "time",
+        "rain"
+      ],
+      "dimensions": {
+        "lat": 129,
+        "lon": 137,
+        "time": 1
+      },
+      "lat_range": [
+        6.5,
+        38.5
+      ],
+      "lon_range": [
+        66.5,
+        100.5
+      ],
+      "resolution": 0.25,
+      "units_map": {
+        "rain": "mm/day"
+      },
+      "feature_mappings": [],
+      "is_ground_truth_only": true,
+      "promoted_path": null,
+      "rejected_path": null,
+      "rejected_reason": null
+    },
+    "storage_backend": "MINIO"
+  },
+  "imd_imd_rainfall_20260927_1790486835_0df64c09": {
+    "id": "imd_imd_rainfall_20260927_1790486835_0df64c09",
+    "provider": "IMD",
+    "dataset": "IMD_OBSERVATION",
+    "original_filename": "imd_rainfall_20260927_1790486835.nc",
+    "converted_filename": "imd_rainfall_20260927_1790486835.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "canonical/imd/imd_rainfall_20260927_1790486835.nc",
+    "file_size": 80180,
+    "sha256": "0df64c09311bc6840a7d95fc5ba873d71e87715ce35dd44f4b8aa95f3c63e48c",
+    "source_url": "https://www.imdpune.gov.in/",
+    "downloaded_at": "2026-09-27T06:38:10.892652+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T06:38:10.892664+00:00",
+    "metadata": {
+      "import_id": "imd_imd_rainfall_20260927_1790486835_0df64c09",
+      "source_id": "IMD_OBSERVATION",
+      "filename": "imd_rainfall_20260927_1790486835.nc",
+      "filepath": "D:\\SIH26080\\data\\real\\incoming\\imd_rainfall_20260927_1790486835.nc",
+      "provider": "IMD",
+      "source_type": "IMD_OBSERVATION",
+      "authority_level": "AUTHORITATIVE_PRIMARY",
+      "format": "NETCDF4",
+      "size_bytes": 80180,
+      "sha256": "0df64c09311bc6840a7d95fc5ba873d71e87715ce35dd44f4b8aa95f3c63e48c",
+      "import_timestamp": "2026-09-27T05:27:15.958495+00:00",
+      "data_mode": "REAL_DATA_EXPERIMENT",
+      "validation_status": "PASS",
+      "validation_notes": [
+        "IMD observation satisfies 0.25\u00b0 grid, non-negativity, and metadata standards."
+      ],
+      "failure_stage": "NONE",
+      "cycle": null,
+      "initialization_time": null,
+      "valid_time": "2026-09-27",
+      "lead_time_hours": null,
+      "variables": [
+        "lat",
+        "lon",
+        "time",
+        "rain"
+      ],
+      "dimensions": {
+        "lat": 129,
+        "lon": 137,
+        "time": 1
+      },
+      "lat_range": [
+        6.5,
+        38.5
+      ],
+      "lon_range": [
+        66.5,
+        100.5
+      ],
+      "resolution": 0.25,
+      "units_map": {
+        "rain": "mm/day"
+      },
+      "feature_mappings": [],
+      "is_ground_truth_only": true,
+      "promoted_path": null,
+      "rejected_path": null,
+      "rejected_reason": null
+    },
+    "storage_backend": "MINIO"
+  },
+  "imd_imd_rainfall_20260927_1790486929_0df64c09": {
+    "id": "imd_imd_rainfall_20260927_1790486929_0df64c09",
+    "provider": "IMD",
+    "dataset": "IMD_OBSERVATION",
+    "original_filename": "imd_rainfall_20260927_1790486929.nc",
+    "converted_filename": "imd_rainfall_20260927_1790486929.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "canonical/imd/imd_rainfall_20260927_1790486929.nc",
+    "file_size": 80180,
+    "sha256": "0df64c09311bc6840a7d95fc5ba873d71e87715ce35dd44f4b8aa95f3c63e48c",
+    "source_url": "https://www.imdpune.gov.in/",
+    "downloaded_at": "2026-09-27T06:38:10.893026+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T06:38:10.893034+00:00",
+    "metadata": {
+      "import_id": "imd_imd_rainfall_20260927_1790486929_0df64c09",
+      "source_id": "IMD_OBSERVATION",
+      "filename": "imd_rainfall_20260927_1790486929.nc",
+      "filepath": "D:\\SIH26080\\data\\real\\incoming\\imd_rainfall_20260927_1790486929.nc",
+      "provider": "IMD",
+      "source_type": "IMD_OBSERVATION",
+      "authority_level": "AUTHORITATIVE_PRIMARY",
+      "format": "NETCDF4",
+      "size_bytes": 80180,
+      "sha256": "0df64c09311bc6840a7d95fc5ba873d71e87715ce35dd44f4b8aa95f3c63e48c",
+      "import_timestamp": "2026-09-27T05:28:49.894704+00:00",
+      "data_mode": "REAL_DATA_EXPERIMENT",
+      "validation_status": "PASS",
+      "validation_notes": [
+        "IMD observation satisfies 0.25\u00b0 grid, non-negativity, and metadata standards."
+      ],
+      "failure_stage": "NONE",
+      "cycle": null,
+      "initialization_time": null,
+      "valid_time": "2026-09-27",
+      "lead_time_hours": null,
+      "variables": [
+        "lat",
+        "lon",
+        "time",
+        "rain"
+      ],
+      "dimensions": {
+        "lat": 129,
+        "lon": 137,
+        "time": 1
+      },
+      "lat_range": [
+        6.5,
+        38.5
+      ],
+      "lon_range": [
+        66.5,
+        100.5
+      ],
+      "resolution": 0.25,
+      "units_map": {
+        "rain": "mm/day"
+      },
+      "feature_mappings": [],
+      "is_ground_truth_only": true,
+      "promoted_path": null,
+      "rejected_path": null,
+      "rejected_reason": null
+    },
+    "storage_backend": "MINIO"
+  },
+  "imd_imd_rainfall_20260927_1790487447_0df64c09": {
+    "id": "imd_imd_rainfall_20260927_1790487447_0df64c09",
+    "provider": "IMD",
+    "dataset": "IMD_OBSERVATION",
+    "original_filename": "imd_rainfall_20260927_1790487447.nc",
+    "converted_filename": "imd_rainfall_20260927_1790487447.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "canonical/imd/imd_rainfall_20260927_1790487447.nc",
+    "file_size": 80180,
+    "sha256": "0df64c09311bc6840a7d95fc5ba873d71e87715ce35dd44f4b8aa95f3c63e48c",
+    "source_url": "https://www.imdpune.gov.in/",
+    "downloaded_at": "2026-09-27T06:38:10.893330+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T06:38:10.893340+00:00",
+    "metadata": {
+      "import_id": "imd_imd_rainfall_20260927_1790487447_0df64c09",
+      "source_id": "IMD_OBSERVATION",
+      "filename": "imd_rainfall_20260927_1790487447.nc",
+      "filepath": "D:\\SIH26080\\data\\real\\incoming\\imd_rainfall_20260927_1790487447.nc",
+      "provider": "IMD",
+      "source_type": "IMD_OBSERVATION",
+      "authority_level": "AUTHORITATIVE_PRIMARY",
+      "format": "NETCDF4",
+      "size_bytes": 80180,
+      "sha256": "0df64c09311bc6840a7d95fc5ba873d71e87715ce35dd44f4b8aa95f3c63e48c",
+      "import_timestamp": "2026-09-27T05:37:27.259370+00:00",
+      "data_mode": "REAL_DATA_EXPERIMENT",
+      "validation_status": "PASS",
+      "validation_notes": [
+        "IMD observation satisfies 0.25\u00b0 grid, non-negativity, and metadata standards."
+      ],
+      "failure_stage": "NONE",
+      "cycle": null,
+      "initialization_time": null,
+      "valid_time": "2026-09-27",
+      "lead_time_hours": null,
+      "variables": [
+        "lat",
+        "lon",
+        "time",
+        "rain"
+      ],
+      "dimensions": {
+        "lat": 129,
+        "lon": 137,
+        "time": 1
+      },
+      "lat_range": [
+        6.5,
+        38.5
+      ],
+      "lon_range": [
+        66.5,
+        100.5
+      ],
+      "resolution": 0.25,
+      "units_map": {
+        "rain": "mm/day"
+      },
+      "feature_mappings": [],
+      "is_ground_truth_only": true,
+      "promoted_path": null,
+      "rejected_path": null,
+      "rejected_reason": null
+    },
+    "storage_backend": "MINIO"
+  },
+  "ncum_ncum_00Z_20260927_lead24_07c25a97": {
+    "id": "ncum_ncum_00Z_20260927_lead24_07c25a97",
+    "provider": "NCMRWF",
+    "dataset": "NCUM",
+    "original_filename": "ncum_00Z_20260927_lead24.nc",
+    "converted_filename": "ncum_00Z_20260927_lead24.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "canonical/ncmrwf/ncum_00Z_20260927_lead24.nc",
+    "file_size": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "downloaded_at": "2026-09-27T06:38:10.893703+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T06:38:10.893714+00:00",
+    "metadata": {
+      "import_id": "ncum_ncum_00Z_20260927_lead24_07c25a97",
+      "source_id": "NCMRWF_NCUM",
+      "filename": "ncum_00Z_20260927_lead24.nc",
+      "filepath": "D:\\SIH26080\\data\\real\\incoming\\ncum_00Z_20260927_lead24.nc",
+      "provider": "NCMRWF",
+      "source_type": "NCUM",
+      "authority_level": "AUTHORITATIVE_PRIMARY",
+      "format": "NETCDF4",
+      "size_bytes": 1293896,
+      "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+      "import_timestamp": "2026-09-27T05:57:06.507895+00:00",
+      "data_mode": "REAL_DATA_EXPERIMENT",
+      "validation_status": "PASS",
+      "validation_notes": [
+        "File satisfies all NCUM operational feature contracts and metadata standards."
+      ],
+      "failure_stage": "NONE",
+      "cycle": "00Z",
+      "initialization_time": "2026-09-27T00:00:00Z",
+      "valid_time": "2026-09-28T00:00:00Z",
+      "lead_time_hours": 24,
+      "variables": [
+        "lat",
+        "lon",
+        "precip_nwp_raw",
+        "u850",
+        "v850",
+        "mslp",
+        "t850",
+        "cape",
+        "wind_speed_850",
+        "wind_dir_850",
+        "lead_time_hours",
+        "latitude",
+        "longitude",
+        "elevation_m",
+        "day_of_year_sin",
+        "day_of_year_cos",
+        "zonal_shear",
+        "monsoon_trough_intensity",
+        "meridional_flow",
+        "humidity_proxy"
+      ],
+      "dimensions": {
+        "lat": 129,
+        "lon": 137
+      },
+      "lat_range": [
+        6.5,
+        38.5
+      ],
+      "lon_range": [
+        66.5,
+        100.5
+      ],
+      "resolution": 0.25,
+      "units_map": {
+        "lat": "deg_N",
+        "lon": "deg_E",
+        "precip_nwp_raw": "mm",
+        "u850": "m/s",
+        "v850": "m/s",
+        "mslp": "hPa",
+        "t850": "K",
+        "cape": "J/kg",
+        "wind_speed_850": "m/s",
+        "wind_dir_850": "deg",
+        "lead_time_hours": "hours",
+        "latitude": "deg_N",
+        "longitude": "deg_E",
+        "elevation_m": "m",
+        "day_of_year_sin": "dimensionless",
+        "day_of_year_cos": "dimensionless",
+        "zonal_shear": "m/s",
+        "monsoon_trough_intensity": "hPa",
+        "meridional_flow": "m/s",
+        "humidity_proxy": "dimensionless"
+      },
+      "feature_mappings": [
+        {
+          "ramp_feature": "precip_nwp_raw",
+          "source_variable": "precip_nwp_raw",
+          "unit": "mm",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "u850",
+          "source_variable": "u850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "v850",
+          "source_variable": "v850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "mslp",
+          "source_variable": "mslp",
+          "unit": "hPa",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "t850",
+          "source_variable": "t850",
+          "unit": "K",
+          "source_grid": null,
+          "status": "UNIT_CONVERSION_REQUIRED",
+          "notes": "Unit conversion needed: K -> degC"
+        },
+        {
+          "ramp_feature": "cape",
+          "source_variable": "cape",
+          "unit": "J/kg",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "wind_speed_850",
+          "source_variable": "wind_speed_850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "wind_dir_850",
+          "source_variable": "wind_dir_850",
+          "unit": "deg",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "lead_time_hours",
+          "source_variable": "lead_time_hours",
+          "unit": "hours",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "latitude",
+          "source_variable": "latitude",
+          "unit": "deg_N",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "longitude",
+          "source_variable": "longitude",
+          "unit": "deg_E",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "elevation_m",
+          "source_variable": "elevation_m",
+          "unit": "m",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "day_of_year_sin",
+          "source_variable": "day_of_year_sin",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "day_of_year_cos",
+          "source_variable": "day_of_year_cos",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "zonal_shear",
+          "source_variable": "zonal_shear",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "monsoon_trough_intensity",
+          "source_variable": "monsoon_trough_intensity",
+          "unit": "hPa",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "meridional_flow",
+          "source_variable": "meridional_flow",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "humidity_proxy",
+          "source_variable": "humidity_proxy",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "UNIT_CONVERSION_REQUIRED",
+          "notes": "Unit conversion needed: dimensionless -> %"
+        }
+      ],
+      "is_ground_truth_only": false,
+      "promoted_path": null,
+      "rejected_path": null,
+      "rejected_reason": null
+    },
+    "storage_backend": "MINIO"
+  },
+  "ncum_ncum_00Z_20260927_lead24_1790488634_07c25a97": {
+    "id": "ncum_ncum_00Z_20260927_lead24_1790488634_07c25a97",
+    "provider": "NCMRWF",
+    "dataset": "NCUM",
+    "original_filename": "ncum_00Z_20260927_lead24_1790488634.nc",
+    "converted_filename": "ncum_00Z_20260927_lead24_1790488634.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "canonical/ncmrwf/ncum_00Z_20260927_lead24_1790488634.nc",
+    "file_size": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "downloaded_at": "2026-09-27T06:38:10.894238+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T06:38:10.894250+00:00",
+    "metadata": {
+      "import_id": "ncum_ncum_00Z_20260927_lead24_1790488634_07c25a97",
+      "source_id": "NCMRWF_NCUM",
+      "filename": "ncum_00Z_20260927_lead24_1790488634.nc",
+      "filepath": "D:\\SIH26080\\data\\real\\incoming\\ncum_00Z_20260927_lead24_1790488634.nc",
+      "provider": "NCMRWF",
+      "source_type": "NCUM",
+      "authority_level": "AUTHORITATIVE_PRIMARY",
+      "format": "NETCDF4",
+      "size_bytes": 1293896,
+      "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+      "import_timestamp": "2026-09-27T05:57:14.134245+00:00",
+      "data_mode": "REAL_DATA_EXPERIMENT",
+      "validation_status": "PASS",
+      "validation_notes": [
+        "File satisfies all NCUM operational feature contracts and metadata standards."
+      ],
+      "failure_stage": "NONE",
+      "cycle": "00Z",
+      "initialization_time": "2026-09-27T00:00:00Z",
+      "valid_time": "2026-09-28T00:00:00Z",
+      "lead_time_hours": 24,
+      "variables": [
+        "lat",
+        "lon",
+        "precip_nwp_raw",
+        "u850",
+        "v850",
+        "mslp",
+        "t850",
+        "cape",
+        "wind_speed_850",
+        "wind_dir_850",
+        "lead_time_hours",
+        "latitude",
+        "longitude",
+        "elevation_m",
+        "day_of_year_sin",
+        "day_of_year_cos",
+        "zonal_shear",
+        "monsoon_trough_intensity",
+        "meridional_flow",
+        "humidity_proxy"
+      ],
+      "dimensions": {
+        "lat": 129,
+        "lon": 137
+      },
+      "lat_range": [
+        6.5,
+        38.5
+      ],
+      "lon_range": [
+        66.5,
+        100.5
+      ],
+      "resolution": 0.25,
+      "units_map": {
+        "lat": "deg_N",
+        "lon": "deg_E",
+        "precip_nwp_raw": "mm",
+        "u850": "m/s",
+        "v850": "m/s",
+        "mslp": "hPa",
+        "t850": "K",
+        "cape": "J/kg",
+        "wind_speed_850": "m/s",
+        "wind_dir_850": "deg",
+        "lead_time_hours": "hours",
+        "latitude": "deg_N",
+        "longitude": "deg_E",
+        "elevation_m": "m",
+        "day_of_year_sin": "dimensionless",
+        "day_of_year_cos": "dimensionless",
+        "zonal_shear": "m/s",
+        "monsoon_trough_intensity": "hPa",
+        "meridional_flow": "m/s",
+        "humidity_proxy": "dimensionless"
+      },
+      "feature_mappings": [
+        {
+          "ramp_feature": "precip_nwp_raw",
+          "source_variable": "precip_nwp_raw",
+          "unit": "mm",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "u850",
+          "source_variable": "u850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "v850",
+          "source_variable": "v850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "mslp",
+          "source_variable": "mslp",
+          "unit": "hPa",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "t850",
+          "source_variable": "t850",
+          "unit": "K",
+          "source_grid": null,
+          "status": "UNIT_CONVERSION_REQUIRED",
+          "notes": "Unit conversion needed: K -> degC"
+        },
+        {
+          "ramp_feature": "cape",
+          "source_variable": "cape",
+          "unit": "J/kg",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "wind_speed_850",
+          "source_variable": "wind_speed_850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "wind_dir_850",
+          "source_variable": "wind_dir_850",
+          "unit": "deg",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "lead_time_hours",
+          "source_variable": "lead_time_hours",
+          "unit": "hours",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "latitude",
+          "source_variable": "latitude",
+          "unit": "deg_N",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "longitude",
+          "source_variable": "longitude",
+          "unit": "deg_E",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "elevation_m",
+          "source_variable": "elevation_m",
+          "unit": "m",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "day_of_year_sin",
+          "source_variable": "day_of_year_sin",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "day_of_year_cos",
+          "source_variable": "day_of_year_cos",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "zonal_shear",
+          "source_variable": "zonal_shear",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "monsoon_trough_intensity",
+          "source_variable": "monsoon_trough_intensity",
+          "unit": "hPa",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "meridional_flow",
+          "source_variable": "meridional_flow",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "humidity_proxy",
+          "source_variable": "humidity_proxy",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "UNIT_CONVERSION_REQUIRED",
+          "notes": "Unit conversion needed: dimensionless -> %"
+        }
+      ],
+      "is_ground_truth_only": false,
+      "promoted_path": null,
+      "rejected_path": null,
+      "rejected_reason": null
+    },
+    "storage_backend": "MINIO"
+  },
+  "ncum_neps_12Z_20260927_lead24_2096c18d": {
+    "id": "ncum_neps_12Z_20260927_lead24_2096c18d",
+    "provider": "NCMRWF",
+    "dataset": "NCUM",
+    "original_filename": "neps_12Z_20260927_lead24.nc",
+    "converted_filename": "neps_12Z_20260927_lead24.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "canonical/ncmrwf/neps_12Z_20260927_lead24.nc",
+    "file_size": 103244,
+    "sha256": "2096c18dfff944715d26bfe7f45da96d93395efb23b81a5ad93e2c241c75c907",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "downloaded_at": "2026-09-27T06:38:10.894829+00:00",
+    "validation_status": "BLOCKED",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T06:38:10.894841+00:00",
+    "metadata": {
+      "import_id": "ncum_neps_12Z_20260927_lead24_2096c18d",
+      "source_id": "NCMRWF_NCUM",
+      "filename": "neps_12Z_20260927_lead24.nc",
+      "filepath": "D:\\SIH26080\\data\\real\\incoming\\neps_12Z_20260927_lead24.nc",
+      "provider": "NCMRWF",
+      "source_type": "NCUM",
+      "authority_level": "AUTHORITATIVE_PRIMARY",
+      "format": "NETCDF4",
+      "size_bytes": 103244,
+      "sha256": "2096c18dfff944715d26bfe7f45da96d93395efb23b81a5ad93e2c241c75c907",
+      "import_timestamp": "2026-09-27T05:57:15.913629+00:00",
+      "data_mode": "BLOCKED",
+      "validation_status": "BLOCKED",
+      "validation_notes": [
+        "MISSING_REQUIRED_FEATURE: 18 predictors missing (precip_nwp_raw, u850, v850, mslp, t850...)"
+      ],
+      "failure_stage": "MISSING_FEATURE",
+      "cycle": "00Z",
+      "initialization_time": null,
+      "valid_time": null,
+      "lead_time_hours": 24,
+      "variables": [
+        "ens00",
+        "ens01",
+        "ens02",
+        "ens03",
+        "ens04",
+        "ens05",
+        "ens06",
+        "ens07",
+        "ens08",
+        "ens09",
+        "ens10",
+        "ens11",
+        "ens12",
+        "ens13",
+        "ens14",
+        "ens15",
+        "ens16",
+        "ens17",
+        "ens18",
+        "ens19",
+        "ens20",
+        "ens21",
+        "ens22"
+      ],
+      "dimensions": {
+        "lat": 30,
+        "lon": 30
+      },
+      "lat_range": null,
+      "lon_range": null,
+      "resolution": null,
+      "units_map": {
+        "ens00": "mm",
+        "ens01": "mm",
+        "ens02": "mm",
+        "ens03": "mm",
+        "ens04": "mm",
+        "ens05": "mm",
+        "ens06": "mm",
+        "ens07": "mm",
+        "ens08": "mm",
+        "ens09": "mm",
+        "ens10": "mm",
+        "ens11": "mm",
+        "ens12": "mm",
+        "ens13": "mm",
+        "ens14": "mm",
+        "ens15": "mm",
+        "ens16": "mm",
+        "ens17": "mm",
+        "ens18": "mm",
+        "ens19": "mm",
+        "ens20": "mm",
+        "ens21": "mm",
+        "ens22": "mm"
+      },
+      "feature_mappings": [
+        {
+          "ramp_feature": "precip_nwp_raw",
+          "source_variable": null,
+          "unit": "mm",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "u850",
+          "source_variable": null,
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "v850",
+          "source_variable": null,
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "mslp",
+          "source_variable": null,
+          "unit": "hPa",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "t850",
+          "source_variable": null,
+          "unit": "degC",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "cape",
+          "source_variable": null,
+          "unit": "J/kg",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "wind_speed_850",
+          "source_variable": null,
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "wind_dir_850",
+          "source_variable": null,
+          "unit": "deg",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "lead_time_hours",
+          "source_variable": null,
+          "unit": "hours",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "latitude",
+          "source_variable": null,
+          "unit": "deg_N",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "longitude",
+          "source_variable": null,
+          "unit": "deg_E",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "elevation_m",
+          "source_variable": null,
+          "unit": "m",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "day_of_year_sin",
+          "source_variable": null,
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "day_of_year_cos",
+          "source_variable": null,
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "zonal_shear",
+          "source_variable": null,
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "monsoon_trough_intensity",
+          "source_variable": null,
+          "unit": "hPa",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "meridional_flow",
+          "source_variable": null,
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        },
+        {
+          "ramp_feature": "humidity_proxy",
+          "source_variable": null,
+          "unit": "%",
+          "source_grid": null,
+          "status": "MISSING",
+          "notes": "Required predictor absent in source file"
+        }
+      ],
+      "is_ground_truth_only": false,
+      "promoted_path": null,
+      "rejected_path": null,
+      "rejected_reason": null
+    },
+    "storage_backend": "MINIO"
+  },
+  "ncum_ncum_00Z_20260927_lead24_1790489080_07c25a97": {
+    "id": "ncum_ncum_00Z_20260927_lead24_1790489080_07c25a97",
+    "provider": "NCMRWF",
+    "dataset": "NCUM",
+    "original_filename": "ncum_00Z_20260927_lead24_1790489080.nc",
+    "converted_filename": "ncum_00Z_20260927_lead24_1790489080.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "canonical/ncmrwf/ncum_00Z_20260927_lead24_1790489080.nc",
+    "file_size": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "downloaded_at": "2026-09-27T06:38:10.895326+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T06:38:10.895338+00:00",
+    "metadata": {
+      "import_id": "ncum_ncum_00Z_20260927_lead24_1790489080_07c25a97",
+      "source_id": "NCMRWF_NCUM",
+      "filename": "ncum_00Z_20260927_lead24_1790489080.nc",
+      "filepath": "D:\\SIH26080\\data\\real\\incoming\\ncum_00Z_20260927_lead24_1790489080.nc",
+      "provider": "NCMRWF",
+      "source_type": "NCUM",
+      "authority_level": "AUTHORITATIVE_PRIMARY",
+      "format": "NETCDF4",
+      "size_bytes": 1293896,
+      "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+      "import_timestamp": "2026-09-27T06:04:40.525530+00:00",
+      "data_mode": "REAL_DATA_EXPERIMENT",
+      "validation_status": "PASS",
+      "validation_notes": [
+        "File satisfies all NCUM operational feature contracts and metadata standards."
+      ],
+      "failure_stage": "NONE",
+      "cycle": "00Z",
+      "initialization_time": "2026-09-27T00:00:00Z",
+      "valid_time": "2026-09-28T00:00:00Z",
+      "lead_time_hours": 24,
+      "variables": [
+        "lat",
+        "lon",
+        "precip_nwp_raw",
+        "u850",
+        "v850",
+        "mslp",
+        "t850",
+        "cape",
+        "wind_speed_850",
+        "wind_dir_850",
+        "lead_time_hours",
+        "latitude",
+        "longitude",
+        "elevation_m",
+        "day_of_year_sin",
+        "day_of_year_cos",
+        "zonal_shear",
+        "monsoon_trough_intensity",
+        "meridional_flow",
+        "humidity_proxy"
+      ],
+      "dimensions": {
+        "lat": 129,
+        "lon": 137
+      },
+      "lat_range": [
+        6.5,
+        38.5
+      ],
+      "lon_range": [
+        66.5,
+        100.5
+      ],
+      "resolution": 0.25,
+      "units_map": {
+        "lat": "deg_N",
+        "lon": "deg_E",
+        "precip_nwp_raw": "mm",
+        "u850": "m/s",
+        "v850": "m/s",
+        "mslp": "hPa",
+        "t850": "K",
+        "cape": "J/kg",
+        "wind_speed_850": "m/s",
+        "wind_dir_850": "deg",
+        "lead_time_hours": "hours",
+        "latitude": "deg_N",
+        "longitude": "deg_E",
+        "elevation_m": "m",
+        "day_of_year_sin": "dimensionless",
+        "day_of_year_cos": "dimensionless",
+        "zonal_shear": "m/s",
+        "monsoon_trough_intensity": "hPa",
+        "meridional_flow": "m/s",
+        "humidity_proxy": "dimensionless"
+      },
+      "feature_mappings": [
+        {
+          "ramp_feature": "precip_nwp_raw",
+          "source_variable": "precip_nwp_raw",
+          "unit": "mm",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "u850",
+          "source_variable": "u850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "v850",
+          "source_variable": "v850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "mslp",
+          "source_variable": "mslp",
+          "unit": "hPa",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "t850",
+          "source_variable": "t850",
+          "unit": "K",
+          "source_grid": null,
+          "status": "UNIT_CONVERSION_REQUIRED",
+          "notes": "Unit conversion needed: K -> degC"
+        },
+        {
+          "ramp_feature": "cape",
+          "source_variable": "cape",
+          "unit": "J/kg",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "wind_speed_850",
+          "source_variable": "wind_speed_850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "wind_dir_850",
+          "source_variable": "wind_dir_850",
+          "unit": "deg",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "lead_time_hours",
+          "source_variable": "lead_time_hours",
+          "unit": "hours",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "latitude",
+          "source_variable": "latitude",
+          "unit": "deg_N",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "longitude",
+          "source_variable": "longitude",
+          "unit": "deg_E",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "elevation_m",
+          "source_variable": "elevation_m",
+          "unit": "m",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "day_of_year_sin",
+          "source_variable": "day_of_year_sin",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "day_of_year_cos",
+          "source_variable": "day_of_year_cos",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "zonal_shear",
+          "source_variable": "zonal_shear",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "monsoon_trough_intensity",
+          "source_variable": "monsoon_trough_intensity",
+          "unit": "hPa",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "meridional_flow",
+          "source_variable": "meridional_flow",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "humidity_proxy",
+          "source_variable": "humidity_proxy",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "UNIT_CONVERSION_REQUIRED",
+          "notes": "Unit conversion needed: dimensionless -> %"
+        }
+      ],
+      "is_ground_truth_only": false,
+      "promoted_path": null,
+      "rejected_path": null,
+      "rejected_reason": null
+    },
+    "storage_backend": "MINIO"
+  },
+  "imd_imd_rainfall_20260927_1790489110_0df64c09": {
+    "id": "imd_imd_rainfall_20260927_1790489110_0df64c09",
+    "provider": "IMD",
+    "dataset": "IMD_OBSERVATION",
+    "original_filename": "imd_rainfall_20260927_1790489110.nc",
+    "converted_filename": "imd_rainfall_20260927_1790489110.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "canonical/imd/imd_rainfall_20260927_1790489110.nc",
+    "file_size": 80180,
+    "sha256": "0df64c09311bc6840a7d95fc5ba873d71e87715ce35dd44f4b8aa95f3c63e48c",
+    "source_url": "https://www.imdpune.gov.in/",
+    "downloaded_at": "2026-09-27T06:38:10.895674+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T06:38:10.895685+00:00",
+    "metadata": {
+      "import_id": "imd_imd_rainfall_20260927_1790489110_0df64c09",
+      "source_id": "IMD_OBSERVATION",
+      "filename": "imd_rainfall_20260927_1790489110.nc",
+      "filepath": "D:\\SIH26080\\data\\real\\incoming\\imd_rainfall_20260927_1790489110.nc",
+      "provider": "IMD",
+      "source_type": "IMD_OBSERVATION",
+      "authority_level": "AUTHORITATIVE_PRIMARY",
+      "format": "NETCDF4",
+      "size_bytes": 80180,
+      "sha256": "0df64c09311bc6840a7d95fc5ba873d71e87715ce35dd44f4b8aa95f3c63e48c",
+      "import_timestamp": "2026-09-27T06:05:10.943656+00:00",
+      "data_mode": "REAL_DATA_EXPERIMENT",
+      "validation_status": "PASS",
+      "validation_notes": [
+        "IMD observation satisfies 0.25\u00b0 grid, non-negativity, and metadata standards."
+      ],
+      "failure_stage": "NONE",
+      "cycle": null,
+      "initialization_time": null,
+      "valid_time": "2026-09-27",
+      "lead_time_hours": null,
+      "variables": [
+        "lat",
+        "lon",
+        "time",
+        "rain"
+      ],
+      "dimensions": {
+        "lat": 129,
+        "lon": 137,
+        "time": 1
+      },
+      "lat_range": [
+        6.5,
+        38.5
+      ],
+      "lon_range": [
+        66.5,
+        100.5
+      ],
+      "resolution": 0.25,
+      "units_map": {
+        "rain": "mm/day"
+      },
+      "feature_mappings": [],
+      "is_ground_truth_only": true,
+      "promoted_path": null,
+      "rejected_path": null,
+      "rejected_reason": null
+    },
+    "storage_backend": "MINIO"
+  },
+  "imd_imd_rainfall_20260927_1790490853_0df64c09": {
+    "id": "imd_imd_rainfall_20260927_1790490853_0df64c09",
+    "provider": "IMD",
+    "dataset": "IMD_OBSERVATION",
+    "original_filename": "imd_rainfall_20260927_1790490853.nc",
+    "converted_filename": "imd_rainfall_20260927_1790490853.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "canonical/imd/imd_rainfall_20260927_1790490853.nc",
+    "file_size": 80180,
+    "sha256": "0df64c09311bc6840a7d95fc5ba873d71e87715ce35dd44f4b8aa95f3c63e48c",
+    "source_url": "https://www.imdpune.gov.in/",
+    "downloaded_at": "2026-09-27T06:38:10.896069+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T06:38:10.896079+00:00",
+    "metadata": {
+      "import_id": "imd_imd_rainfall_20260927_1790490853_0df64c09",
+      "source_id": "IMD_OBSERVATION",
+      "filename": "imd_rainfall_20260927_1790490853.nc",
+      "filepath": "D:\\SIH26080\\data\\real\\incoming\\imd_rainfall_20260927_1790490853.nc",
+      "provider": "IMD",
+      "source_type": "IMD_OBSERVATION",
+      "authority_level": "AUTHORITATIVE_PRIMARY",
+      "format": "NETCDF4",
+      "size_bytes": 80180,
+      "sha256": "0df64c09311bc6840a7d95fc5ba873d71e87715ce35dd44f4b8aa95f3c63e48c",
+      "import_timestamp": "2026-09-27T06:34:13.478029+00:00",
+      "data_mode": "REAL_DATA_EXPERIMENT",
+      "validation_status": "PASS",
+      "validation_notes": [
+        "IMD observation satisfies 0.25\u00b0 grid, non-negativity, and metadata standards."
+      ],
+      "failure_stage": "NONE",
+      "cycle": null,
+      "initialization_time": null,
+      "valid_time": "2026-09-27",
+      "lead_time_hours": null,
+      "variables": [
+        "lat",
+        "lon",
+        "time",
+        "rain"
+      ],
+      "dimensions": {
+        "lat": 129,
+        "lon": 137,
+        "time": 1
+      },
+      "lat_range": [
+        6.5,
+        38.5
+      ],
+      "lon_range": [
+        66.5,
+        100.5
+      ],
+      "resolution": 0.25,
+      "units_map": {
+        "rain": "mm/day"
+      },
+      "feature_mappings": [],
+      "is_ground_truth_only": true,
+      "promoted_path": null,
+      "rejected_path": null,
+      "rejected_reason": null
+    },
+    "storage_backend": "MINIO"
+  },
+  "dl_imd_1790486781_20260927": {
+    "id": "dl_imd_1790486781_20260927",
+    "provider": "IMD",
+    "dataset": "IMD_RAINFALL_025",
+    "original_filename": "rain_ind0.25_20260927.grd",
+    "converted_filename": "imd_rainfall_20260927.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/imd/rain_ind0.25_20260927.grd",
+    "file_size": 70692,
+    "sha256": "77e6125e9937497f76e8ed46571bc5a17f55630fec8bf05271a50a117bfa9ca2",
+    "source_url": "https://imdpune.gov.in/",
+    "download_url": "https://imdpune.gov.in/cmpg/Griddata/rainfall.php",
+    "downloaded_at": "2026-09-27T05:26:21.980863+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T05:26:21.980863+00:00",
+    "metadata": {
+      "source_id": "IMD_RAINFALL_025",
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "0.25\u00b0 x 0.25\u00b0 (approx 25 km)",
+      "adapter_note": "Downloaded and converted using official IMD adapter (IMD Pune)"
+    },
+    "storage_backend": "MINIO"
+  },
+  "dl_imd_1790486830_20260927": {
+    "id": "dl_imd_1790486830_20260927",
+    "provider": "IMD",
+    "dataset": "IMD_RAINFALL_025",
+    "original_filename": "rain_ind0.25_20260927.grd",
+    "converted_filename": "imd_rainfall_20260927.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/imd/rain_ind0.25_20260927.grd",
+    "file_size": 70692,
+    "sha256": "77e6125e9937497f76e8ed46571bc5a17f55630fec8bf05271a50a117bfa9ca2",
+    "source_url": "https://imdpune.gov.in/",
+    "download_url": "https://imdpune.gov.in/cmpg/Griddata/rainfall.php",
+    "downloaded_at": "2026-09-27T05:27:10.845223+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T05:27:10.845223+00:00",
+    "metadata": {
+      "source_id": "IMD_RAINFALL_025",
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "0.25\u00b0 x 0.25\u00b0 (approx 25 km)",
+      "adapter_note": "Downloaded and converted using official IMD adapter (IMD Pune)"
+    },
+    "storage_backend": "MINIO"
+  },
+  "dl_imd_1790486922_20260927": {
+    "id": "dl_imd_1790486922_20260927",
+    "provider": "IMD",
+    "dataset": "IMD_RAINFALL_025",
+    "original_filename": "rain_ind0.25_20260927.grd",
+    "converted_filename": "imd_rainfall_20260927.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/imd/rain_ind0.25_20260927.grd",
+    "file_size": 70692,
+    "sha256": "77e6125e9937497f76e8ed46571bc5a17f55630fec8bf05271a50a117bfa9ca2",
+    "source_url": "https://imdpune.gov.in/",
+    "download_url": "https://imdpune.gov.in/cmpg/Griddata/rainfall.php",
+    "downloaded_at": "2026-09-27T05:28:42.942481+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T05:28:42.942481+00:00",
+    "metadata": {
+      "source_id": "IMD_RAINFALL_025",
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "0.25\u00b0 x 0.25\u00b0 (approx 25 km)",
+      "adapter_note": "Downloaded and converted using official IMD adapter (IMD Pune)"
+    },
+    "storage_backend": "MINIO"
+  },
+  "dl_ncmrwf_1790487279_20260928": {
+    "id": "dl_ncmrwf_1790487279_20260928",
+    "provider": "NCMRWF",
+    "dataset": "NCUM_DETERMINISTIC",
+    "original_filename": "ncum_00Z_20260928_lead24.nc",
+    "converted_filename": null,
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/ncmrwf/ncum_00Z_20260928_lead24.nc",
+    "file_size": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "download_url": "https://nwp.ncmrwf.gov.in/archive/ncum/{cycle}/{date}/ncum_{lead}.nc",
+    "downloaded_at": "2026-09-27T05:34:39.228663+00:00",
+    "validation_status": "PASS",
+    "import_status": "NOT_IMPORTED",
+    "created_at": "2026-09-27T05:34:39.228663+00:00",
+    "metadata": {
+      "source_id": "NCMRWF_NCUM",
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "~12 km (NCUM-G) / 0.12\u00b0",
+      "adapter_note": "Validated using NCMRWF NCUM Deterministic 18-feature adapter",
+      "features_count": 20,
+      "auth_mode": "INSTITUTIONAL_REFERENCE_ARCHIVE",
+      "source_institution": "NCMRWF / MoES"
+    },
+    "storage_backend": "MINIO"
+  },
+  "dl_imd_1790487424_20260927": {
+    "id": "dl_imd_1790487424_20260927",
+    "provider": "IMD",
+    "dataset": "IMD_RAINFALL_025",
+    "original_filename": "rain_ind0.25_20260927.grd",
+    "converted_filename": "imd_rainfall_20260927.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/imd/rain_ind0.25_20260927.grd",
+    "file_size": 70692,
+    "sha256": "77e6125e9937497f76e8ed46571bc5a17f55630fec8bf05271a50a117bfa9ca2",
+    "source_url": "https://imdpune.gov.in/",
+    "download_url": "https://imdpune.gov.in/cmpg/Griddata/rainfall.php",
+    "downloaded_at": "2026-09-27T05:37:04.829771+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T05:37:04.829771+00:00",
+    "metadata": {
+      "source_id": "IMD_RAINFALL_025",
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "0.25\u00b0 x 0.25\u00b0 (approx 25 km)",
+      "adapter_note": "Downloaded and converted using official IMD adapter (IMD Pune)"
+    },
+    "storage_backend": "MINIO"
+  },
+  "dl_ncmrwf_1790487508_20260927": {
+    "id": "dl_ncmrwf_1790487508_20260927",
+    "provider": "NCMRWF",
+    "dataset": "NCUM_DETERMINISTIC",
+    "original_filename": "ncum_00Z_20260927_lead24.nc",
+    "converted_filename": null,
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/ncmrwf/ncum_00Z_20260927_lead24.nc",
+    "file_size": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "download_url": "https://nwp.ncmrwf.gov.in/archive/ncum/{cycle}/{date}/ncum_{lead}.nc",
+    "downloaded_at": "2026-09-27T05:38:28.218468+00:00",
+    "validation_status": "PASS",
+    "import_status": "NOT_IMPORTED",
+    "created_at": "2026-09-27T05:38:28.218468+00:00",
+    "metadata": {
+      "source_id": "NCMRWF_NCUM",
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "~12 km (NCUM-G) / 0.12\u00b0",
+      "adapter_note": "Validated using NCMRWF NCUM Deterministic 18-feature adapter",
+      "features_count": 20,
+      "auth_mode": "INSTITUTIONAL_REFERENCE_ARCHIVE",
+      "source_institution": "NCMRWF / MoES"
+    },
+    "storage_backend": "MINIO"
+  },
+  "dl_ncmrwf_1790487747_20260927": {
+    "id": "dl_ncmrwf_1790487747_20260927",
+    "provider": "NCMRWF",
+    "dataset": "NEPS_ENSEMBLE",
+    "original_filename": "neps_12Z_20260927_lead24.nc",
+    "converted_filename": null,
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/ncmrwf/neps_12Z_20260927_lead24.nc",
+    "file_size": 103244,
+    "sha256": "2096c18dfff944715d26bfe7f45da96d93395efb23b81a5ad93e2c241c75c907",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "download_url": "https://nwp.ncmrwf.gov.in/archive/neps/{cycle}/{date}/neps_{lead}.nc",
+    "downloaded_at": "2026-09-27T05:42:27.339528+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T05:42:27.339528+00:00",
+    "metadata": {
+      "source_id": "NCMRWF_NEPS",
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "~12 km (control) / ~33 km (perturbed members)",
+      "adapter_note": "Validated using NCMRWF NEPS 23-member adapter",
+      "features_count": 23,
+      "auth_mode": "INSTITUTIONAL_REFERENCE_ARCHIVE",
+      "source_institution": "NCMRWF / MoES"
+    },
+    "storage_backend": "MINIO"
+  },
+  "dl_ncmrwf_1790487775_20260927": {
+    "id": "dl_ncmrwf_1790487775_20260927",
+    "provider": "NCMRWF",
+    "dataset": "NCUM_DETERMINISTIC",
+    "original_filename": "ncum_00Z_20260927_lead24.nc",
+    "converted_filename": null,
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/ncmrwf/ncum_00Z_20260927_lead24.nc",
+    "file_size": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "download_url": "https://nwp.ncmrwf.gov.in/archive/ncum/{cycle}/{date}/ncum_{lead}.nc",
+    "downloaded_at": "2026-09-27T05:42:55.461695+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T05:42:55.461695+00:00",
+    "metadata": {
+      "source_id": "NCMRWF_NCUM",
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "~12 km (NCUM-G) / 0.12\u00b0",
+      "adapter_note": "Validated using NCMRWF NCUM Deterministic 18-feature adapter",
+      "features_count": 20,
+      "auth_mode": "INSTITUTIONAL_REFERENCE_ARCHIVE",
+      "source_institution": "NCMRWF / MoES"
+    },
+    "storage_backend": "MINIO"
+  },
+  "dl_ncmrwf_1790488622_20260927": {
+    "id": "dl_ncmrwf_1790488622_20260927",
+    "provider": "NCMRWF",
+    "dataset": "NCUM_DETERMINISTIC",
+    "original_filename": "ncum_00Z_20260927_lead24.nc",
+    "converted_filename": null,
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/ncmrwf/ncum_00Z_20260927_lead24.nc",
+    "file_size": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "download_url": "https://nwp.ncmrwf.gov.in/archive/ncum/{cycle}/{date}/ncum_{lead}.nc",
+    "downloaded_at": "2026-09-27T05:57:02.968996+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T05:57:02.968996+00:00",
+    "metadata": {
+      "source_id": "NCMRWF_NCUM",
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "~12 km (NCUM-G) / 0.12\u00b0",
+      "adapter_note": "Validated using NCMRWF NCUM Deterministic 18-feature adapter",
+      "features_count": 20,
+      "auth_mode": "INSTITUTIONAL_REFERENCE_ARCHIVE",
+      "source_institution": "NCMRWF / MoES"
+    },
+    "storage_backend": "MINIO"
+  },
+  "dl_ncmrwf_1790489072_20260927": {
+    "id": "dl_ncmrwf_1790489072_20260927",
+    "provider": "NCMRWF",
+    "dataset": "NCUM_DETERMINISTIC",
+    "original_filename": "ncum_00Z_20260927_lead24.nc",
+    "converted_filename": null,
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/ncmrwf/ncum_00Z_20260927_lead24.nc",
+    "file_size": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "download_url": "https://nwp.ncmrwf.gov.in/archive/ncum/{cycle}/{date}/ncum_{lead}.nc",
+    "downloaded_at": "2026-09-27T06:04:32.839635+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T06:04:32.839635+00:00",
+    "metadata": {
+      "source_id": "NCMRWF_NCUM",
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "~12 km (NCUM-G) / 0.12\u00b0",
+      "features_count": 20
+    },
+    "storage_backend": "MINIO"
+  },
+  "dl_imd_1790489102_20260927": {
+    "id": "dl_imd_1790489102_20260927",
+    "provider": "IMD",
+    "dataset": "IMD_RAINFALL_025",
+    "original_filename": "rain_ind0.25_20260927.grd",
+    "converted_filename": "imd_rainfall_20260927.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/imd/rain_ind0.25_20260927.grd",
+    "file_size": 70692,
+    "sha256": "77e6125e9937497f76e8ed46571bc5a17f55630fec8bf05271a50a117bfa9ca2",
+    "source_url": "https://imdpune.gov.in/",
+    "download_url": "https://imdpune.gov.in/cmpg/Griddata/rainfall.php",
+    "downloaded_at": "2026-09-27T06:05:02.836200+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T06:05:02.836200+00:00",
+    "metadata": {
+      "source_id": "IMD_RAINFALL_025",
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "0.25\u00b0 x 0.25\u00b0 (approx 25 km)",
+      "adapter_note": "Downloaded and converted using official IMD adapter (IMD Pune)"
+    },
+    "storage_backend": "MINIO"
+  },
+  "dl_ncmrwf_1790489265_20260927": {
+    "id": "dl_ncmrwf_1790489265_20260927",
+    "provider": "NCMRWF",
+    "dataset": "NCUM_DETERMINISTIC",
+    "original_filename": "ncum_00Z_20260927_lead24.nc",
+    "converted_filename": null,
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/ncmrwf/ncum_00Z_20260927_lead24.nc",
+    "file_size": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "download_url": "https://nwp.ncmrwf.gov.in/archive/ncum/{cycle}/{date}/ncum_{lead}.nc",
+    "downloaded_at": "2026-09-27T06:07:45.034148+00:00",
+    "validation_status": "PASS",
+    "import_status": "NOT_IMPORTED",
+    "created_at": "2026-09-27T06:07:45.034148+00:00",
+    "metadata": {
+      "source_id": "NCMRWF_NCUM",
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "~12 km (NCUM-G) / 0.12\u00b0",
+      "features_count": 20
+    },
+    "storage_backend": "MINIO"
+  },
+  "dl_ncmrwf_1790489288_20260927": {
+    "id": "dl_ncmrwf_1790489288_20260927",
+    "provider": "NCMRWF",
+    "dataset": "NCUM_DETERMINISTIC",
+    "original_filename": "ncum_00Z_20260927_lead24.nc",
+    "converted_filename": null,
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/ncmrwf/ncum_00Z_20260927_lead24.nc",
+    "file_size": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "download_url": "https://nwp.ncmrwf.gov.in/archive/ncum/{cycle}/{date}/ncum_{lead}.nc",
+    "downloaded_at": "2026-09-27T06:08:08.879493+00:00",
+    "validation_status": "PASS",
+    "import_status": "NOT_IMPORTED",
+    "created_at": "2026-09-27T06:08:08.879493+00:00",
+    "metadata": {
+      "source_id": "NCMRWF_NCUM",
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "~12 km (NCUM-G) / 0.12\u00b0",
+      "features_count": 20
+    },
+    "storage_backend": "MINIO"
+  },
+  "dl_imd_1790490778_20260927": {
+    "id": "dl_imd_1790490778_20260927",
+    "provider": "IMD",
+    "dataset": "IMD_RAINFALL_025",
+    "original_filename": "rain_ind0.25_20260927.grd",
+    "converted_filename": "imd_rainfall_20260927.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/imd/rain_ind0.25_20260927.grd",
+    "file_size": 70692,
+    "sha256": "77e6125e9937497f76e8ed46571bc5a17f55630fec8bf05271a50a117bfa9ca2",
+    "source_url": "https://imdpune.gov.in/",
+    "download_url": "https://imdpune.gov.in/cmpg/Griddata/rainfall.php",
+    "downloaded_at": "2026-09-27T06:32:58.019454+00:00",
+    "validation_status": "FAIL",
+    "import_status": "NOT_IMPORTED",
+    "created_at": "2026-09-27T06:32:58.019454+00:00",
+    "metadata": {
+      "source_id": "IMD_RAINFALL_025",
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "0.25\u00b0 x 0.25\u00b0 (approx 25 km)",
+      "adapter_note": "Downloaded and converted using official IMD adapter (IMD Pune)"
+    },
+    "storage_backend": "MINIO"
+  },
+  "dl_imd_1790490847_20260927": {
+    "id": "dl_imd_1790490847_20260927",
+    "provider": "IMD",
+    "dataset": "IMD_RAINFALL_025",
+    "original_filename": "rain_ind0.25_20260927.grd",
+    "converted_filename": "imd_rainfall_20260927.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/imd/rain_ind0.25_20260927.grd",
+    "file_size": 70692,
+    "sha256": "77e6125e9937497f76e8ed46571bc5a17f55630fec8bf05271a50a117bfa9ca2",
+    "source_url": "https://imdpune.gov.in/",
+    "download_url": "https://imdpune.gov.in/cmpg/Griddata/rainfall.php",
+    "downloaded_at": "2026-09-27T06:34:07.271814+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T06:34:07.271814+00:00",
+    "metadata": {
+      "source_id": "IMD_RAINFALL_025",
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "0.25\u00b0 x 0.25\u00b0 (approx 25 km)",
+      "adapter_note": "Downloaded and converted using official IMD adapter (IMD Pune)"
+    },
+    "storage_backend": "MINIO"
+  },
+  "imd_imd_rainfall_20260927_1790491387_0df64c09": {
+    "id": "imd_imd_rainfall_20260927_1790491387_0df64c09",
+    "provider": "IMD",
+    "dataset": "IMD_OBSERVATION",
+    "original_filename": "imd_rainfall_20260927_1790491387.nc",
+    "converted_filename": "imd_rainfall_20260927_1790491387.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "canonical/imd/imd_rainfall_20260927_1790491387.nc",
+    "file_size": 80180,
+    "sha256": "0df64c09311bc6840a7d95fc5ba873d71e87715ce35dd44f4b8aa95f3c63e48c",
+    "source_url": "https://www.imdpune.gov.in/",
+    "downloaded_at": "2026-09-27T07:05:43.199152+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T07:05:43.199173+00:00",
+    "metadata": {
+      "import_id": "imd_imd_rainfall_20260927_1790491387_0df64c09",
+      "source_id": "IMD_OBSERVATION",
+      "filename": "imd_rainfall_20260927_1790491387.nc",
+      "filepath": "D:\\SIH26080\\data\\real\\incoming\\imd_rainfall_20260927_1790491387.nc",
+      "provider": "IMD",
+      "source_type": "IMD_OBSERVATION",
+      "authority_level": "AUTHORITATIVE_PRIMARY",
+      "format": "NETCDF4",
+      "size_bytes": 80180,
+      "sha256": "0df64c09311bc6840a7d95fc5ba873d71e87715ce35dd44f4b8aa95f3c63e48c",
+      "import_timestamp": "2026-09-27T06:43:07.363870+00:00",
+      "data_mode": "REAL_DATA_EXPERIMENT",
+      "validation_status": "PASS",
+      "validation_notes": [
+        "IMD observation satisfies 0.25\u00b0 grid, non-negativity, and metadata standards."
+      ],
+      "failure_stage": "NONE",
+      "cycle": null,
+      "initialization_time": null,
+      "valid_time": "2026-09-27",
+      "lead_time_hours": null,
+      "variables": [
+        "lat",
+        "lon",
+        "time",
+        "rain"
+      ],
+      "dimensions": {
+        "lat": 129,
+        "lon": 137,
+        "time": 1
+      },
+      "lat_range": [
+        6.5,
+        38.5
+      ],
+      "lon_range": [
+        66.5,
+        100.5
+      ],
+      "resolution": 0.25,
+      "units_map": {
+        "rain": "mm/day"
+      },
+      "feature_mappings": [],
+      "is_ground_truth_only": true,
+      "promoted_path": null,
+      "rejected_path": null,
+      "rejected_reason": null
+    },
+    "storage_backend": "MINIO"
+  },
+  "dl_imd_1790491381_20260927": {
+    "id": "dl_imd_1790491381_20260927",
+    "provider": "IMD",
+    "dataset": "IMD_RAINFALL_025",
+    "original_filename": "rain_ind0.25_20260927.grd",
+    "converted_filename": "imd_rainfall_20260927.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/imd/rain_ind0.25_20260927.grd",
+    "file_size": 70692,
+    "sha256": "77e6125e9937497f76e8ed46571bc5a17f55630fec8bf05271a50a117bfa9ca2",
+    "source_url": "https://imdpune.gov.in/",
+    "download_url": "https://imdpune.gov.in/cmpg/Griddata/rainfall.php",
+    "downloaded_at": "2026-09-27T06:43:01.338822+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T06:43:01.338822+00:00",
+    "metadata": {
+      "source_id": "IMD_RAINFALL_025",
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "0.25\u00b0 x 0.25\u00b0 (approx 25 km)",
+      "adapter_note": "Downloaded and converted using official IMD adapter (IMD Pune)"
+    },
+    "storage_backend": "MINIO"
+  },
+  "dl_ncmrwf_1790491719_20260927": {
+    "id": "dl_ncmrwf_1790491719_20260927",
+    "provider": "NCMRWF",
+    "dataset": "NCUM_DETERMINISTIC",
+    "original_filename": "ncum_00Z_20260927_lead24.nc",
+    "converted_filename": null,
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/ncmrwf/ncum_00Z_20260927_lead24.nc",
+    "file_size": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "download_url": "https://nwp.ncmrwf.gov.in/archive/ncum/{cycle}/{date}/ncum_{lead}.nc",
+    "downloaded_at": "2026-09-27T06:48:39.691095+00:00",
+    "validation_status": "PASS",
+    "import_status": "NOT_IMPORTED",
+    "created_at": "2026-09-27T06:48:39.691095+00:00",
+    "metadata": {
+      "source_id": "NCMRWF_NCUM",
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "~12 km (NCUM-G) / 0.12\u00b0",
+      "features_count": 20
+    },
+    "storage_backend": "MINIO"
+  },
+  "ncum_ncum_00Z_20260927_lead24_1790493421_07c25a97": {
+    "id": "ncum_ncum_00Z_20260927_lead24_1790493421_07c25a97",
+    "provider": "NCMRWF",
+    "dataset": "NCUM",
+    "original_filename": "ncum_00Z_20260927_lead24_1790493421.nc",
+    "converted_filename": "ncum_00Z_20260927_lead24_1790493421.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "canonical/ncmrwf/ncum_00Z_20260927_lead24_1790493421.nc",
+    "file_size": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "downloaded_at": "2026-09-27T07:39:29.907856+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T07:39:29.908109+00:00",
+    "metadata": {
+      "import_id": "ncum_ncum_00Z_20260927_lead24_1790493421_07c25a97",
+      "source_id": "NCMRWF_NCUM",
+      "filename": "ncum_00Z_20260927_lead24_1790493421.nc",
+      "filepath": "D:\\SIH26080\\data\\real\\incoming\\ncum_00Z_20260927_lead24_1790493421.nc",
+      "provider": "NCMRWF",
+      "source_type": "NCUM",
+      "authority_level": "AUTHORITATIVE_PRIMARY",
+      "format": "NETCDF4",
+      "size_bytes": 1293896,
+      "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+      "import_timestamp": "2026-09-27T07:17:01.436727+00:00",
+      "data_mode": "REAL_DATA_EXPERIMENT",
+      "validation_status": "PASS",
+      "validation_notes": [
+        "File satisfies all NCUM operational feature contracts and metadata standards."
+      ],
+      "failure_stage": "NONE",
+      "cycle": "00Z",
+      "initialization_time": "2026-09-27T00:00:00Z",
+      "valid_time": "2026-09-28T00:00:00Z",
+      "lead_time_hours": 24,
+      "variables": [
+        "lat",
+        "lon",
+        "precip_nwp_raw",
+        "u850",
+        "v850",
+        "mslp",
+        "t850",
+        "cape",
+        "wind_speed_850",
+        "wind_dir_850",
+        "lead_time_hours",
+        "latitude",
+        "longitude",
+        "elevation_m",
+        "day_of_year_sin",
+        "day_of_year_cos",
+        "zonal_shear",
+        "monsoon_trough_intensity",
+        "meridional_flow",
+        "humidity_proxy"
+      ],
+      "dimensions": {
+        "lat": 129,
+        "lon": 137
+      },
+      "lat_range": [
+        6.5,
+        38.5
+      ],
+      "lon_range": [
+        66.5,
+        100.5
+      ],
+      "resolution": 0.25,
+      "units_map": {
+        "lat": "deg_N",
+        "lon": "deg_E",
+        "precip_nwp_raw": "mm",
+        "u850": "m/s",
+        "v850": "m/s",
+        "mslp": "hPa",
+        "t850": "K",
+        "cape": "J/kg",
+        "wind_speed_850": "m/s",
+        "wind_dir_850": "deg",
+        "lead_time_hours": "hours",
+        "latitude": "deg_N",
+        "longitude": "deg_E",
+        "elevation_m": "m",
+        "day_of_year_sin": "dimensionless",
+        "day_of_year_cos": "dimensionless",
+        "zonal_shear": "m/s",
+        "monsoon_trough_intensity": "hPa",
+        "meridional_flow": "m/s",
+        "humidity_proxy": "dimensionless"
+      },
+      "feature_mappings": [
+        {
+          "ramp_feature": "precip_nwp_raw",
+          "source_variable": "precip_nwp_raw",
+          "unit": "mm",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "u850",
+          "source_variable": "u850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "v850",
+          "source_variable": "v850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "mslp",
+          "source_variable": "mslp",
+          "unit": "hPa",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "t850",
+          "source_variable": "t850",
+          "unit": "K",
+          "source_grid": null,
+          "status": "UNIT_CONVERSION_REQUIRED",
+          "notes": "Unit conversion needed: K -> degC"
+        },
+        {
+          "ramp_feature": "cape",
+          "source_variable": "cape",
+          "unit": "J/kg",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "wind_speed_850",
+          "source_variable": "wind_speed_850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "wind_dir_850",
+          "source_variable": "wind_dir_850",
+          "unit": "deg",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "lead_time_hours",
+          "source_variable": "lead_time_hours",
+          "unit": "hours",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "latitude",
+          "source_variable": "latitude",
+          "unit": "deg_N",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "longitude",
+          "source_variable": "longitude",
+          "unit": "deg_E",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "elevation_m",
+          "source_variable": "elevation_m",
+          "unit": "m",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "day_of_year_sin",
+          "source_variable": "day_of_year_sin",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "day_of_year_cos",
+          "source_variable": "day_of_year_cos",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "zonal_shear",
+          "source_variable": "zonal_shear",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "monsoon_trough_intensity",
+          "source_variable": "monsoon_trough_intensity",
+          "unit": "hPa",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "meridional_flow",
+          "source_variable": "meridional_flow",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "humidity_proxy",
+          "source_variable": "humidity_proxy",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "UNIT_CONVERSION_REQUIRED",
+          "notes": "Unit conversion needed: dimensionless -> %"
+        }
+      ],
+      "is_ground_truth_only": false,
+      "promoted_path": null,
+      "rejected_path": null,
+      "rejected_reason": null
+    },
+    "storage_backend": "MINIO"
+  },
+  "imd_imd_rainfall_20260927_1790494762_0df64c09": {
+    "id": "imd_imd_rainfall_20260927_1790494762_0df64c09",
+    "provider": "IMD",
+    "dataset": "IMD_OBSERVATION",
+    "original_filename": "imd_rainfall_20260927_1790494762.nc",
+    "converted_filename": "imd_rainfall_20260927_1790494762.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "canonical/imd/imd_rainfall_20260927_1790494762.nc",
+    "file_size": 80180,
+    "sha256": "0df64c09311bc6840a7d95fc5ba873d71e87715ce35dd44f4b8aa95f3c63e48c",
+    "source_url": "https://www.imdpune.gov.in/",
+    "downloaded_at": "2026-09-27T07:39:29.908877+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T07:39:29.908888+00:00",
+    "metadata": {
+      "import_id": "imd_imd_rainfall_20260927_1790494762_0df64c09",
+      "source_id": "IMD_OBSERVATION",
+      "filename": "imd_rainfall_20260927_1790494762.nc",
+      "filepath": "D:\\SIH26080\\data\\real\\incoming\\imd_rainfall_20260927_1790494762.nc",
+      "provider": "IMD",
+      "source_type": "IMD_OBSERVATION",
+      "authority_level": "AUTHORITATIVE_PRIMARY",
+      "format": "NETCDF4",
+      "size_bytes": 80180,
+      "sha256": "0df64c09311bc6840a7d95fc5ba873d71e87715ce35dd44f4b8aa95f3c63e48c",
+      "import_timestamp": "2026-09-27T07:39:22.577160+00:00",
+      "data_mode": "REAL_DATA_EXPERIMENT",
+      "validation_status": "PASS",
+      "validation_notes": [
+        "IMD observation satisfies 0.25\u00b0 grid, non-negativity, and metadata standards."
+      ],
+      "failure_stage": "NONE",
+      "cycle": null,
+      "initialization_time": null,
+      "valid_time": "2026-09-27",
+      "lead_time_hours": null,
+      "variables": [
+        "lat",
+        "lon",
+        "time",
+        "rain"
+      ],
+      "dimensions": {
+        "lat": 129,
+        "lon": 137,
+        "time": 1
+      },
+      "lat_range": [
+        6.5,
+        38.5
+      ],
+      "lon_range": [
+        66.5,
+        100.5
+      ],
+      "resolution": 0.25,
+      "units_map": {
+        "rain": "mm/day"
+      },
+      "feature_mappings": [],
+      "is_ground_truth_only": true,
+      "promoted_path": null,
+      "rejected_path": null,
+      "rejected_reason": null
+    },
+    "storage_backend": "MINIO"
+  },
+  "dl_imd_1790492750_20260927": {
+    "id": "dl_imd_1790492750_20260927",
+    "provider": "IMD",
+    "dataset": "IMD_RAINFALL_025",
+    "original_filename": "rain_ind0.25_20260927.grd",
+    "converted_filename": "imd_rainfall_20260927.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/imd/rain_ind0.25_20260927.grd",
+    "file_size": 70692,
+    "sha256": "77e6125e9937497f76e8ed46571bc5a17f55630fec8bf05271a50a117bfa9ca2",
+    "source_url": "https://imdpune.gov.in/",
+    "download_url": "https://imdpune.gov.in/cmpg/Griddata/rainfall.php",
+    "downloaded_at": "2026-09-27T07:05:50.588373+00:00",
+    "validation_status": "PASS",
+    "import_status": "NOT_IMPORTED",
+    "created_at": "2026-09-27T07:05:50.588373+00:00",
+    "metadata": {
+      "source_id": "IMD_RAINFALL_025",
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "0.25\u00b0 x 0.25\u00b0 (approx 25 km)",
+      "adapter_note": "Downloaded and converted using official IMD adapter (IMD Pune)"
+    },
+    "storage_backend": "MINIO"
+  },
+  "dl_ncmrwf_1790493399_20260927": {
+    "id": "dl_ncmrwf_1790493399_20260927",
+    "provider": "NCMRWF",
+    "dataset": "NCUM_DETERMINISTIC",
+    "original_filename": "ncum_00Z_20260927_lead24.nc",
+    "converted_filename": null,
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/ncmrwf/ncum_00Z_20260927_lead24.nc",
+    "file_size": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "download_url": "https://nwp.ncmrwf.gov.in/archive/ncum/{cycle}/{date}/ncum_{lead}.nc",
+    "downloaded_at": "2026-09-27T07:16:39.327243+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T07:16:39.327243+00:00",
+    "metadata": {
+      "source_id": "NCMRWF_NCUM",
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "~12 km (NCUM-G) / 0.12\u00b0",
+      "features_count": 20
+    },
+    "storage_backend": "MINIO"
+  },
+  "dl_ncmrwf_1790493492_20260927": {
+    "id": "dl_ncmrwf_1790493492_20260927",
+    "provider": "NCMRWF",
+    "dataset": "NCUM_DETERMINISTIC",
+    "original_filename": "ncum_00Z_20260927_lead24.nc",
+    "converted_filename": null,
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/ncmrwf/ncum_00Z_20260927_lead24.nc",
+    "file_size": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "download_url": "https://nwp.ncmrwf.gov.in/archive/ncum/{cycle}/{date}/ncum_{lead}.nc",
+    "downloaded_at": "2026-09-27T07:18:12.482390+00:00",
+    "validation_status": "PASS",
+    "import_status": "NOT_IMPORTED",
+    "created_at": "2026-09-27T07:18:12.482390+00:00",
+    "metadata": {
+      "source_id": "NCMRWF_NCUM",
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "~12 km (NCUM-G) / 0.12\u00b0",
+      "features_count": 20
+    },
+    "storage_backend": "MINIO"
+  },
+  "dl_ncmrwf_1790493533_20260927": {
+    "id": "dl_ncmrwf_1790493533_20260927",
+    "provider": "NCMRWF",
+    "dataset": "NEPS_ENSEMBLE",
+    "original_filename": "ncum_00Z_20260927_lead24.nc",
+    "converted_filename": null,
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/ncmrwf/ncum_00Z_20260927_lead24.nc",
+    "file_size": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "download_url": "https://nwp.ncmrwf.gov.in/archive/neps/{cycle}/{date}/neps_{lead}.nc",
+    "downloaded_at": "2026-09-27T07:18:53.876802+00:00",
+    "validation_status": "PASS",
+    "import_status": "NOT_IMPORTED",
+    "created_at": "2026-09-27T07:18:53.876802+00:00",
+    "metadata": {
+      "source_id": "NCMRWF_NEPS",
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "~12 km (control) / ~33 km (perturbed members)",
+      "features_count": 20
+    },
+    "storage_backend": "MINIO"
+  },
+  "dl_imd_1790493544_20260927": {
+    "id": "dl_imd_1790493544_20260927",
+    "provider": "IMD",
+    "dataset": "IMD_RAINFALL_025",
+    "original_filename": "rain_ind0.25_20260927.grd",
+    "converted_filename": "imd_rainfall_20260927.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/imd/rain_ind0.25_20260927.grd",
+    "file_size": 70692,
+    "sha256": "77e6125e9937497f76e8ed46571bc5a17f55630fec8bf05271a50a117bfa9ca2",
+    "source_url": "https://imdpune.gov.in/",
+    "download_url": "https://imdpune.gov.in/cmpg/Griddata/rainfall.php",
+    "downloaded_at": "2026-09-27T07:19:04.418662+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T07:19:04.418662+00:00",
+    "metadata": {
+      "source_id": "IMD_RAINFALL_025",
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "0.25\u00b0 x 0.25\u00b0 (approx 25 km)",
+      "adapter_note": "Downloaded and converted using official IMD adapter (IMD Pune)"
+    },
+    "storage_backend": "MINIO"
+  },
+  "neps_ncum_00Z_20260927_lead24_1790496615_07c25a97": {
+    "id": "neps_ncum_00Z_20260927_lead24_1790496615_07c25a97",
+    "provider": "NCMRWF",
+    "dataset": "NEPS",
+    "original_filename": "ncum_00Z_20260927_lead24_1790496615.nc",
+    "converted_filename": "ncum_00Z_20260927_lead24_1790496615.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "canonical/ncmrwf/ncum_00Z_20260927_lead24_1790496615.nc",
+    "file_size": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "downloaded_at": "2026-09-27T08:23:38.974074+00:00",
+    "validation_status": "BLOCKED",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T08:23:38.974088+00:00",
+    "metadata": {
+      "import_id": "neps_ncum_00Z_20260927_lead24_1790496615_07c25a97",
+      "source_id": "NCMRWF_NEPS",
+      "filename": "ncum_00Z_20260927_lead24_1790496615.nc",
+      "filepath": "D:\\SIH26080\\data\\real\\incoming\\ncum_00Z_20260927_lead24_1790496615.nc",
+      "provider": "NCMRWF",
+      "source_type": "NEPS",
+      "authority_level": "AUTHORITATIVE_PRIMARY",
+      "format": "NETCDF4",
+      "size_bytes": 1293896,
+      "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+      "import_timestamp": "2026-09-27T08:10:15.455608+00:00",
+      "data_mode": "BLOCKED",
+      "validation_status": "BLOCKED",
+      "validation_notes": [
+        "NEPS_FEATURES_INCOMPLETE: Discovered 0/23 ensemble members. Missing: 23 members."
+      ],
+      "failure_stage": "MISSING_FEATURE",
+      "cycle": "00Z",
+      "initialization_time": "2026-09-27T00:00:00Z",
+      "valid_time": "2026-09-28T00:00:00Z",
+      "lead_time_hours": 24,
+      "variables": [
+        "lat",
+        "lon",
+        "precip_nwp_raw",
+        "u850",
+        "v850",
+        "mslp",
+        "t850",
+        "cape",
+        "wind_speed_850",
+        "wind_dir_850",
+        "lead_time_hours",
+        "latitude",
+        "longitude",
+        "elevation_m",
+        "day_of_year_sin",
+        "day_of_year_cos",
+        "zonal_shear",
+        "monsoon_trough_intensity",
+        "meridional_flow",
+        "humidity_proxy"
+      ],
+      "dimensions": {
+        "lat": 129,
+        "lon": 137
+      },
+      "lat_range": [
+        6.5,
+        38.5
+      ],
+      "lon_range": [
+        66.5,
+        100.5
+      ],
+      "resolution": 0.25,
+      "units_map": {
+        "rainfall": "mm"
+      },
+      "feature_mappings": [],
+      "is_ground_truth_only": false,
+      "promoted_path": null,
+      "rejected_path": null,
+      "rejected_reason": null
+    },
+    "storage_backend": "MINIO"
+  },
+  "dl_ncmrwf_1790495024_20260927": {
+    "id": "dl_ncmrwf_1790495024_20260927",
+    "provider": "NCMRWF",
+    "dataset": "NEPS_ENSEMBLE",
+    "original_filename": "ncum_00Z_20260927_lead24.nc",
+    "converted_filename": null,
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/ncmrwf/ncum_00Z_20260927_lead24.nc",
+    "file_size": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "download_url": "https://nwp.ncmrwf.gov.in/archive/neps/{cycle}/{date}/neps_{lead}.nc",
+    "downloaded_at": "2026-09-27T07:43:44.037859+00:00",
+    "validation_status": "PASS",
+    "import_status": "NOT_IMPORTED",
+    "created_at": "2026-09-27T07:43:44.037859+00:00",
+    "metadata": {
+      "source_id": "NCMRWF_NEPS",
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "~12 km (control) / ~33 km (perturbed members)",
+      "features_count": 20
+    },
+    "storage_backend": "MINIO"
+  },
+  "dl_ncmrwf_1790496559_20260927": {
+    "id": "dl_ncmrwf_1790496559_20260927",
+    "provider": "NCMRWF",
+    "dataset": "NCUM",
+    "original_filename": "ncum_00Z_20260927_lead24.nc",
+    "converted_filename": null,
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/ncmrwf/ncum_00Z_20260927_lead24.nc",
+    "file_size": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "download_url": "https://nwp.ncmrwf.gov.in/archive/ncum/{cycle}/{date}/ncum_{lead}.nc",
+    "downloaded_at": "2026-09-27T08:09:19.828308+00:00",
+    "validation_status": "PASS",
+    "import_status": "NOT_IMPORTED",
+    "created_at": "2026-09-27T08:09:19.828308+00:00",
+    "metadata": {
+      "source_id": null,
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "~12 km (NCUM-G) / 0.12\u00b0",
+      "features_count": 20
+    },
+    "storage_backend": "MINIO"
+  },
+  "dl_ncmrwf_1790496610_20260927": {
+    "id": "dl_ncmrwf_1790496610_20260927",
+    "provider": "NCMRWF",
+    "dataset": "NEPS",
+    "original_filename": "ncum_00Z_20260927_lead24.nc",
+    "converted_filename": null,
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/ncmrwf/ncum_00Z_20260927_lead24.nc",
+    "file_size": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "download_url": "https://nwp.ncmrwf.gov.in/archive/neps/{cycle}/{date}/neps_{lead}.nc",
+    "downloaded_at": "2026-09-27T08:10:10.043937+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T08:10:10.043937+00:00",
+    "metadata": {
+      "source_id": null,
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "~12 km (control) / ~33 km (perturbed members)",
+      "features_count": 20
+    },
+    "storage_backend": "MINIO"
+  },
+  "ncum_ncum_00Z_20260927_lead24_1790497477_07c25a97": {
+    "id": "ncum_ncum_00Z_20260927_lead24_1790497477_07c25a97",
+    "provider": "NCMRWF",
+    "dataset": "NCUM",
+    "original_filename": "ncum_00Z_20260927_lead24_1790497477.nc",
+    "converted_filename": "ncum_00Z_20260927_lead24_1790497477.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "canonical/ncmrwf/ncum_00Z_20260927_lead24_1790497477.nc",
+    "storage_backend": "MINIO",
+    "file_size": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "downloaded_at": "2026-09-27T09:30:12.923942+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T09:30:12.923969+00:00",
+    "metadata": {
+      "import_id": "ncum_ncum_00Z_20260927_lead24_1790497477_07c25a97",
+      "source_id": "NCMRWF_NCUM",
+      "filename": "ncum_00Z_20260927_lead24_1790497477.nc",
+      "filepath": "D:\\SIH26080\\data\\real\\incoming\\ncum_00Z_20260927_lead24_1790497477.nc",
+      "provider": "NCMRWF",
+      "source_type": "NCUM",
+      "authority_level": "AUTHORITATIVE_PRIMARY",
+      "format": "NETCDF4",
+      "size_bytes": 1293896,
+      "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+      "import_timestamp": "2026-09-27T08:24:37.538181+00:00",
+      "data_mode": "REAL_DATA_EXPERIMENT",
+      "validation_status": "PASS",
+      "validation_notes": [
+        "File satisfies all NCUM operational feature contracts and metadata standards."
+      ],
+      "failure_stage": "NONE",
+      "cycle": "00Z",
+      "initialization_time": "2026-09-27T00:00:00Z",
+      "valid_time": "2026-09-28T00:00:00Z",
+      "lead_time_hours": 24,
+      "variables": [
+        "lat",
+        "lon",
+        "precip_nwp_raw",
+        "u850",
+        "v850",
+        "mslp",
+        "t850",
+        "cape",
+        "wind_speed_850",
+        "wind_dir_850",
+        "lead_time_hours",
+        "latitude",
+        "longitude",
+        "elevation_m",
+        "day_of_year_sin",
+        "day_of_year_cos",
+        "zonal_shear",
+        "monsoon_trough_intensity",
+        "meridional_flow",
+        "humidity_proxy"
+      ],
+      "dimensions": {
+        "lat": 129,
+        "lon": 137
+      },
+      "lat_range": [
+        6.5,
+        38.5
+      ],
+      "lon_range": [
+        66.5,
+        100.5
+      ],
+      "resolution": 0.25,
+      "units_map": {
+        "lat": "deg_N",
+        "lon": "deg_E",
+        "precip_nwp_raw": "mm",
+        "u850": "m/s",
+        "v850": "m/s",
+        "mslp": "hPa",
+        "t850": "K",
+        "cape": "J/kg",
+        "wind_speed_850": "m/s",
+        "wind_dir_850": "deg",
+        "lead_time_hours": "hours",
+        "latitude": "deg_N",
+        "longitude": "deg_E",
+        "elevation_m": "m",
+        "day_of_year_sin": "dimensionless",
+        "day_of_year_cos": "dimensionless",
+        "zonal_shear": "m/s",
+        "monsoon_trough_intensity": "hPa",
+        "meridional_flow": "m/s",
+        "humidity_proxy": "dimensionless"
+      },
+      "feature_mappings": [
+        {
+          "ramp_feature": "precip_nwp_raw",
+          "source_variable": "precip_nwp_raw",
+          "unit": "mm",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "u850",
+          "source_variable": "u850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "v850",
+          "source_variable": "v850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "mslp",
+          "source_variable": "mslp",
+          "unit": "hPa",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "t850",
+          "source_variable": "t850",
+          "unit": "K",
+          "source_grid": null,
+          "status": "UNIT_CONVERSION_REQUIRED",
+          "notes": "Unit conversion needed: K -> degC"
+        },
+        {
+          "ramp_feature": "cape",
+          "source_variable": "cape",
+          "unit": "J/kg",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "wind_speed_850",
+          "source_variable": "wind_speed_850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "wind_dir_850",
+          "source_variable": "wind_dir_850",
+          "unit": "deg",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "lead_time_hours",
+          "source_variable": "lead_time_hours",
+          "unit": "hours",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "latitude",
+          "source_variable": "latitude",
+          "unit": "deg_N",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "longitude",
+          "source_variable": "longitude",
+          "unit": "deg_E",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "elevation_m",
+          "source_variable": "elevation_m",
+          "unit": "m",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "day_of_year_sin",
+          "source_variable": "day_of_year_sin",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "day_of_year_cos",
+          "source_variable": "day_of_year_cos",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "zonal_shear",
+          "source_variable": "zonal_shear",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "monsoon_trough_intensity",
+          "source_variable": "monsoon_trough_intensity",
+          "unit": "hPa",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "meridional_flow",
+          "source_variable": "meridional_flow",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "humidity_proxy",
+          "source_variable": "humidity_proxy",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "UNIT_CONVERSION_REQUIRED",
+          "notes": "Unit conversion needed: dimensionless -> %"
+        }
+      ],
+      "is_ground_truth_only": false,
+      "promoted_path": null,
+      "rejected_path": null,
+      "rejected_reason": null
+    }
+  },
+  "dl_ncmrwf_1790497472_20260927": {
+    "id": "dl_ncmrwf_1790497472_20260927",
+    "provider": "NCMRWF",
+    "dataset": "NCUM",
+    "original_filename": "ncum_00Z_20260927_lead24.nc",
+    "converted_filename": null,
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/ncmrwf/ncum_00Z_20260927_lead24.nc",
+    "storage_backend": "MINIO",
+    "file_size": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "download_url": "https://nwp.ncmrwf.gov.in/archive/ncum/{cycle}/{date}/ncum_{lead}.nc",
+    "downloaded_at": "2026-09-27T08:24:32.457467+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T08:24:32.457467+00:00",
+    "metadata": {
+      "source_id": null,
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "~12 km (NCUM-G) / 0.12\u00b0",
+      "features_count": 20
+    }
+  },
+  "dl_ncmrwf_1790503603_20260915": {
+    "id": "dl_ncmrwf_1790503603_20260915",
+    "provider": "NCMRWF",
+    "dataset": "NCUM",
+    "original_filename": null,
+    "converted_filename": null,
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/ncmrwf/None",
+    "storage_backend": "MINIO",
+    "file_size": 0,
+    "sha256": null,
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "download_url": "https://nwp.ncmrwf.gov.in/archive/ncum/{cycle}/{date}/ncum_{lead}.nc",
+    "downloaded_at": "2026-09-27T10:06:43.414037+00:00",
+    "validation_status": "BLOCKED",
+    "import_status": "NOT_IMPORTED",
+    "created_at": "2026-09-27T10:06:43.414037+00:00",
+    "metadata": {
+      "source_id": null,
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "~12 km (NCUM-G) / 0.12\u00b0"
+    }
+  },
+  "dl_ncmrwf_1790504243_20260912": {
+    "id": "dl_ncmrwf_1790504243_20260912",
+    "provider": "NCMRWF",
+    "dataset": "NCUM",
+    "original_filename": null,
+    "converted_filename": null,
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/ncmrwf/None",
+    "storage_backend": "MINIO",
+    "file_size": 0,
+    "sha256": null,
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "download_url": "https://nwp.ncmrwf.gov.in/archive/ncum/{cycle}/{date}/ncum_{lead}.nc",
+    "downloaded_at": "2026-09-27T10:17:23.941977+00:00",
+    "validation_status": "BLOCKED",
+    "import_status": "NOT_IMPORTED",
+    "created_at": "2026-09-27T10:17:23.941977+00:00",
+    "metadata": {
+      "source_id": null,
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "~12 km (NCUM-G) / 0.12\u00b0"
+    }
+  },
+  "dl_ncmrwf_1790504269_20260912": {
+    "id": "dl_ncmrwf_1790504269_20260912",
+    "provider": "NCMRWF",
+    "dataset": "NCUM",
+    "original_filename": null,
+    "converted_filename": null,
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/ncmrwf/None",
+    "storage_backend": "MINIO",
+    "file_size": 0,
+    "sha256": null,
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "download_url": "https://nwp.ncmrwf.gov.in/archive/ncum/{cycle}/{date}/ncum_{lead}.nc",
+    "downloaded_at": "2026-09-27T10:17:49.300592+00:00",
+    "validation_status": "BLOCKED",
+    "import_status": "NOT_IMPORTED",
+    "created_at": "2026-09-27T10:17:49.300592+00:00",
+    "metadata": {
+      "source_id": null,
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "~12 km (NCUM-G) / 0.12\u00b0"
+    }
+  },
+  "imd_imd_rainfall_20260927_1790513515_0df64c09": {
+    "id": "imd_imd_rainfall_20260927_1790513515_0df64c09",
+    "provider": "IMD",
+    "dataset": "IMD_OBSERVATION",
+    "original_filename": "imd_rainfall_20260927_1790513515.nc",
+    "converted_filename": "imd_rainfall_20260927_1790513515.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "canonical/imd/imd_rainfall_20260927_1790513515.nc",
+    "storage_backend": "MINIO",
+    "file_size": 80180,
+    "sha256": "0df64c09311bc6840a7d95fc5ba873d71e87715ce35dd44f4b8aa95f3c63e48c",
+    "source_url": "https://www.imdpune.gov.in/",
+    "downloaded_at": "2026-09-27T14:17:34.152680+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T14:17:34.152701+00:00",
+    "metadata": {
+      "import_id": "imd_imd_rainfall_20260927_1790513515_0df64c09",
+      "source_id": "IMD_OBSERVATION",
+      "filename": "imd_rainfall_20260927_1790513515.nc",
+      "filepath": "D:\\SIH26080\\data\\real\\incoming\\imd_rainfall_20260927_1790513515.nc",
+      "provider": "IMD",
+      "source_type": "IMD_OBSERVATION",
+      "authority_level": "AUTHORITATIVE_PRIMARY",
+      "format": "NETCDF4",
+      "size_bytes": 80180,
+      "sha256": "0df64c09311bc6840a7d95fc5ba873d71e87715ce35dd44f4b8aa95f3c63e48c",
+      "import_timestamp": "2026-09-27T12:51:55.181950+00:00",
+      "data_mode": "REAL_DATA_EXPERIMENT",
+      "validation_status": "PASS",
+      "validation_notes": [
+        "IMD observation satisfies 0.25\u00b0 grid, non-negativity, and metadata standards."
+      ],
+      "validation_error_detail": null,
+      "failure_stage": "NONE",
+      "cycle": null,
+      "initialization_time": null,
+      "valid_time": "2026-09-27",
+      "lead_time_hours": null,
+      "variables": [
+        "lat",
+        "lon",
+        "time",
+        "rain"
+      ],
+      "dimensions": {
+        "lat": 129,
+        "lon": 137,
+        "time": 1
+      },
+      "lat_range": [
+        6.5,
+        38.5
+      ],
+      "lon_range": [
+        66.5,
+        100.5
+      ],
+      "resolution": 0.25,
+      "units_map": {
+        "rain": "mm/day"
+      },
+      "feature_mappings": [],
+      "is_ground_truth_only": true,
+      "promoted_path": null,
+      "rejected_path": null,
+      "rejected_reason": null
+    }
+  },
+  "ncum_ncum_00Z_20260927_lead24_1790513584_07c25a97": {
+    "id": "ncum_ncum_00Z_20260927_lead24_1790513584_07c25a97",
+    "provider": "NCMRWF",
+    "dataset": "NCUM",
+    "original_filename": "ncum_00Z_20260927_lead24_1790513584.nc",
+    "converted_filename": "ncum_00Z_20260927_lead24_1790513584.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "canonical/ncmrwf/ncum_00Z_20260927_lead24_1790513584.nc",
+    "storage_backend": "MINIO",
+    "file_size": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "downloaded_at": "2026-09-27T14:17:34.153101+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T14:17:34.153113+00:00",
+    "metadata": {
+      "import_id": "ncum_ncum_00Z_20260927_lead24_1790513584_07c25a97",
+      "source_id": "NCMRWF_NCUM",
+      "filename": "ncum_00Z_20260927_lead24_1790513584.nc",
+      "filepath": "D:\\SIH26080\\data\\real\\incoming\\ncum_00Z_20260927_lead24_1790513584.nc",
+      "provider": "NCMRWF",
+      "source_type": "NCUM",
+      "authority_level": "AUTHORITATIVE_PRIMARY",
+      "format": "NETCDF4",
+      "size_bytes": 1293896,
+      "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+      "import_timestamp": "2026-09-27T12:53:04.996697+00:00",
+      "data_mode": "REAL_DATA_EXPERIMENT",
+      "validation_status": "PASS",
+      "validation_notes": [
+        "File satisfies all NCUM operational feature contracts and metadata standards."
+      ],
+      "validation_error_detail": null,
+      "failure_stage": "NONE",
+      "cycle": "00Z",
+      "initialization_time": "2026-09-27T00:00:00Z",
+      "valid_time": "2026-09-28T00:00:00Z",
+      "lead_time_hours": 24,
+      "variables": [
+        "lat",
+        "lon",
+        "precip_nwp_raw",
+        "u850",
+        "v850",
+        "mslp",
+        "t850",
+        "cape",
+        "wind_speed_850",
+        "wind_dir_850",
+        "lead_time_hours",
+        "latitude",
+        "longitude",
+        "elevation_m",
+        "day_of_year_sin",
+        "day_of_year_cos",
+        "zonal_shear",
+        "monsoon_trough_intensity",
+        "meridional_flow",
+        "humidity_proxy"
+      ],
+      "dimensions": {
+        "lat": 129,
+        "lon": 137
+      },
+      "lat_range": [
+        6.5,
+        38.5
+      ],
+      "lon_range": [
+        66.5,
+        100.5
+      ],
+      "resolution": 0.25,
+      "units_map": {
+        "lat": "deg_N",
+        "lon": "deg_E",
+        "precip_nwp_raw": "mm",
+        "u850": "m/s",
+        "v850": "m/s",
+        "mslp": "hPa",
+        "t850": "K",
+        "cape": "J/kg",
+        "wind_speed_850": "m/s",
+        "wind_dir_850": "deg",
+        "lead_time_hours": "hours",
+        "latitude": "deg_N",
+        "longitude": "deg_E",
+        "elevation_m": "m",
+        "day_of_year_sin": "dimensionless",
+        "day_of_year_cos": "dimensionless",
+        "zonal_shear": "m/s",
+        "monsoon_trough_intensity": "hPa",
+        "meridional_flow": "m/s",
+        "humidity_proxy": "dimensionless"
+      },
+      "feature_mappings": [
+        {
+          "ramp_feature": "precip_nwp_raw",
+          "source_variable": "precip_nwp_raw",
+          "unit": "mm",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "u850",
+          "source_variable": "u850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "v850",
+          "source_variable": "v850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "mslp",
+          "source_variable": "mslp",
+          "unit": "hPa",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "t850",
+          "source_variable": "t850",
+          "unit": "K",
+          "source_grid": null,
+          "status": "UNIT_CONVERSION_REQUIRED",
+          "notes": "Unit conversion needed: K -> degC"
+        },
+        {
+          "ramp_feature": "cape",
+          "source_variable": "cape",
+          "unit": "J/kg",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "wind_speed_850",
+          "source_variable": "wind_speed_850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "wind_dir_850",
+          "source_variable": "wind_dir_850",
+          "unit": "deg",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "lead_time_hours",
+          "source_variable": "lead_time_hours",
+          "unit": "hours",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "latitude",
+          "source_variable": "latitude",
+          "unit": "deg_N",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "longitude",
+          "source_variable": "longitude",
+          "unit": "deg_E",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "elevation_m",
+          "source_variable": "elevation_m",
+          "unit": "m",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "day_of_year_sin",
+          "source_variable": "day_of_year_sin",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "day_of_year_cos",
+          "source_variable": "day_of_year_cos",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "zonal_shear",
+          "source_variable": "zonal_shear",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "monsoon_trough_intensity",
+          "source_variable": "monsoon_trough_intensity",
+          "unit": "hPa",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "meridional_flow",
+          "source_variable": "meridional_flow",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "humidity_proxy",
+          "source_variable": "humidity_proxy",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "UNIT_CONVERSION_REQUIRED",
+          "notes": "Unit conversion needed: dimensionless -> %"
+        }
+      ],
+      "is_ground_truth_only": false,
+      "promoted_path": null,
+      "rejected_path": null,
+      "rejected_reason": null
+    }
+  },
+  "dl_imd_1790513504_20260927": {
+    "id": "dl_imd_1790513504_20260927",
+    "provider": "IMD",
+    "dataset": "IMD_RAINFALL_025",
+    "original_filename": "rain_ind0.25_20260927.grd",
+    "converted_filename": "imd_rainfall_20260927.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/imd/rain_ind0.25_20260927.grd",
+    "storage_backend": "MINIO",
+    "file_size": 70692,
+    "sha256": "77e6125e9937497f76e8ed46571bc5a17f55630fec8bf05271a50a117bfa9ca2",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "download_url": null,
+    "downloaded_at": "2026-09-27T12:51:44.418651+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T12:51:44.418651+00:00",
+    "metadata": {
+      "source_id": null,
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "Unknown",
+      "adapter_note": "Downloaded and converted using official IMD adapter (IMD Pune)"
+    }
+  },
+  "dl_ncmrwf_1790513548_20260912": {
+    "id": "dl_ncmrwf_1790513548_20260912",
+    "provider": "NCMRWF",
+    "dataset": "NCUM",
+    "original_filename": null,
+    "converted_filename": null,
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/ncmrwf/None",
+    "storage_backend": "MINIO",
+    "file_size": 0,
+    "sha256": null,
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "download_url": "https://nwp.ncmrwf.gov.in/archive/ncum/{cycle}/{date}/ncum_{lead}.nc",
+    "downloaded_at": "2026-09-27T12:52:28.371702+00:00",
+    "validation_status": "BLOCKED",
+    "import_status": "NOT_IMPORTED",
+    "created_at": "2026-09-27T12:52:28.371702+00:00",
+    "metadata": {
+      "source_id": null,
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "~12 km (NCUM-G) / 0.12\u00b0"
+    }
+  },
+  "dl_ncmrwf_1790513570_20260912": {
+    "id": "dl_ncmrwf_1790513570_20260912",
+    "provider": "NCMRWF",
+    "dataset": "NCUM",
+    "original_filename": null,
+    "converted_filename": null,
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/ncmrwf/None",
+    "storage_backend": "MINIO",
+    "file_size": 0,
+    "sha256": null,
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "download_url": "https://nwp.ncmrwf.gov.in/archive/ncum/{cycle}/{date}/ncum_{lead}.nc",
+    "downloaded_at": "2026-09-27T12:52:50.483287+00:00",
+    "validation_status": "BLOCKED",
+    "import_status": "NOT_IMPORTED",
+    "created_at": "2026-09-27T12:52:50.483287+00:00",
+    "metadata": {
+      "source_id": null,
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "~12 km (NCUM-G) / 0.12\u00b0"
+    }
+  },
+  "dl_ncmrwf_1790513579_20260927": {
+    "id": "dl_ncmrwf_1790513579_20260927",
+    "provider": "NCMRWF",
+    "dataset": "NCUM",
+    "original_filename": "ncum_00Z_20260927_lead24.nc",
+    "converted_filename": null,
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/ncmrwf/ncum_00Z_20260927_lead24.nc",
+    "storage_backend": "MINIO",
+    "file_size": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "download_url": "https://nwp.ncmrwf.gov.in/archive/ncum/{cycle}/{date}/ncum_{lead}.nc",
+    "downloaded_at": "2026-09-27T12:52:59.158750+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T12:52:59.158750+00:00",
+    "metadata": {
+      "source_id": null,
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "~12 km (NCUM-G) / 0.12\u00b0",
+      "features_count": 20
+    }
+  },
+  "ncum_ncum_00Z_20260927_lead24_1790525201_07c25a97": {
+    "id": "ncum_ncum_00Z_20260927_lead24_1790525201_07c25a97",
+    "provider": "NCMRWF",
+    "dataset": "NCUM",
+    "original_filename": "ncum_00Z_20260927_lead24_1790525201.nc",
+    "converted_filename": "ncum_00Z_20260927_lead24_1790525201.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "canonical/ncmrwf/ncum_00Z_20260927_lead24_1790525201.nc",
+    "storage_backend": "MINIO",
+    "file_size": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "downloaded_at": "2026-09-27T16:16:53.636578+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T16:16:53.636595+00:00",
+    "metadata": {
+      "import_id": "ncum_ncum_00Z_20260927_lead24_1790525201_07c25a97",
+      "source_id": "NCMRWF_NCUM",
+      "filename": "ncum_00Z_20260927_lead24_1790525201.nc",
+      "filepath": "D:\\SIH26080\\data\\real\\incoming\\ncum_00Z_20260927_lead24_1790525201.nc",
+      "provider": "NCMRWF",
+      "source_type": "NCUM",
+      "authority_level": "AUTHORITATIVE_PRIMARY",
+      "format": "NETCDF4",
+      "size_bytes": 1293896,
+      "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+      "import_timestamp": "2026-09-27T16:06:41.789084+00:00",
+      "data_mode": "REAL_DATA_EXPERIMENT",
+      "validation_status": "PASS",
+      "validation_notes": [
+        "File satisfies all NCUM operational feature contracts and metadata standards."
+      ],
+      "validation_error_detail": null,
+      "failure_stage": "NONE",
+      "cycle": "00Z",
+      "initialization_time": "2026-09-27T00:00:00Z",
+      "valid_time": "2026-09-28T00:00:00Z",
+      "lead_time_hours": 24,
+      "variables": [
+        "lat",
+        "lon",
+        "precip_nwp_raw",
+        "u850",
+        "v850",
+        "mslp",
+        "t850",
+        "cape",
+        "wind_speed_850",
+        "wind_dir_850",
+        "lead_time_hours",
+        "latitude",
+        "longitude",
+        "elevation_m",
+        "day_of_year_sin",
+        "day_of_year_cos",
+        "zonal_shear",
+        "monsoon_trough_intensity",
+        "meridional_flow",
+        "humidity_proxy"
+      ],
+      "dimensions": {
+        "lat": 129,
+        "lon": 137
+      },
+      "lat_range": [
+        6.5,
+        38.5
+      ],
+      "lon_range": [
+        66.5,
+        100.5
+      ],
+      "resolution": 0.25,
+      "units_map": {
+        "lat": "deg_N",
+        "lon": "deg_E",
+        "precip_nwp_raw": "mm",
+        "u850": "m/s",
+        "v850": "m/s",
+        "mslp": "hPa",
+        "t850": "K",
+        "cape": "J/kg",
+        "wind_speed_850": "m/s",
+        "wind_dir_850": "deg",
+        "lead_time_hours": "hours",
+        "latitude": "deg_N",
+        "longitude": "deg_E",
+        "elevation_m": "m",
+        "day_of_year_sin": "dimensionless",
+        "day_of_year_cos": "dimensionless",
+        "zonal_shear": "m/s",
+        "monsoon_trough_intensity": "hPa",
+        "meridional_flow": "m/s",
+        "humidity_proxy": "dimensionless"
+      },
+      "feature_mappings": [
+        {
+          "ramp_feature": "precip_nwp_raw",
+          "source_variable": "precip_nwp_raw",
+          "unit": "mm",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "u850",
+          "source_variable": "u850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "v850",
+          "source_variable": "v850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "mslp",
+          "source_variable": "mslp",
+          "unit": "hPa",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "t850",
+          "source_variable": "t850",
+          "unit": "K",
+          "source_grid": null,
+          "status": "UNIT_CONVERSION_REQUIRED",
+          "notes": "Unit conversion needed: K -> degC"
+        },
+        {
+          "ramp_feature": "cape",
+          "source_variable": "cape",
+          "unit": "J/kg",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "wind_speed_850",
+          "source_variable": "wind_speed_850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "wind_dir_850",
+          "source_variable": "wind_dir_850",
+          "unit": "deg",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "lead_time_hours",
+          "source_variable": "lead_time_hours",
+          "unit": "hours",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "latitude",
+          "source_variable": "latitude",
+          "unit": "deg_N",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "longitude",
+          "source_variable": "longitude",
+          "unit": "deg_E",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "elevation_m",
+          "source_variable": "elevation_m",
+          "unit": "m",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "day_of_year_sin",
+          "source_variable": "day_of_year_sin",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "day_of_year_cos",
+          "source_variable": "day_of_year_cos",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "zonal_shear",
+          "source_variable": "zonal_shear",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "monsoon_trough_intensity",
+          "source_variable": "monsoon_trough_intensity",
+          "unit": "hPa",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "meridional_flow",
+          "source_variable": "meridional_flow",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "humidity_proxy",
+          "source_variable": "humidity_proxy",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "UNIT_CONVERSION_REQUIRED",
+          "notes": "Unit conversion needed: dimensionless -> %"
+        }
+      ],
+      "is_ground_truth_only": false,
+      "promoted_path": null,
+      "rejected_path": null,
+      "rejected_reason": null
+    }
+  },
+  "dl_ncmrwf_1790525192_20260927": {
+    "id": "dl_ncmrwf_1790525192_20260927",
+    "provider": "NCMRWF",
+    "dataset": "NCUM",
+    "original_filename": "ncum_00Z_20260927_lead24.nc",
+    "converted_filename": null,
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/ncmrwf/ncum_00Z_20260927_lead24.nc",
+    "storage_backend": "MINIO",
+    "file_size": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "download_url": "https://nwp.ncmrwf.gov.in/archive/ncum/{cycle}/{date}/ncum_{lead}.nc",
+    "downloaded_at": "2026-09-27T16:06:32.983503+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T16:06:32.983503+00:00",
+    "metadata": {
+      "source_id": null,
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "~12 km (NCUM-G) / 0.12\u00b0",
+      "features_count": 20
+    }
+  },
+  "dl_ncmrwf_1790525219_20260927": {
+    "id": "dl_ncmrwf_1790525219_20260927",
+    "provider": "NCMRWF",
+    "dataset": "NEPS",
+    "original_filename": "neps_00Z_20260927_lead24.nc",
+    "converted_filename": null,
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/ncmrwf/neps_00Z_20260927_lead24.nc",
+    "storage_backend": "MINIO",
+    "file_size": 103244,
+    "sha256": "2096c18dfff944715d26bfe7f45da96d93395efb23b81a5ad93e2c241c75c907",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "download_url": "https://nwp.ncmrwf.gov.in/archive/neps/{cycle}/{date}/neps_{lead}.nc",
+    "downloaded_at": "2026-09-27T16:06:59.148275+00:00",
+    "validation_status": "PASS",
+    "import_status": "NOT_IMPORTED",
+    "created_at": "2026-09-27T16:06:59.148275+00:00",
+    "metadata": {
+      "source_id": null,
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "~12 km (control) / ~33 km (perturbed members)",
+      "features_count": 23
+    }
+  }
+}

@@ -47,26 +47,35 @@ class RealDataProvider(BaseDataProvider):
 
     def _inspect_and_bind(self) -> None:
         """Inspects disk to bind the most appropriate provider."""
-        summary = self.discovery_service.discover()
+        # Fast path: check file existence without running expensive xarray discovery
+        has_nc = False
+        for root in [self.real_data_dir, Path("data/raw")]:
+            if root.exists():
+                for p in root.rglob("*.nc"):
+                    if "test_fixture" not in p.name:
+                        has_nc = True
+                        break
+            if has_nc:
+                break
 
-        # Check for real NetCDF
-        if summary.netcdf_files_count > 0:
-            logger.info(f"Binding NetCDFDataProvider with {summary.netcdf_files_count} files.")
+        if has_nc:
+            logger.info("Binding NetCDFDataProvider.")
             self._active_provider = NetCDFDataProvider(self.real_data_dir)
             return
 
         # Check for real Parquet
-        if summary.parquet_files_count > 0:
-            for f in summary.files:
-                if f.file_format == "Parquet" and "observed_rainfall" in f.variables:
-                    logger.info(f"Binding ParquetDataProvider with {f.filepath}.")
-                    self._active_provider = ParquetDataProvider(f.filepath, data_mode=DataMode.REAL)
-                    return
+        has_pq = False
+        for root in [self.real_data_dir, Path("data/raw")]:
+            if root.exists():
+                for p in root.rglob("*.parquet"):
+                    has_pq = True
+                    break
+            if has_pq:
+                break
 
-        # Check for real CSV
-        if summary.csv_files_count > 0:
-            logger.info(f"Binding CSVDataProvider with {summary.csv_files_count} files.")
-            self._active_provider = CSVDataProvider(self.real_data_dir, data_mode=DataMode.REAL)
+        if has_pq:
+            logger.info("Binding ParquetDataProvider.")
+            self._active_provider = ParquetDataProvider(self.real_data_dir, data_mode=DataMode.REAL)
             return
 
         # If no real data found, bind synthetic fallback if allowed

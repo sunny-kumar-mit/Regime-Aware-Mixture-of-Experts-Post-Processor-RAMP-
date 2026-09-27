@@ -1,0 +1,7 @@
+{
+  "lat_min": 6.5,
+  "lat_max": 38.5,
+  "lon_min": 66.5,
+  "lon_max": 100.5,
+  "resolution_deg": 0.25
+}

@@ -1,0 +1,52 @@
+{
+  "registry_version": "2.0.0",
+  "updated_at": "2026-09-27T10:22:36.474471+00:00",
+  "registered_models": {
+    "ramp_global_v2.0.0": {
+      "model_id": "ramp_global_v2.0.0",
+      "model_type": "GLOBAL_ML",
+      "lifecycle_status": "DEVELOPMENT",
+      "dataset_version": "ramp_dataset_real_v1.0.0",
+      "data_mode": "SYNTHETIC_DEMO",
+      "registered_at": "2026-09-27T10:22:35.975766+00:00",
+      "model_checksum": "632981bbfaeb9e9579e4ad7493171691dd058047f0cb7f6242eab4301708cf71",
+      "promotion_eligible": false
+    },
+    "ramp_regime_v2.0.0": {
+      "model_id": "ramp_regime_v2.0.0",
+      "model_type": "WEATHER_REGIME_CLASSIFIER",
+      "lifecycle_status": "DEVELOPMENT",
+      "dataset_version": "ramp_dataset_real_v1.0.0",
+      "data_mode": "SYNTHETIC_DEMO",
+      "registered_at": "2026-09-27T10:22:36.126759+00:00",
+      "model_checksum": "5237e3a5fed42abacb52b607bd1cf13d0ae3d8da2e8b30b060ce7fa8da9a4fc3",
+      "promotion_eligible": false
+    },
+    "ramp_moe_v2.0.0": {
+      "model_id": "ramp_moe_v2.0.0",
+      "model_type": "REGIME_AWARE_MOE",
+      "lifecycle_status": "DEVELOPMENT",
+      "dataset_version": "ramp_dataset_real_v1.0.0",
+      "data_mode": "SYNTHETIC_DEMO",
+      "registered_at": "2026-09-27T10:22:36.294357+00:00",
+      "model_checksum": "bf8aaf917323d02d0669ade81c44d4a165df9ea92d814eef1e45e25fddba105e",
+      "promotion_eligible": false
+    },
+    "ramp_extreme_v2.0.0": {
+      "model_id": "ramp_extreme_v2.0.0",
+      "model_type": "EXTREME_PROBABILITY_MODELS",
+      "lifecycle_status": "DEVELOPMENT",
+      "dataset_version": "ramp_dataset_real_v1.0.0",
+      "data_mode": "SYNTHETIC_DEMO",
+      "registered_at": "2026-09-27T10:22:36.457932+00:00",
+      "model_checksum": "9f337b3ad14a6d2e3a2cf4648f7ca575e71e9a25cb2d31989bde31e5d8249f2a",
+      "promotion_eligible": false
+    }
+  },
+  "active_models": {
+    "GLOBAL_ML": "ramp_global_v2.0.0",
+    "WEATHER_REGIME_CLASSIFIER": "ramp_regime_v2.0.0",
+    "REGIME_AWARE_MOE": "ramp_moe_v2.0.0",
+    "EXTREME_PROBABILITY_MODELS": "ramp_extreme_v2.0.0"
+  }
+}

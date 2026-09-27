@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  backend-staging:
+    build:
+      context: ../../
+      dockerfile: deployment/docker/Dockerfile.backend
+    container_name: ramp-backend-staging
+    restart: unless-stopped
+    ports:
+      - "8001:8000"
+    environment:
+      - APP_ENV=STAGING
+      - RAMP_DATA_MODE=STAGING_REAL_DATA
+      - ENABLE_STAGING_MODE=1
+      - NCMRWF_DATA_ROOT=/data/ncmrwf_staging
+      - IMD_DATA_ROOT=/data/imd_staging
+    volumes:
+      - staging-ncmrwf:/data/ncmrwf_staging:ro
+      - staging-imd:/data/imd_staging:ro
+      - staging-audit:/data/audit
+      - staging-forecasts:/data/processed/forecasts
+
+volumes:
+  staging-ncmrwf:
+  staging-imd:
+  staging-audit:
+  staging-forecasts:

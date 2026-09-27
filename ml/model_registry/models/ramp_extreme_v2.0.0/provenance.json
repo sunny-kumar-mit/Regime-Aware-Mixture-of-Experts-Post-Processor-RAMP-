@@ -1,0 +1,14 @@
+{
+  "git_commit": "8c1191e4d8a5094d295c315ca43b8f86f0f94159",
+  "libraries": {
+    "python": "3.14.2",
+    "numpy": "2.4.4",
+    "pandas": "3.0.2",
+    "scipy": "1.17.1",
+    "sklearn": "1.8.0",
+    "lightgbm": "4.7.0",
+    "pydantic": "2.13.4",
+    "fastapi": "0.141.1"
+  },
+  "registered_at": "2026-09-27T10:22:36.457239+00:00"
+}

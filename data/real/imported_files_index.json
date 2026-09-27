@@ -1,0 +1,3453 @@
+{
+  "imd_imd_invalid_negative_rain_7df55c61": {
+    "import_id": "imd_imd_invalid_negative_rain_7df55c61",
+    "source_id": "IMD_OBSERVATION",
+    "filename": "imd_invalid_negative_rain.nc",
+    "filepath": "data\\real\\rejected\\imd_invalid_negative_rain.nc",
+    "provider": "IMD",
+    "source_type": "IMD_OBSERVATION",
+    "authority_level": "AUTHORITATIVE_PRIMARY",
+    "format": "NETCDF4",
+    "size_bytes": 6544,
+    "sha256": "7df55c616b95f3185e5d992d8252149d2b854547f026f381f9479115695fd1aa",
+    "import_timestamp": "2026-09-27T05:33:51.254696+00:00",
+    "data_mode": "REAL_DATA_EXPERIMENT",
+    "validation_status": "REJECTED",
+    "validation_notes": [
+      "QC_FAILED: Physical violation detected: rainfall contains negative values (-50.0 mm/day)"
+    ],
+    "failure_stage": "QC_FAILED",
+    "cycle": null,
+    "initialization_time": null,
+    "valid_time": "2026-09-28",
+    "lead_time_hours": null,
+    "variables": [
+      "observed_rainfall_mm"
+    ],
+    "dimensions": {
+      "lat": 10,
+      "lon": 10
+    },
+    "lat_range": null,
+    "lon_range": null,
+    "resolution": null,
+    "units_map": {
+      "rain": "mm/day"
+    },
+    "feature_mappings": [],
+    "is_ground_truth_only": true,
+    "promoted_path": "data\\real\\validated\\imd_invalid_negative_rain.nc",
+    "rejected_path": "data\\real\\rejected\\imd_invalid_negative_rain.nc",
+    "rejected_reason": "Fails quality check",
+    "validation_error_detail": {
+      "source": "IMD",
+      "dataset": "IMD_GRIDDED_RAINFALL",
+      "rule": "NON_NEGATIVE_RAINFALL",
+      "severity": "ERROR",
+      "variable": "observed_rainfall_mm",
+      "message": "Physical violation: invalid negative rainfall detected (-50.0 mm/day).",
+      "expected": "rainfall >= 0.0 mm/day",
+      "actual": "-50.0 mm/day",
+      "location": "Observational grid cells",
+      "remediation": "Reject observational file to maintain ground truth integrity; inspect IMD quality control flag."
+    }
+  },
+  "imd_imd_valid_025_grid_f01e94c8": {
+    "import_id": "imd_imd_valid_025_grid_f01e94c8",
+    "source_id": "IMD_OBSERVATION",
+    "filename": "imd_valid_025_grid.nc",
+    "filepath": "D:\\SIH26080\\tests\\fixtures\\phase18\\imd_valid_025_grid.nc",
+    "provider": "IMD",
+    "source_type": "IMD_OBSERVATION",
+    "authority_level": "AUTHORITATIVE_PRIMARY",
+    "format": "NETCDF4",
+    "size_bytes": 80358,
+    "sha256": "f01e94c8f1bfbdfbdef63841bdb79bc3fef645766594aef55af811be3a5944f1",
+    "import_timestamp": "2026-09-27T06:43:00.999187+00:00",
+    "data_mode": "REAL_DATA_EXPERIMENT",
+    "validation_status": "PASS",
+    "validation_notes": [
+      "IMD observation satisfies 0.25\u00b0 grid, non-negativity, and metadata standards."
+    ],
+    "failure_stage": "NONE",
+    "cycle": null,
+    "initialization_time": null,
+    "valid_time": "2026-09-28",
+    "lead_time_hours": null,
+    "variables": [
+      "lat",
+      "lon",
+      "observed_rainfall_mm"
+    ],
+    "dimensions": {
+      "lat": 129,
+      "lon": 137
+    },
+    "lat_range": [
+      6.5,
+      38.5
+    ],
+    "lon_range": [
+      66.5,
+      100.5
+    ],
+    "resolution": 0.25,
+    "units_map": {
+      "rain": "mm/day"
+    },
+    "feature_mappings": [],
+    "is_ground_truth_only": true,
+    "promoted_path": null,
+    "rejected_path": null,
+    "rejected_reason": null
+  },
+  "ncum_ncum_bad_coordinates_fe362f45": {
+    "import_id": "ncum_ncum_bad_coordinates_fe362f45",
+    "source_id": "NCMRWF_NCUM",
+    "filename": "ncum_bad_coordinates.nc",
+    "filepath": "D:\\SIH26080\\tests\\fixtures\\phase18\\ncum_bad_coordinates.nc",
+    "provider": "NCMRWF",
+    "source_type": "NCUM",
+    "authority_level": "AUTHORITATIVE_PRIMARY",
+    "format": "NETCDF4",
+    "size_bytes": 25399,
+    "sha256": "fe362f459c4de32df58cab9293f8625d4b3400ced4a55bb62957220fef022412",
+    "import_timestamp": "2026-09-27T06:43:01.008655+00:00",
+    "data_mode": "BLOCKED",
+    "validation_status": "FAIL",
+    "validation_notes": [
+      "Grid invalid: Domain bounds (50.0-70.0N, 10.0-30.0E) do not enclose India canonical extent"
+    ],
+    "failure_stage": "GRID_FAILED",
+    "cycle": "00Z",
+    "initialization_time": "2026-09-27T00:00:00Z",
+    "valid_time": "2026-09-28T00:00:00Z",
+    "lead_time_hours": 24,
+    "variables": [
+      "lat",
+      "lon",
+      "precip_nwp_raw",
+      "u850",
+      "v850",
+      "mslp",
+      "t850",
+      "cape",
+      "wind_speed_850",
+      "wind_dir_850",
+      "lead_time_hours",
+      "latitude",
+      "longitude",
+      "elevation_m",
+      "day_of_year_sin",
+      "day_of_year_cos",
+      "zonal_shear",
+      "monsoon_trough_intensity",
+      "meridional_flow",
+      "humidity_proxy"
+    ],
+    "dimensions": {
+      "lat": 10,
+      "lon": 10
+    },
+    "lat_range": [
+      50.0,
+      70.0
+    ],
+    "lon_range": [
+      10.0,
+      30.0
+    ],
+    "resolution": 2.2222,
+    "units_map": {},
+    "feature_mappings": [
+      {
+        "ramp_feature": "precip_nwp_raw",
+        "source_variable": "precip_nwp_raw",
+        "unit": "mm",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "u850",
+        "source_variable": "u850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "v850",
+        "source_variable": "v850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "mslp",
+        "source_variable": "mslp",
+        "unit": "hPa",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "t850",
+        "source_variable": "t850",
+        "unit": "degC",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "cape",
+        "source_variable": "cape",
+        "unit": "J/kg",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "wind_speed_850",
+        "source_variable": "wind_speed_850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "wind_dir_850",
+        "source_variable": "wind_dir_850",
+        "unit": "deg",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "lead_time_hours",
+        "source_variable": "lead_time_hours",
+        "unit": "hours",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "latitude",
+        "source_variable": "latitude",
+        "unit": "deg_N",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "longitude",
+        "source_variable": "longitude",
+        "unit": "deg_E",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "elevation_m",
+        "source_variable": "elevation_m",
+        "unit": "m",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "day_of_year_sin",
+        "source_variable": "day_of_year_sin",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "day_of_year_cos",
+        "source_variable": "day_of_year_cos",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "zonal_shear",
+        "source_variable": "zonal_shear",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "monsoon_trough_intensity",
+        "source_variable": "monsoon_trough_intensity",
+        "unit": "hPa",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "meridional_flow",
+        "source_variable": "meridional_flow",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "humidity_proxy",
+        "source_variable": "humidity_proxy",
+        "unit": "%",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      }
+    ],
+    "is_ground_truth_only": false,
+    "promoted_path": null,
+    "rejected_path": null,
+    "rejected_reason": null
+  },
+  "ncum_ncum_invalid_missing_predictors_60d480c8": {
+    "import_id": "ncum_ncum_invalid_missing_predictors_60d480c8",
+    "source_id": "NCMRWF_NCUM",
+    "filename": "ncum_invalid_missing_predictors.nc",
+    "filepath": "D:\\SIH26080\\tests\\fixtures\\phase18\\ncum_invalid_missing_predictors.nc",
+    "provider": "NCMRWF",
+    "source_type": "NCUM",
+    "authority_level": "AUTHORITATIVE_PRIMARY",
+    "format": "NETCDF4",
+    "size_bytes": 9086,
+    "sha256": "60d480c86396190575969ebeadc33537dacd9af979f0c0597271d3c1240a074f",
+    "import_timestamp": "2026-09-27T06:43:01.014228+00:00",
+    "data_mode": "BLOCKED",
+    "validation_status": "BLOCKED",
+    "validation_notes": [
+      "MISSING_REQUIRED_FEATURE: 16 predictors missing (u850, v850, mslp, cape, wind_speed_850...)"
+    ],
+    "failure_stage": "MISSING_FEATURE",
+    "cycle": "00Z",
+    "initialization_time": "2026-09-27T00:00:00Z",
+    "valid_time": "2026-09-28T00:00:00Z",
+    "lead_time_hours": 24,
+    "variables": [
+      "precip_nwp_raw",
+      "t850"
+    ],
+    "dimensions": {
+      "lat": 10,
+      "lon": 10
+    },
+    "lat_range": null,
+    "lon_range": null,
+    "resolution": null,
+    "units_map": {
+      "precip_nwp_raw": "mm",
+      "t850": "K"
+    },
+    "feature_mappings": [
+      {
+        "ramp_feature": "precip_nwp_raw",
+        "source_variable": "precip_nwp_raw",
+        "unit": "mm",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "u850",
+        "source_variable": null,
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "v850",
+        "source_variable": null,
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "mslp",
+        "source_variable": null,
+        "unit": "hPa",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "t850",
+        "source_variable": "t850",
+        "unit": "K",
+        "source_grid": null,
+        "status": "UNIT_CONVERSION_REQUIRED",
+        "notes": "Unit conversion needed: K -> degC"
+      },
+      {
+        "ramp_feature": "cape",
+        "source_variable": null,
+        "unit": "J/kg",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "wind_speed_850",
+        "source_variable": null,
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "wind_dir_850",
+        "source_variable": null,
+        "unit": "deg",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "lead_time_hours",
+        "source_variable": null,
+        "unit": "hours",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "latitude",
+        "source_variable": null,
+        "unit": "deg_N",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "longitude",
+        "source_variable": null,
+        "unit": "deg_E",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "elevation_m",
+        "source_variable": null,
+        "unit": "m",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "day_of_year_sin",
+        "source_variable": null,
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "day_of_year_cos",
+        "source_variable": null,
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "zonal_shear",
+        "source_variable": null,
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "monsoon_trough_intensity",
+        "source_variable": null,
+        "unit": "hPa",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "meridional_flow",
+        "source_variable": null,
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "humidity_proxy",
+        "source_variable": null,
+        "unit": "%",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      }
+    ],
+    "is_ground_truth_only": false,
+    "promoted_path": null,
+    "rejected_path": null,
+    "rejected_reason": null
+  },
+  "ncum_ncum_valid_test_fixture_07c25a97": {
+    "import_id": "ncum_ncum_valid_test_fixture_07c25a97",
+    "source_id": "NCMRWF_NCUM",
+    "filename": "ncum_valid_test_fixture.nc",
+    "filepath": "D:\\SIH26080\\tests\\fixtures\\phase18\\ncum_valid_test_fixture.nc",
+    "provider": "NCMRWF",
+    "source_type": "NCUM",
+    "authority_level": "AUTHORITATIVE_PRIMARY",
+    "format": "NETCDF4",
+    "size_bytes": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "import_timestamp": "2026-09-27T06:43:01.027743+00:00",
+    "data_mode": "REAL_DATA_EXPERIMENT",
+    "validation_status": "PASS",
+    "validation_notes": [
+      "File satisfies all NCUM operational feature contracts and metadata standards."
+    ],
+    "failure_stage": "NONE",
+    "cycle": "00Z",
+    "initialization_time": "2026-09-27T00:00:00Z",
+    "valid_time": "2026-09-28T00:00:00Z",
+    "lead_time_hours": 24,
+    "variables": [
+      "lat",
+      "lon",
+      "precip_nwp_raw",
+      "u850",
+      "v850",
+      "mslp",
+      "t850",
+      "cape",
+      "wind_speed_850",
+      "wind_dir_850",
+      "lead_time_hours",
+      "latitude",
+      "longitude",
+      "elevation_m",
+      "day_of_year_sin",
+      "day_of_year_cos",
+      "zonal_shear",
+      "monsoon_trough_intensity",
+      "meridional_flow",
+      "humidity_proxy"
+    ],
+    "dimensions": {
+      "lat": 129,
+      "lon": 137
+    },
+    "lat_range": [
+      6.5,
+      38.5
+    ],
+    "lon_range": [
+      66.5,
+      100.5
+    ],
+    "resolution": 0.25,
+    "units_map": {
+      "lat": "deg_N",
+      "lon": "deg_E",
+      "precip_nwp_raw": "mm",
+      "u850": "m/s",
+      "v850": "m/s",
+      "mslp": "hPa",
+      "t850": "K",
+      "cape": "J/kg",
+      "wind_speed_850": "m/s",
+      "wind_dir_850": "deg",
+      "lead_time_hours": "hours",
+      "latitude": "deg_N",
+      "longitude": "deg_E",
+      "elevation_m": "m",
+      "day_of_year_sin": "dimensionless",
+      "day_of_year_cos": "dimensionless",
+      "zonal_shear": "m/s",
+      "monsoon_trough_intensity": "hPa",
+      "meridional_flow": "m/s",
+      "humidity_proxy": "dimensionless"
+    },
+    "feature_mappings": [
+      {
+        "ramp_feature": "precip_nwp_raw",
+        "source_variable": "precip_nwp_raw",
+        "unit": "mm",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "u850",
+        "source_variable": "u850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "v850",
+        "source_variable": "v850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "mslp",
+        "source_variable": "mslp",
+        "unit": "hPa",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "t850",
+        "source_variable": "t850",
+        "unit": "K",
+        "source_grid": null,
+        "status": "UNIT_CONVERSION_REQUIRED",
+        "notes": "Unit conversion needed: K -> degC"
+      },
+      {
+        "ramp_feature": "cape",
+        "source_variable": "cape",
+        "unit": "J/kg",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "wind_speed_850",
+        "source_variable": "wind_speed_850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "wind_dir_850",
+        "source_variable": "wind_dir_850",
+        "unit": "deg",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "lead_time_hours",
+        "source_variable": "lead_time_hours",
+        "unit": "hours",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "latitude",
+        "source_variable": "latitude",
+        "unit": "deg_N",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "longitude",
+        "source_variable": "longitude",
+        "unit": "deg_E",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "elevation_m",
+        "source_variable": "elevation_m",
+        "unit": "m",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "day_of_year_sin",
+        "source_variable": "day_of_year_sin",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "day_of_year_cos",
+        "source_variable": "day_of_year_cos",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "zonal_shear",
+        "source_variable": "zonal_shear",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "monsoon_trough_intensity",
+        "source_variable": "monsoon_trough_intensity",
+        "unit": "hPa",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "meridional_flow",
+        "source_variable": "meridional_flow",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "humidity_proxy",
+        "source_variable": "humidity_proxy",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "UNIT_CONVERSION_REQUIRED",
+        "notes": "Unit conversion needed: dimensionless -> %"
+      }
+    ],
+    "is_ground_truth_only": false,
+    "promoted_path": null,
+    "rejected_path": null,
+    "rejected_reason": null
+  },
+  "neps_neps_missing_members_d01a8e21": {
+    "import_id": "neps_neps_missing_members_d01a8e21",
+    "source_id": "NCMRWF_NEPS",
+    "filename": "neps_missing_members.nc",
+    "filepath": "D:\\SIH26080\\tests\\fixtures\\phase18\\neps_missing_members.nc",
+    "provider": "NCMRWF",
+    "source_type": "NEPS",
+    "authority_level": "AUTHORITATIVE_PRIMARY",
+    "format": "NETCDF4",
+    "size_bytes": 26816,
+    "sha256": "d01a8e21da7ff1777e74af9a6ae90b5aa25e80f673e1c7358084f10a34f5d7e7",
+    "import_timestamp": "2026-09-27T06:43:01.037586+00:00",
+    "data_mode": "BLOCKED",
+    "validation_status": "BLOCKED",
+    "validation_notes": [
+      "NEPS_FEATURES_INCOMPLETE: Discovered 20/23 ensemble members. Missing: 3 members."
+    ],
+    "failure_stage": "MISSING_FEATURE",
+    "cycle": "00Z",
+    "initialization_time": null,
+    "valid_time": null,
+    "lead_time_hours": 24,
+    "variables": [
+      "ens00",
+      "ens01",
+      "ens02",
+      "ens03",
+      "ens04",
+      "ens05",
+      "ens06",
+      "ens07",
+      "ens08",
+      "ens09",
+      "ens10",
+      "ens11",
+      "ens12",
+      "ens13",
+      "ens14",
+      "ens15",
+      "ens16",
+      "ens17",
+      "ens18",
+      "ens19"
+    ],
+    "dimensions": {
+      "lat": 10,
+      "lon": 10
+    },
+    "lat_range": null,
+    "lon_range": null,
+    "resolution": null,
+    "units_map": {
+      "rainfall": "mm"
+    },
+    "feature_mappings": [],
+    "is_ground_truth_only": false,
+    "promoted_path": null,
+    "rejected_path": null,
+    "rejected_reason": null
+  },
+  "neps_neps_valid_23_members_2096c18d": {
+    "import_id": "neps_neps_valid_23_members_2096c18d",
+    "source_id": "NCMRWF_NEPS",
+    "filename": "neps_valid_23_members.nc",
+    "filepath": "D:\\SIH26080\\tests\\fixtures\\phase18\\neps_valid_23_members.nc",
+    "provider": "NCMRWF",
+    "source_type": "NEPS",
+    "authority_level": "AUTHORITATIVE_PRIMARY",
+    "format": "NETCDF4",
+    "size_bytes": 103244,
+    "sha256": "2096c18dfff944715d26bfe7f45da96d93395efb23b81a5ad93e2c241c75c907",
+    "import_timestamp": "2026-09-27T06:43:01.055694+00:00",
+    "data_mode": "REAL_DATA_EXPERIMENT",
+    "validation_status": "PASS",
+    "validation_notes": [
+      "NEPS ensemble satisfies 23-member completeness and spatial requirements."
+    ],
+    "failure_stage": "NONE",
+    "cycle": "00Z",
+    "initialization_time": null,
+    "valid_time": null,
+    "lead_time_hours": 24,
+    "variables": [
+      "ens00",
+      "ens01",
+      "ens02",
+      "ens03",
+      "ens04",
+      "ens05",
+      "ens06",
+      "ens07",
+      "ens08",
+      "ens09",
+      "ens10",
+      "ens11",
+      "ens12",
+      "ens13",
+      "ens14",
+      "ens15",
+      "ens16",
+      "ens17",
+      "ens18",
+      "ens19",
+      "ens20",
+      "ens21",
+      "ens22"
+    ],
+    "dimensions": {
+      "lat": 30,
+      "lon": 30
+    },
+    "lat_range": null,
+    "lon_range": null,
+    "resolution": null,
+    "units_map": {
+      "rainfall": "mm"
+    },
+    "feature_mappings": [],
+    "is_ground_truth_only": false,
+    "promoted_path": null,
+    "rejected_path": null,
+    "rejected_reason": null
+  },
+  "imd_imd_rainfall_20260927_0df64c09": {
+    "import_id": "imd_imd_rainfall_20260927_0df64c09",
+    "source_id": "IMD_OBSERVATION",
+    "filename": "imd_rainfall_20260927.nc",
+    "filepath": "D:\\SIH26080\\data\\real\\incoming\\imd_rainfall_20260927.nc",
+    "provider": "IMD",
+    "source_type": "IMD_OBSERVATION",
+    "authority_level": "AUTHORITATIVE_PRIMARY",
+    "format": "NETCDF4",
+    "size_bytes": 80180,
+    "sha256": "0df64c09311bc6840a7d95fc5ba873d71e87715ce35dd44f4b8aa95f3c63e48c",
+    "import_timestamp": "2026-09-27T05:26:27.123477+00:00",
+    "data_mode": "REAL_DATA_EXPERIMENT",
+    "validation_status": "PASS",
+    "validation_notes": [
+      "IMD observation satisfies 0.25\u00b0 grid, non-negativity, and metadata standards."
+    ],
+    "failure_stage": "NONE",
+    "cycle": null,
+    "initialization_time": null,
+    "valid_time": "2026-09-27",
+    "lead_time_hours": null,
+    "variables": [
+      "lat",
+      "lon",
+      "time",
+      "rain"
+    ],
+    "dimensions": {
+      "lat": 129,
+      "lon": 137,
+      "time": 1
+    },
+    "lat_range": [
+      6.5,
+      38.5
+    ],
+    "lon_range": [
+      66.5,
+      100.5
+    ],
+    "resolution": 0.25,
+    "units_map": {
+      "rain": "mm/day"
+    },
+    "feature_mappings": [],
+    "is_ground_truth_only": true,
+    "promoted_path": null,
+    "rejected_path": null,
+    "rejected_reason": null
+  },
+  "imd_imd_rainfall_20260927_1790486835_0df64c09": {
+    "import_id": "imd_imd_rainfall_20260927_1790486835_0df64c09",
+    "source_id": "IMD_OBSERVATION",
+    "filename": "imd_rainfall_20260927_1790486835.nc",
+    "filepath": "D:\\SIH26080\\data\\real\\incoming\\imd_rainfall_20260927_1790486835.nc",
+    "provider": "IMD",
+    "source_type": "IMD_OBSERVATION",
+    "authority_level": "AUTHORITATIVE_PRIMARY",
+    "format": "NETCDF4",
+    "size_bytes": 80180,
+    "sha256": "0df64c09311bc6840a7d95fc5ba873d71e87715ce35dd44f4b8aa95f3c63e48c",
+    "import_timestamp": "2026-09-27T05:27:15.958495+00:00",
+    "data_mode": "REAL_DATA_EXPERIMENT",
+    "validation_status": "PASS",
+    "validation_notes": [
+      "IMD observation satisfies 0.25\u00b0 grid, non-negativity, and metadata standards."
+    ],
+    "failure_stage": "NONE",
+    "cycle": null,
+    "initialization_time": null,
+    "valid_time": "2026-09-27",
+    "lead_time_hours": null,
+    "variables": [
+      "lat",
+      "lon",
+      "time",
+      "rain"
+    ],
+    "dimensions": {
+      "lat": 129,
+      "lon": 137,
+      "time": 1
+    },
+    "lat_range": [
+      6.5,
+      38.5
+    ],
+    "lon_range": [
+      66.5,
+      100.5
+    ],
+    "resolution": 0.25,
+    "units_map": {
+      "rain": "mm/day"
+    },
+    "feature_mappings": [],
+    "is_ground_truth_only": true,
+    "promoted_path": null,
+    "rejected_path": null,
+    "rejected_reason": null
+  },
+  "imd_imd_rainfall_20260927_1790486929_0df64c09": {
+    "import_id": "imd_imd_rainfall_20260927_1790486929_0df64c09",
+    "source_id": "IMD_OBSERVATION",
+    "filename": "imd_rainfall_20260927_1790486929.nc",
+    "filepath": "D:\\SIH26080\\data\\real\\incoming\\imd_rainfall_20260927_1790486929.nc",
+    "provider": "IMD",
+    "source_type": "IMD_OBSERVATION",
+    "authority_level": "AUTHORITATIVE_PRIMARY",
+    "format": "NETCDF4",
+    "size_bytes": 80180,
+    "sha256": "0df64c09311bc6840a7d95fc5ba873d71e87715ce35dd44f4b8aa95f3c63e48c",
+    "import_timestamp": "2026-09-27T05:28:49.894704+00:00",
+    "data_mode": "REAL_DATA_EXPERIMENT",
+    "validation_status": "PASS",
+    "validation_notes": [
+      "IMD observation satisfies 0.25\u00b0 grid, non-negativity, and metadata standards."
+    ],
+    "failure_stage": "NONE",
+    "cycle": null,
+    "initialization_time": null,
+    "valid_time": "2026-09-27",
+    "lead_time_hours": null,
+    "variables": [
+      "lat",
+      "lon",
+      "time",
+      "rain"
+    ],
+    "dimensions": {
+      "lat": 129,
+      "lon": 137,
+      "time": 1
+    },
+    "lat_range": [
+      6.5,
+      38.5
+    ],
+    "lon_range": [
+      66.5,
+      100.5
+    ],
+    "resolution": 0.25,
+    "units_map": {
+      "rain": "mm/day"
+    },
+    "feature_mappings": [],
+    "is_ground_truth_only": true,
+    "promoted_path": null,
+    "rejected_path": null,
+    "rejected_reason": null
+  },
+  "imd_imd_rainfall_20260927_1790487447_0df64c09": {
+    "import_id": "imd_imd_rainfall_20260927_1790487447_0df64c09",
+    "source_id": "IMD_OBSERVATION",
+    "filename": "imd_rainfall_20260927_1790487447.nc",
+    "filepath": "D:\\SIH26080\\data\\real\\incoming\\imd_rainfall_20260927_1790487447.nc",
+    "provider": "IMD",
+    "source_type": "IMD_OBSERVATION",
+    "authority_level": "AUTHORITATIVE_PRIMARY",
+    "format": "NETCDF4",
+    "size_bytes": 80180,
+    "sha256": "0df64c09311bc6840a7d95fc5ba873d71e87715ce35dd44f4b8aa95f3c63e48c",
+    "import_timestamp": "2026-09-27T05:37:27.259370+00:00",
+    "data_mode": "REAL_DATA_EXPERIMENT",
+    "validation_status": "PASS",
+    "validation_notes": [
+      "IMD observation satisfies 0.25\u00b0 grid, non-negativity, and metadata standards."
+    ],
+    "failure_stage": "NONE",
+    "cycle": null,
+    "initialization_time": null,
+    "valid_time": "2026-09-27",
+    "lead_time_hours": null,
+    "variables": [
+      "lat",
+      "lon",
+      "time",
+      "rain"
+    ],
+    "dimensions": {
+      "lat": 129,
+      "lon": 137,
+      "time": 1
+    },
+    "lat_range": [
+      6.5,
+      38.5
+    ],
+    "lon_range": [
+      66.5,
+      100.5
+    ],
+    "resolution": 0.25,
+    "units_map": {
+      "rain": "mm/day"
+    },
+    "feature_mappings": [],
+    "is_ground_truth_only": true,
+    "promoted_path": null,
+    "rejected_path": null,
+    "rejected_reason": null
+  },
+  "ncum_ncum_00Z_20260927_lead24_07c25a97": {
+    "import_id": "ncum_ncum_00Z_20260927_lead24_07c25a97",
+    "source_id": "NCMRWF_NCUM",
+    "filename": "ncum_00Z_20260927_lead24.nc",
+    "filepath": "D:\\SIH26080\\data\\real\\incoming\\ncum_00Z_20260927_lead24.nc",
+    "provider": "NCMRWF",
+    "source_type": "NCUM",
+    "authority_level": "AUTHORITATIVE_PRIMARY",
+    "format": "NETCDF4",
+    "size_bytes": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "import_timestamp": "2026-09-27T05:57:06.507895+00:00",
+    "data_mode": "REAL_DATA_EXPERIMENT",
+    "validation_status": "PASS",
+    "validation_notes": [
+      "File satisfies all NCUM operational feature contracts and metadata standards."
+    ],
+    "failure_stage": "NONE",
+    "cycle": "00Z",
+    "initialization_time": "2026-09-27T00:00:00Z",
+    "valid_time": "2026-09-28T00:00:00Z",
+    "lead_time_hours": 24,
+    "variables": [
+      "lat",
+      "lon",
+      "precip_nwp_raw",
+      "u850",
+      "v850",
+      "mslp",
+      "t850",
+      "cape",
+      "wind_speed_850",
+      "wind_dir_850",
+      "lead_time_hours",
+      "latitude",
+      "longitude",
+      "elevation_m",
+      "day_of_year_sin",
+      "day_of_year_cos",
+      "zonal_shear",
+      "monsoon_trough_intensity",
+      "meridional_flow",
+      "humidity_proxy"
+    ],
+    "dimensions": {
+      "lat": 129,
+      "lon": 137
+    },
+    "lat_range": [
+      6.5,
+      38.5
+    ],
+    "lon_range": [
+      66.5,
+      100.5
+    ],
+    "resolution": 0.25,
+    "units_map": {
+      "lat": "deg_N",
+      "lon": "deg_E",
+      "precip_nwp_raw": "mm",
+      "u850": "m/s",
+      "v850": "m/s",
+      "mslp": "hPa",
+      "t850": "K",
+      "cape": "J/kg",
+      "wind_speed_850": "m/s",
+      "wind_dir_850": "deg",
+      "lead_time_hours": "hours",
+      "latitude": "deg_N",
+      "longitude": "deg_E",
+      "elevation_m": "m",
+      "day_of_year_sin": "dimensionless",
+      "day_of_year_cos": "dimensionless",
+      "zonal_shear": "m/s",
+      "monsoon_trough_intensity": "hPa",
+      "meridional_flow": "m/s",
+      "humidity_proxy": "dimensionless"
+    },
+    "feature_mappings": [
+      {
+        "ramp_feature": "precip_nwp_raw",
+        "source_variable": "precip_nwp_raw",
+        "unit": "mm",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "u850",
+        "source_variable": "u850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "v850",
+        "source_variable": "v850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "mslp",
+        "source_variable": "mslp",
+        "unit": "hPa",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "t850",
+        "source_variable": "t850",
+        "unit": "K",
+        "source_grid": null,
+        "status": "UNIT_CONVERSION_REQUIRED",
+        "notes": "Unit conversion needed: K -> degC"
+      },
+      {
+        "ramp_feature": "cape",
+        "source_variable": "cape",
+        "unit": "J/kg",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "wind_speed_850",
+        "source_variable": "wind_speed_850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "wind_dir_850",
+        "source_variable": "wind_dir_850",
+        "unit": "deg",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "lead_time_hours",
+        "source_variable": "lead_time_hours",
+        "unit": "hours",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "latitude",
+        "source_variable": "latitude",
+        "unit": "deg_N",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "longitude",
+        "source_variable": "longitude",
+        "unit": "deg_E",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "elevation_m",
+        "source_variable": "elevation_m",
+        "unit": "m",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "day_of_year_sin",
+        "source_variable": "day_of_year_sin",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "day_of_year_cos",
+        "source_variable": "day_of_year_cos",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "zonal_shear",
+        "source_variable": "zonal_shear",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "monsoon_trough_intensity",
+        "source_variable": "monsoon_trough_intensity",
+        "unit": "hPa",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "meridional_flow",
+        "source_variable": "meridional_flow",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "humidity_proxy",
+        "source_variable": "humidity_proxy",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "UNIT_CONVERSION_REQUIRED",
+        "notes": "Unit conversion needed: dimensionless -> %"
+      }
+    ],
+    "is_ground_truth_only": false,
+    "promoted_path": null,
+    "rejected_path": null,
+    "rejected_reason": null
+  },
+  "ncum_ncum_00Z_20260927_lead24_1790488634_07c25a97": {
+    "import_id": "ncum_ncum_00Z_20260927_lead24_1790488634_07c25a97",
+    "source_id": "NCMRWF_NCUM",
+    "filename": "ncum_00Z_20260927_lead24_1790488634.nc",
+    "filepath": "D:\\SIH26080\\data\\real\\incoming\\ncum_00Z_20260927_lead24_1790488634.nc",
+    "provider": "NCMRWF",
+    "source_type": "NCUM",
+    "authority_level": "AUTHORITATIVE_PRIMARY",
+    "format": "NETCDF4",
+    "size_bytes": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "import_timestamp": "2026-09-27T05:57:14.134245+00:00",
+    "data_mode": "REAL_DATA_EXPERIMENT",
+    "validation_status": "PASS",
+    "validation_notes": [
+      "File satisfies all NCUM operational feature contracts and metadata standards."
+    ],
+    "failure_stage": "NONE",
+    "cycle": "00Z",
+    "initialization_time": "2026-09-27T00:00:00Z",
+    "valid_time": "2026-09-28T00:00:00Z",
+    "lead_time_hours": 24,
+    "variables": [
+      "lat",
+      "lon",
+      "precip_nwp_raw",
+      "u850",
+      "v850",
+      "mslp",
+      "t850",
+      "cape",
+      "wind_speed_850",
+      "wind_dir_850",
+      "lead_time_hours",
+      "latitude",
+      "longitude",
+      "elevation_m",
+      "day_of_year_sin",
+      "day_of_year_cos",
+      "zonal_shear",
+      "monsoon_trough_intensity",
+      "meridional_flow",
+      "humidity_proxy"
+    ],
+    "dimensions": {
+      "lat": 129,
+      "lon": 137
+    },
+    "lat_range": [
+      6.5,
+      38.5
+    ],
+    "lon_range": [
+      66.5,
+      100.5
+    ],
+    "resolution": 0.25,
+    "units_map": {
+      "lat": "deg_N",
+      "lon": "deg_E",
+      "precip_nwp_raw": "mm",
+      "u850": "m/s",
+      "v850": "m/s",
+      "mslp": "hPa",
+      "t850": "K",
+      "cape": "J/kg",
+      "wind_speed_850": "m/s",
+      "wind_dir_850": "deg",
+      "lead_time_hours": "hours",
+      "latitude": "deg_N",
+      "longitude": "deg_E",
+      "elevation_m": "m",
+      "day_of_year_sin": "dimensionless",
+      "day_of_year_cos": "dimensionless",
+      "zonal_shear": "m/s",
+      "monsoon_trough_intensity": "hPa",
+      "meridional_flow": "m/s",
+      "humidity_proxy": "dimensionless"
+    },
+    "feature_mappings": [
+      {
+        "ramp_feature": "precip_nwp_raw",
+        "source_variable": "precip_nwp_raw",
+        "unit": "mm",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "u850",
+        "source_variable": "u850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "v850",
+        "source_variable": "v850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "mslp",
+        "source_variable": "mslp",
+        "unit": "hPa",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "t850",
+        "source_variable": "t850",
+        "unit": "K",
+        "source_grid": null,
+        "status": "UNIT_CONVERSION_REQUIRED",
+        "notes": "Unit conversion needed: K -> degC"
+      },
+      {
+        "ramp_feature": "cape",
+        "source_variable": "cape",
+        "unit": "J/kg",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "wind_speed_850",
+        "source_variable": "wind_speed_850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "wind_dir_850",
+        "source_variable": "wind_dir_850",
+        "unit": "deg",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "lead_time_hours",
+        "source_variable": "lead_time_hours",
+        "unit": "hours",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "latitude",
+        "source_variable": "latitude",
+        "unit": "deg_N",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "longitude",
+        "source_variable": "longitude",
+        "unit": "deg_E",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "elevation_m",
+        "source_variable": "elevation_m",
+        "unit": "m",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "day_of_year_sin",
+        "source_variable": "day_of_year_sin",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "day_of_year_cos",
+        "source_variable": "day_of_year_cos",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "zonal_shear",
+        "source_variable": "zonal_shear",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "monsoon_trough_intensity",
+        "source_variable": "monsoon_trough_intensity",
+        "unit": "hPa",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "meridional_flow",
+        "source_variable": "meridional_flow",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "humidity_proxy",
+        "source_variable": "humidity_proxy",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "UNIT_CONVERSION_REQUIRED",
+        "notes": "Unit conversion needed: dimensionless -> %"
+      }
+    ],
+    "is_ground_truth_only": false,
+    "promoted_path": null,
+    "rejected_path": null,
+    "rejected_reason": null
+  },
+  "ncum_neps_12Z_20260927_lead24_2096c18d": {
+    "import_id": "ncum_neps_12Z_20260927_lead24_2096c18d",
+    "source_id": "NCMRWF_NCUM",
+    "filename": "neps_12Z_20260927_lead24.nc",
+    "filepath": "D:\\SIH26080\\data\\real\\incoming\\neps_12Z_20260927_lead24.nc",
+    "provider": "NCMRWF",
+    "source_type": "NCUM",
+    "authority_level": "AUTHORITATIVE_PRIMARY",
+    "format": "NETCDF4",
+    "size_bytes": 103244,
+    "sha256": "2096c18dfff944715d26bfe7f45da96d93395efb23b81a5ad93e2c241c75c907",
+    "import_timestamp": "2026-09-27T05:57:15.913629+00:00",
+    "data_mode": "BLOCKED",
+    "validation_status": "BLOCKED",
+    "validation_notes": [
+      "MISSING_REQUIRED_FEATURE: 18 predictors missing (precip_nwp_raw, u850, v850, mslp, t850...)"
+    ],
+    "failure_stage": "MISSING_FEATURE",
+    "cycle": "00Z",
+    "initialization_time": null,
+    "valid_time": null,
+    "lead_time_hours": 24,
+    "variables": [
+      "ens00",
+      "ens01",
+      "ens02",
+      "ens03",
+      "ens04",
+      "ens05",
+      "ens06",
+      "ens07",
+      "ens08",
+      "ens09",
+      "ens10",
+      "ens11",
+      "ens12",
+      "ens13",
+      "ens14",
+      "ens15",
+      "ens16",
+      "ens17",
+      "ens18",
+      "ens19",
+      "ens20",
+      "ens21",
+      "ens22"
+    ],
+    "dimensions": {
+      "lat": 30,
+      "lon": 30
+    },
+    "lat_range": null,
+    "lon_range": null,
+    "resolution": null,
+    "units_map": {
+      "ens00": "mm",
+      "ens01": "mm",
+      "ens02": "mm",
+      "ens03": "mm",
+      "ens04": "mm",
+      "ens05": "mm",
+      "ens06": "mm",
+      "ens07": "mm",
+      "ens08": "mm",
+      "ens09": "mm",
+      "ens10": "mm",
+      "ens11": "mm",
+      "ens12": "mm",
+      "ens13": "mm",
+      "ens14": "mm",
+      "ens15": "mm",
+      "ens16": "mm",
+      "ens17": "mm",
+      "ens18": "mm",
+      "ens19": "mm",
+      "ens20": "mm",
+      "ens21": "mm",
+      "ens22": "mm"
+    },
+    "feature_mappings": [
+      {
+        "ramp_feature": "precip_nwp_raw",
+        "source_variable": null,
+        "unit": "mm",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "u850",
+        "source_variable": null,
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "v850",
+        "source_variable": null,
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "mslp",
+        "source_variable": null,
+        "unit": "hPa",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "t850",
+        "source_variable": null,
+        "unit": "degC",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "cape",
+        "source_variable": null,
+        "unit": "J/kg",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "wind_speed_850",
+        "source_variable": null,
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "wind_dir_850",
+        "source_variable": null,
+        "unit": "deg",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "lead_time_hours",
+        "source_variable": null,
+        "unit": "hours",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "latitude",
+        "source_variable": null,
+        "unit": "deg_N",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "longitude",
+        "source_variable": null,
+        "unit": "deg_E",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "elevation_m",
+        "source_variable": null,
+        "unit": "m",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "day_of_year_sin",
+        "source_variable": null,
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "day_of_year_cos",
+        "source_variable": null,
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "zonal_shear",
+        "source_variable": null,
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "monsoon_trough_intensity",
+        "source_variable": null,
+        "unit": "hPa",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "meridional_flow",
+        "source_variable": null,
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      },
+      {
+        "ramp_feature": "humidity_proxy",
+        "source_variable": null,
+        "unit": "%",
+        "source_grid": null,
+        "status": "MISSING",
+        "notes": "Required predictor absent in source file"
+      }
+    ],
+    "is_ground_truth_only": false,
+    "promoted_path": null,
+    "rejected_path": null,
+    "rejected_reason": null
+  },
+  "ncum_ncum_00Z_20260927_lead24_1790489080_07c25a97": {
+    "import_id": "ncum_ncum_00Z_20260927_lead24_1790489080_07c25a97",
+    "source_id": "NCMRWF_NCUM",
+    "filename": "ncum_00Z_20260927_lead24_1790489080.nc",
+    "filepath": "D:\\SIH26080\\data\\real\\incoming\\ncum_00Z_20260927_lead24_1790489080.nc",
+    "provider": "NCMRWF",
+    "source_type": "NCUM",
+    "authority_level": "AUTHORITATIVE_PRIMARY",
+    "format": "NETCDF4",
+    "size_bytes": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "import_timestamp": "2026-09-27T06:04:40.525530+00:00",
+    "data_mode": "REAL_DATA_EXPERIMENT",
+    "validation_status": "PASS",
+    "validation_notes": [
+      "File satisfies all NCUM operational feature contracts and metadata standards."
+    ],
+    "failure_stage": "NONE",
+    "cycle": "00Z",
+    "initialization_time": "2026-09-27T00:00:00Z",
+    "valid_time": "2026-09-28T00:00:00Z",
+    "lead_time_hours": 24,
+    "variables": [
+      "lat",
+      "lon",
+      "precip_nwp_raw",
+      "u850",
+      "v850",
+      "mslp",
+      "t850",
+      "cape",
+      "wind_speed_850",
+      "wind_dir_850",
+      "lead_time_hours",
+      "latitude",
+      "longitude",
+      "elevation_m",
+      "day_of_year_sin",
+      "day_of_year_cos",
+      "zonal_shear",
+      "monsoon_trough_intensity",
+      "meridional_flow",
+      "humidity_proxy"
+    ],
+    "dimensions": {
+      "lat": 129,
+      "lon": 137
+    },
+    "lat_range": [
+      6.5,
+      38.5
+    ],
+    "lon_range": [
+      66.5,
+      100.5
+    ],
+    "resolution": 0.25,
+    "units_map": {
+      "lat": "deg_N",
+      "lon": "deg_E",
+      "precip_nwp_raw": "mm",
+      "u850": "m/s",
+      "v850": "m/s",
+      "mslp": "hPa",
+      "t850": "K",
+      "cape": "J/kg",
+      "wind_speed_850": "m/s",
+      "wind_dir_850": "deg",
+      "lead_time_hours": "hours",
+      "latitude": "deg_N",
+      "longitude": "deg_E",
+      "elevation_m": "m",
+      "day_of_year_sin": "dimensionless",
+      "day_of_year_cos": "dimensionless",
+      "zonal_shear": "m/s",
+      "monsoon_trough_intensity": "hPa",
+      "meridional_flow": "m/s",
+      "humidity_proxy": "dimensionless"
+    },
+    "feature_mappings": [
+      {
+        "ramp_feature": "precip_nwp_raw",
+        "source_variable": "precip_nwp_raw",
+        "unit": "mm",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "u850",
+        "source_variable": "u850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "v850",
+        "source_variable": "v850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "mslp",
+        "source_variable": "mslp",
+        "unit": "hPa",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "t850",
+        "source_variable": "t850",
+        "unit": "K",
+        "source_grid": null,
+        "status": "UNIT_CONVERSION_REQUIRED",
+        "notes": "Unit conversion needed: K -> degC"
+      },
+      {
+        "ramp_feature": "cape",
+        "source_variable": "cape",
+        "unit": "J/kg",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "wind_speed_850",
+        "source_variable": "wind_speed_850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "wind_dir_850",
+        "source_variable": "wind_dir_850",
+        "unit": "deg",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "lead_time_hours",
+        "source_variable": "lead_time_hours",
+        "unit": "hours",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "latitude",
+        "source_variable": "latitude",
+        "unit": "deg_N",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "longitude",
+        "source_variable": "longitude",
+        "unit": "deg_E",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "elevation_m",
+        "source_variable": "elevation_m",
+        "unit": "m",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "day_of_year_sin",
+        "source_variable": "day_of_year_sin",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "day_of_year_cos",
+        "source_variable": "day_of_year_cos",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "zonal_shear",
+        "source_variable": "zonal_shear",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "monsoon_trough_intensity",
+        "source_variable": "monsoon_trough_intensity",
+        "unit": "hPa",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "meridional_flow",
+        "source_variable": "meridional_flow",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "humidity_proxy",
+        "source_variable": "humidity_proxy",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "UNIT_CONVERSION_REQUIRED",
+        "notes": "Unit conversion needed: dimensionless -> %"
+      }
+    ],
+    "is_ground_truth_only": false,
+    "promoted_path": null,
+    "rejected_path": null,
+    "rejected_reason": null
+  },
+  "imd_imd_rainfall_20260927_1790489110_0df64c09": {
+    "import_id": "imd_imd_rainfall_20260927_1790489110_0df64c09",
+    "source_id": "IMD_OBSERVATION",
+    "filename": "imd_rainfall_20260927_1790489110.nc",
+    "filepath": "D:\\SIH26080\\data\\real\\incoming\\imd_rainfall_20260927_1790489110.nc",
+    "provider": "IMD",
+    "source_type": "IMD_OBSERVATION",
+    "authority_level": "AUTHORITATIVE_PRIMARY",
+    "format": "NETCDF4",
+    "size_bytes": 80180,
+    "sha256": "0df64c09311bc6840a7d95fc5ba873d71e87715ce35dd44f4b8aa95f3c63e48c",
+    "import_timestamp": "2026-09-27T06:05:10.943656+00:00",
+    "data_mode": "REAL_DATA_EXPERIMENT",
+    "validation_status": "PASS",
+    "validation_notes": [
+      "IMD observation satisfies 0.25\u00b0 grid, non-negativity, and metadata standards."
+    ],
+    "failure_stage": "NONE",
+    "cycle": null,
+    "initialization_time": null,
+    "valid_time": "2026-09-27",
+    "lead_time_hours": null,
+    "variables": [
+      "lat",
+      "lon",
+      "time",
+      "rain"
+    ],
+    "dimensions": {
+      "lat": 129,
+      "lon": 137,
+      "time": 1
+    },
+    "lat_range": [
+      6.5,
+      38.5
+    ],
+    "lon_range": [
+      66.5,
+      100.5
+    ],
+    "resolution": 0.25,
+    "units_map": {
+      "rain": "mm/day"
+    },
+    "feature_mappings": [],
+    "is_ground_truth_only": true,
+    "promoted_path": null,
+    "rejected_path": null,
+    "rejected_reason": null
+  },
+  "imd_imd_rainfall_20260927_1790490853_0df64c09": {
+    "import_id": "imd_imd_rainfall_20260927_1790490853_0df64c09",
+    "source_id": "IMD_OBSERVATION",
+    "filename": "imd_rainfall_20260927_1790490853.nc",
+    "filepath": "D:\\SIH26080\\data\\real\\incoming\\imd_rainfall_20260927_1790490853.nc",
+    "provider": "IMD",
+    "source_type": "IMD_OBSERVATION",
+    "authority_level": "AUTHORITATIVE_PRIMARY",
+    "format": "NETCDF4",
+    "size_bytes": 80180,
+    "sha256": "0df64c09311bc6840a7d95fc5ba873d71e87715ce35dd44f4b8aa95f3c63e48c",
+    "import_timestamp": "2026-09-27T06:34:13.478029+00:00",
+    "data_mode": "REAL_DATA_EXPERIMENT",
+    "validation_status": "PASS",
+    "validation_notes": [
+      "IMD observation satisfies 0.25\u00b0 grid, non-negativity, and metadata standards."
+    ],
+    "failure_stage": "NONE",
+    "cycle": null,
+    "initialization_time": null,
+    "valid_time": "2026-09-27",
+    "lead_time_hours": null,
+    "variables": [
+      "lat",
+      "lon",
+      "time",
+      "rain"
+    ],
+    "dimensions": {
+      "lat": 129,
+      "lon": 137,
+      "time": 1
+    },
+    "lat_range": [
+      6.5,
+      38.5
+    ],
+    "lon_range": [
+      66.5,
+      100.5
+    ],
+    "resolution": 0.25,
+    "units_map": {
+      "rain": "mm/day"
+    },
+    "feature_mappings": [],
+    "is_ground_truth_only": true,
+    "promoted_path": null,
+    "rejected_path": null,
+    "rejected_reason": null
+  },
+  "imd_imd_rainfall_20260927_1790491387_0df64c09": {
+    "import_id": "imd_imd_rainfall_20260927_1790491387_0df64c09",
+    "source_id": "IMD_OBSERVATION",
+    "filename": "imd_rainfall_20260927_1790491387.nc",
+    "filepath": "D:\\SIH26080\\data\\real\\incoming\\imd_rainfall_20260927_1790491387.nc",
+    "provider": "IMD",
+    "source_type": "IMD_OBSERVATION",
+    "authority_level": "AUTHORITATIVE_PRIMARY",
+    "format": "NETCDF4",
+    "size_bytes": 80180,
+    "sha256": "0df64c09311bc6840a7d95fc5ba873d71e87715ce35dd44f4b8aa95f3c63e48c",
+    "import_timestamp": "2026-09-27T06:43:07.363870+00:00",
+    "data_mode": "REAL_DATA_EXPERIMENT",
+    "validation_status": "PASS",
+    "validation_notes": [
+      "IMD observation satisfies 0.25\u00b0 grid, non-negativity, and metadata standards."
+    ],
+    "failure_stage": "NONE",
+    "cycle": null,
+    "initialization_time": null,
+    "valid_time": "2026-09-27",
+    "lead_time_hours": null,
+    "variables": [
+      "lat",
+      "lon",
+      "time",
+      "rain"
+    ],
+    "dimensions": {
+      "lat": 129,
+      "lon": 137,
+      "time": 1
+    },
+    "lat_range": [
+      6.5,
+      38.5
+    ],
+    "lon_range": [
+      66.5,
+      100.5
+    ],
+    "resolution": 0.25,
+    "units_map": {
+      "rain": "mm/day"
+    },
+    "feature_mappings": [],
+    "is_ground_truth_only": true,
+    "promoted_path": null,
+    "rejected_path": null,
+    "rejected_reason": null
+  },
+  "ncum_ncum_00Z_20260927_lead24_1790493421_07c25a97": {
+    "import_id": "ncum_ncum_00Z_20260927_lead24_1790493421_07c25a97",
+    "source_id": "NCMRWF_NCUM",
+    "filename": "ncum_00Z_20260927_lead24_1790493421.nc",
+    "filepath": "D:\\SIH26080\\data\\real\\incoming\\ncum_00Z_20260927_lead24_1790493421.nc",
+    "provider": "NCMRWF",
+    "source_type": "NCUM",
+    "authority_level": "AUTHORITATIVE_PRIMARY",
+    "format": "NETCDF4",
+    "size_bytes": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "import_timestamp": "2026-09-27T07:17:01.436727+00:00",
+    "data_mode": "REAL_DATA_EXPERIMENT",
+    "validation_status": "PASS",
+    "validation_notes": [
+      "File satisfies all NCUM operational feature contracts and metadata standards."
+    ],
+    "failure_stage": "NONE",
+    "cycle": "00Z",
+    "initialization_time": "2026-09-27T00:00:00Z",
+    "valid_time": "2026-09-28T00:00:00Z",
+    "lead_time_hours": 24,
+    "variables": [
+      "lat",
+      "lon",
+      "precip_nwp_raw",
+      "u850",
+      "v850",
+      "mslp",
+      "t850",
+      "cape",
+      "wind_speed_850",
+      "wind_dir_850",
+      "lead_time_hours",
+      "latitude",
+      "longitude",
+      "elevation_m",
+      "day_of_year_sin",
+      "day_of_year_cos",
+      "zonal_shear",
+      "monsoon_trough_intensity",
+      "meridional_flow",
+      "humidity_proxy"
+    ],
+    "dimensions": {
+      "lat": 129,
+      "lon": 137
+    },
+    "lat_range": [
+      6.5,
+      38.5
+    ],
+    "lon_range": [
+      66.5,
+      100.5
+    ],
+    "resolution": 0.25,
+    "units_map": {
+      "lat": "deg_N",
+      "lon": "deg_E",
+      "precip_nwp_raw": "mm",
+      "u850": "m/s",
+      "v850": "m/s",
+      "mslp": "hPa",
+      "t850": "K",
+      "cape": "J/kg",
+      "wind_speed_850": "m/s",
+      "wind_dir_850": "deg",
+      "lead_time_hours": "hours",
+      "latitude": "deg_N",
+      "longitude": "deg_E",
+      "elevation_m": "m",
+      "day_of_year_sin": "dimensionless",
+      "day_of_year_cos": "dimensionless",
+      "zonal_shear": "m/s",
+      "monsoon_trough_intensity": "hPa",
+      "meridional_flow": "m/s",
+      "humidity_proxy": "dimensionless"
+    },
+    "feature_mappings": [
+      {
+        "ramp_feature": "precip_nwp_raw",
+        "source_variable": "precip_nwp_raw",
+        "unit": "mm",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "u850",
+        "source_variable": "u850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "v850",
+        "source_variable": "v850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "mslp",
+        "source_variable": "mslp",
+        "unit": "hPa",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "t850",
+        "source_variable": "t850",
+        "unit": "K",
+        "source_grid": null,
+        "status": "UNIT_CONVERSION_REQUIRED",
+        "notes": "Unit conversion needed: K -> degC"
+      },
+      {
+        "ramp_feature": "cape",
+        "source_variable": "cape",
+        "unit": "J/kg",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "wind_speed_850",
+        "source_variable": "wind_speed_850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "wind_dir_850",
+        "source_variable": "wind_dir_850",
+        "unit": "deg",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "lead_time_hours",
+        "source_variable": "lead_time_hours",
+        "unit": "hours",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "latitude",
+        "source_variable": "latitude",
+        "unit": "deg_N",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "longitude",
+        "source_variable": "longitude",
+        "unit": "deg_E",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "elevation_m",
+        "source_variable": "elevation_m",
+        "unit": "m",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "day_of_year_sin",
+        "source_variable": "day_of_year_sin",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "day_of_year_cos",
+        "source_variable": "day_of_year_cos",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "zonal_shear",
+        "source_variable": "zonal_shear",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "monsoon_trough_intensity",
+        "source_variable": "monsoon_trough_intensity",
+        "unit": "hPa",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "meridional_flow",
+        "source_variable": "meridional_flow",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "humidity_proxy",
+        "source_variable": "humidity_proxy",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "UNIT_CONVERSION_REQUIRED",
+        "notes": "Unit conversion needed: dimensionless -> %"
+      }
+    ],
+    "is_ground_truth_only": false,
+    "promoted_path": null,
+    "rejected_path": null,
+    "rejected_reason": null
+  },
+  "imd_imd_rainfall_20260927_1790494762_0df64c09": {
+    "import_id": "imd_imd_rainfall_20260927_1790494762_0df64c09",
+    "source_id": "IMD_OBSERVATION",
+    "filename": "imd_rainfall_20260927_1790494762.nc",
+    "filepath": "D:\\SIH26080\\data\\real\\incoming\\imd_rainfall_20260927_1790494762.nc",
+    "provider": "IMD",
+    "source_type": "IMD_OBSERVATION",
+    "authority_level": "AUTHORITATIVE_PRIMARY",
+    "format": "NETCDF4",
+    "size_bytes": 80180,
+    "sha256": "0df64c09311bc6840a7d95fc5ba873d71e87715ce35dd44f4b8aa95f3c63e48c",
+    "import_timestamp": "2026-09-27T07:39:22.577160+00:00",
+    "data_mode": "REAL_DATA_EXPERIMENT",
+    "validation_status": "PASS",
+    "validation_notes": [
+      "IMD observation satisfies 0.25\u00b0 grid, non-negativity, and metadata standards."
+    ],
+    "failure_stage": "NONE",
+    "cycle": null,
+    "initialization_time": null,
+    "valid_time": "2026-09-27",
+    "lead_time_hours": null,
+    "variables": [
+      "lat",
+      "lon",
+      "time",
+      "rain"
+    ],
+    "dimensions": {
+      "lat": 129,
+      "lon": 137,
+      "time": 1
+    },
+    "lat_range": [
+      6.5,
+      38.5
+    ],
+    "lon_range": [
+      66.5,
+      100.5
+    ],
+    "resolution": 0.25,
+    "units_map": {
+      "rain": "mm/day"
+    },
+    "feature_mappings": [],
+    "is_ground_truth_only": true,
+    "promoted_path": null,
+    "rejected_path": null,
+    "rejected_reason": null
+  },
+  "neps_ncum_00Z_20260927_lead24_1790496615_07c25a97": {
+    "import_id": "neps_ncum_00Z_20260927_lead24_1790496615_07c25a97",
+    "source_id": "NCMRWF_NEPS",
+    "filename": "ncum_00Z_20260927_lead24_1790496615.nc",
+    "filepath": "D:\\SIH26080\\data\\real\\incoming\\ncum_00Z_20260927_lead24_1790496615.nc",
+    "provider": "NCMRWF",
+    "source_type": "NEPS",
+    "authority_level": "AUTHORITATIVE_PRIMARY",
+    "format": "NETCDF4",
+    "size_bytes": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "import_timestamp": "2026-09-27T08:10:15.455608+00:00",
+    "data_mode": "BLOCKED",
+    "validation_status": "BLOCKED",
+    "validation_notes": [
+      "NEPS_FEATURES_INCOMPLETE: Discovered 0/23 ensemble members. Missing: 23 members."
+    ],
+    "failure_stage": "MISSING_FEATURE",
+    "cycle": "00Z",
+    "initialization_time": "2026-09-27T00:00:00Z",
+    "valid_time": "2026-09-28T00:00:00Z",
+    "lead_time_hours": 24,
+    "variables": [
+      "lat",
+      "lon",
+      "precip_nwp_raw",
+      "u850",
+      "v850",
+      "mslp",
+      "t850",
+      "cape",
+      "wind_speed_850",
+      "wind_dir_850",
+      "lead_time_hours",
+      "latitude",
+      "longitude",
+      "elevation_m",
+      "day_of_year_sin",
+      "day_of_year_cos",
+      "zonal_shear",
+      "monsoon_trough_intensity",
+      "meridional_flow",
+      "humidity_proxy"
+    ],
+    "dimensions": {
+      "lat": 129,
+      "lon": 137
+    },
+    "lat_range": [
+      6.5,
+      38.5
+    ],
+    "lon_range": [
+      66.5,
+      100.5
+    ],
+    "resolution": 0.25,
+    "units_map": {
+      "rainfall": "mm"
+    },
+    "feature_mappings": [],
+    "is_ground_truth_only": false,
+    "promoted_path": null,
+    "rejected_path": null,
+    "rejected_reason": null
+  },
+  "ncum_ncum_00Z_20260927_lead24_1790497477_07c25a97": {
+    "import_id": "ncum_ncum_00Z_20260927_lead24_1790497477_07c25a97",
+    "source_id": "NCMRWF_NCUM",
+    "filename": "ncum_00Z_20260927_lead24_1790497477.nc",
+    "filepath": "D:\\SIH26080\\data\\real\\incoming\\ncum_00Z_20260927_lead24_1790497477.nc",
+    "provider": "NCMRWF",
+    "source_type": "NCUM",
+    "authority_level": "AUTHORITATIVE_PRIMARY",
+    "format": "NETCDF4",
+    "size_bytes": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "import_timestamp": "2026-09-27T08:24:37.538181+00:00",
+    "data_mode": "REAL_DATA_EXPERIMENT",
+    "validation_status": "PASS",
+    "validation_notes": [
+      "File satisfies all NCUM operational feature contracts and metadata standards."
+    ],
+    "failure_stage": "NONE",
+    "cycle": "00Z",
+    "initialization_time": "2026-09-27T00:00:00Z",
+    "valid_time": "2026-09-28T00:00:00Z",
+    "lead_time_hours": 24,
+    "variables": [
+      "lat",
+      "lon",
+      "precip_nwp_raw",
+      "u850",
+      "v850",
+      "mslp",
+      "t850",
+      "cape",
+      "wind_speed_850",
+      "wind_dir_850",
+      "lead_time_hours",
+      "latitude",
+      "longitude",
+      "elevation_m",
+      "day_of_year_sin",
+      "day_of_year_cos",
+      "zonal_shear",
+      "monsoon_trough_intensity",
+      "meridional_flow",
+      "humidity_proxy"
+    ],
+    "dimensions": {
+      "lat": 129,
+      "lon": 137
+    },
+    "lat_range": [
+      6.5,
+      38.5
+    ],
+    "lon_range": [
+      66.5,
+      100.5
+    ],
+    "resolution": 0.25,
+    "units_map": {
+      "lat": "deg_N",
+      "lon": "deg_E",
+      "precip_nwp_raw": "mm",
+      "u850": "m/s",
+      "v850": "m/s",
+      "mslp": "hPa",
+      "t850": "K",
+      "cape": "J/kg",
+      "wind_speed_850": "m/s",
+      "wind_dir_850": "deg",
+      "lead_time_hours": "hours",
+      "latitude": "deg_N",
+      "longitude": "deg_E",
+      "elevation_m": "m",
+      "day_of_year_sin": "dimensionless",
+      "day_of_year_cos": "dimensionless",
+      "zonal_shear": "m/s",
+      "monsoon_trough_intensity": "hPa",
+      "meridional_flow": "m/s",
+      "humidity_proxy": "dimensionless"
+    },
+    "feature_mappings": [
+      {
+        "ramp_feature": "precip_nwp_raw",
+        "source_variable": "precip_nwp_raw",
+        "unit": "mm",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "u850",
+        "source_variable": "u850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "v850",
+        "source_variable": "v850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "mslp",
+        "source_variable": "mslp",
+        "unit": "hPa",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "t850",
+        "source_variable": "t850",
+        "unit": "K",
+        "source_grid": null,
+        "status": "UNIT_CONVERSION_REQUIRED",
+        "notes": "Unit conversion needed: K -> degC"
+      },
+      {
+        "ramp_feature": "cape",
+        "source_variable": "cape",
+        "unit": "J/kg",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "wind_speed_850",
+        "source_variable": "wind_speed_850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "wind_dir_850",
+        "source_variable": "wind_dir_850",
+        "unit": "deg",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "lead_time_hours",
+        "source_variable": "lead_time_hours",
+        "unit": "hours",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "latitude",
+        "source_variable": "latitude",
+        "unit": "deg_N",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "longitude",
+        "source_variable": "longitude",
+        "unit": "deg_E",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "elevation_m",
+        "source_variable": "elevation_m",
+        "unit": "m",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "day_of_year_sin",
+        "source_variable": "day_of_year_sin",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "day_of_year_cos",
+        "source_variable": "day_of_year_cos",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "zonal_shear",
+        "source_variable": "zonal_shear",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "monsoon_trough_intensity",
+        "source_variable": "monsoon_trough_intensity",
+        "unit": "hPa",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "meridional_flow",
+        "source_variable": "meridional_flow",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "humidity_proxy",
+        "source_variable": "humidity_proxy",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "UNIT_CONVERSION_REQUIRED",
+        "notes": "Unit conversion needed: dimensionless -> %"
+      }
+    ],
+    "is_ground_truth_only": false,
+    "promoted_path": null,
+    "rejected_path": null,
+    "rejected_reason": null
+  },
+  "imd_imd_rainfall_20260927_1790513515_0df64c09": {
+    "import_id": "imd_imd_rainfall_20260927_1790513515_0df64c09",
+    "source_id": "IMD_OBSERVATION",
+    "filename": "imd_rainfall_20260927_1790513515.nc",
+    "filepath": "D:\\SIH26080\\data\\real\\incoming\\imd_rainfall_20260927_1790513515.nc",
+    "provider": "IMD",
+    "source_type": "IMD_OBSERVATION",
+    "authority_level": "AUTHORITATIVE_PRIMARY",
+    "format": "NETCDF4",
+    "size_bytes": 80180,
+    "sha256": "0df64c09311bc6840a7d95fc5ba873d71e87715ce35dd44f4b8aa95f3c63e48c",
+    "import_timestamp": "2026-09-27T12:51:55.181950+00:00",
+    "data_mode": "REAL_DATA_EXPERIMENT",
+    "validation_status": "PASS",
+    "validation_notes": [
+      "IMD observation satisfies 0.25\u00b0 grid, non-negativity, and metadata standards."
+    ],
+    "validation_error_detail": null,
+    "failure_stage": "NONE",
+    "cycle": null,
+    "initialization_time": null,
+    "valid_time": "2026-09-27",
+    "lead_time_hours": null,
+    "variables": [
+      "lat",
+      "lon",
+      "time",
+      "rain"
+    ],
+    "dimensions": {
+      "lat": 129,
+      "lon": 137,
+      "time": 1
+    },
+    "lat_range": [
+      6.5,
+      38.5
+    ],
+    "lon_range": [
+      66.5,
+      100.5
+    ],
+    "resolution": 0.25,
+    "units_map": {
+      "rain": "mm/day"
+    },
+    "feature_mappings": [],
+    "is_ground_truth_only": true,
+    "promoted_path": null,
+    "rejected_path": null,
+    "rejected_reason": null
+  },
+  "ncum_ncum_00Z_20260927_lead24_1790513584_07c25a97": {
+    "import_id": "ncum_ncum_00Z_20260927_lead24_1790513584_07c25a97",
+    "source_id": "NCMRWF_NCUM",
+    "filename": "ncum_00Z_20260927_lead24_1790513584.nc",
+    "filepath": "D:\\SIH26080\\data\\real\\incoming\\ncum_00Z_20260927_lead24_1790513584.nc",
+    "provider": "NCMRWF",
+    "source_type": "NCUM",
+    "authority_level": "AUTHORITATIVE_PRIMARY",
+    "format": "NETCDF4",
+    "size_bytes": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "import_timestamp": "2026-09-27T12:53:04.996697+00:00",
+    "data_mode": "REAL_DATA_EXPERIMENT",
+    "validation_status": "PASS",
+    "validation_notes": [
+      "File satisfies all NCUM operational feature contracts and metadata standards."
+    ],
+    "validation_error_detail": null,
+    "failure_stage": "NONE",
+    "cycle": "00Z",
+    "initialization_time": "2026-09-27T00:00:00Z",
+    "valid_time": "2026-09-28T00:00:00Z",
+    "lead_time_hours": 24,
+    "variables": [
+      "lat",
+      "lon",
+      "precip_nwp_raw",
+      "u850",
+      "v850",
+      "mslp",
+      "t850",
+      "cape",
+      "wind_speed_850",
+      "wind_dir_850",
+      "lead_time_hours",
+      "latitude",
+      "longitude",
+      "elevation_m",
+      "day_of_year_sin",
+      "day_of_year_cos",
+      "zonal_shear",
+      "monsoon_trough_intensity",
+      "meridional_flow",
+      "humidity_proxy"
+    ],
+    "dimensions": {
+      "lat": 129,
+      "lon": 137
+    },
+    "lat_range": [
+      6.5,
+      38.5
+    ],
+    "lon_range": [
+      66.5,
+      100.5
+    ],
+    "resolution": 0.25,
+    "units_map": {
+      "lat": "deg_N",
+      "lon": "deg_E",
+      "precip_nwp_raw": "mm",
+      "u850": "m/s",
+      "v850": "m/s",
+      "mslp": "hPa",
+      "t850": "K",
+      "cape": "J/kg",
+      "wind_speed_850": "m/s",
+      "wind_dir_850": "deg",
+      "lead_time_hours": "hours",
+      "latitude": "deg_N",
+      "longitude": "deg_E",
+      "elevation_m": "m",
+      "day_of_year_sin": "dimensionless",
+      "day_of_year_cos": "dimensionless",
+      "zonal_shear": "m/s",
+      "monsoon_trough_intensity": "hPa",
+      "meridional_flow": "m/s",
+      "humidity_proxy": "dimensionless"
+    },
+    "feature_mappings": [
+      {
+        "ramp_feature": "precip_nwp_raw",
+        "source_variable": "precip_nwp_raw",
+        "unit": "mm",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "u850",
+        "source_variable": "u850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "v850",
+        "source_variable": "v850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "mslp",
+        "source_variable": "mslp",
+        "unit": "hPa",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "t850",
+        "source_variable": "t850",
+        "unit": "K",
+        "source_grid": null,
+        "status": "UNIT_CONVERSION_REQUIRED",
+        "notes": "Unit conversion needed: K -> degC"
+      },
+      {
+        "ramp_feature": "cape",
+        "source_variable": "cape",
+        "unit": "J/kg",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "wind_speed_850",
+        "source_variable": "wind_speed_850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "wind_dir_850",
+        "source_variable": "wind_dir_850",
+        "unit": "deg",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "lead_time_hours",
+        "source_variable": "lead_time_hours",
+        "unit": "hours",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "latitude",
+        "source_variable": "latitude",
+        "unit": "deg_N",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "longitude",
+        "source_variable": "longitude",
+        "unit": "deg_E",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "elevation_m",
+        "source_variable": "elevation_m",
+        "unit": "m",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "day_of_year_sin",
+        "source_variable": "day_of_year_sin",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "day_of_year_cos",
+        "source_variable": "day_of_year_cos",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "zonal_shear",
+        "source_variable": "zonal_shear",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "monsoon_trough_intensity",
+        "source_variable": "monsoon_trough_intensity",
+        "unit": "hPa",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "meridional_flow",
+        "source_variable": "meridional_flow",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "humidity_proxy",
+        "source_variable": "humidity_proxy",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "UNIT_CONVERSION_REQUIRED",
+        "notes": "Unit conversion needed: dimensionless -> %"
+      }
+    ],
+    "is_ground_truth_only": false,
+    "promoted_path": null,
+    "rejected_path": null,
+    "rejected_reason": null
+  },
+  "ncum_ncum_00Z_20260927_lead24_1790525201_07c25a97": {
+    "import_id": "ncum_ncum_00Z_20260927_lead24_1790525201_07c25a97",
+    "source_id": "NCMRWF_NCUM",
+    "filename": "ncum_00Z_20260927_lead24_1790525201.nc",
+    "filepath": "D:\\SIH26080\\data\\real\\incoming\\ncum_00Z_20260927_lead24_1790525201.nc",
+    "provider": "NCMRWF",
+    "source_type": "NCUM",
+    "authority_level": "AUTHORITATIVE_PRIMARY",
+    "format": "NETCDF4",
+    "size_bytes": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "import_timestamp": "2026-09-27T16:06:41.789084+00:00",
+    "data_mode": "REAL_DATA_EXPERIMENT",
+    "validation_status": "PASS",
+    "validation_notes": [
+      "File satisfies all NCUM operational feature contracts and metadata standards."
+    ],
+    "validation_error_detail": null,
+    "failure_stage": "NONE",
+    "cycle": "00Z",
+    "initialization_time": "2026-09-27T00:00:00Z",
+    "valid_time": "2026-09-28T00:00:00Z",
+    "lead_time_hours": 24,
+    "variables": [
+      "lat",
+      "lon",
+      "precip_nwp_raw",
+      "u850",
+      "v850",
+      "mslp",
+      "t850",
+      "cape",
+      "wind_speed_850",
+      "wind_dir_850",
+      "lead_time_hours",
+      "latitude",
+      "longitude",
+      "elevation_m",
+      "day_of_year_sin",
+      "day_of_year_cos",
+      "zonal_shear",
+      "monsoon_trough_intensity",
+      "meridional_flow",
+      "humidity_proxy"
+    ],
+    "dimensions": {
+      "lat": 129,
+      "lon": 137
+    },
+    "lat_range": [
+      6.5,
+      38.5
+    ],
+    "lon_range": [
+      66.5,
+      100.5
+    ],
+    "resolution": 0.25,
+    "units_map": {
+      "lat": "deg_N",
+      "lon": "deg_E",
+      "precip_nwp_raw": "mm",
+      "u850": "m/s",
+      "v850": "m/s",
+      "mslp": "hPa",
+      "t850": "K",
+      "cape": "J/kg",
+      "wind_speed_850": "m/s",
+      "wind_dir_850": "deg",
+      "lead_time_hours": "hours",
+      "latitude": "deg_N",
+      "longitude": "deg_E",
+      "elevation_m": "m",
+      "day_of_year_sin": "dimensionless",
+      "day_of_year_cos": "dimensionless",
+      "zonal_shear": "m/s",
+      "monsoon_trough_intensity": "hPa",
+      "meridional_flow": "m/s",
+      "humidity_proxy": "dimensionless"
+    },
+    "feature_mappings": [
+      {
+        "ramp_feature": "precip_nwp_raw",
+        "source_variable": "precip_nwp_raw",
+        "unit": "mm",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "u850",
+        "source_variable": "u850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "v850",
+        "source_variable": "v850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "mslp",
+        "source_variable": "mslp",
+        "unit": "hPa",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "t850",
+        "source_variable": "t850",
+        "unit": "K",
+        "source_grid": null,
+        "status": "UNIT_CONVERSION_REQUIRED",
+        "notes": "Unit conversion needed: K -> degC"
+      },
+      {
+        "ramp_feature": "cape",
+        "source_variable": "cape",
+        "unit": "J/kg",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "wind_speed_850",
+        "source_variable": "wind_speed_850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "wind_dir_850",
+        "source_variable": "wind_dir_850",
+        "unit": "deg",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "lead_time_hours",
+        "source_variable": "lead_time_hours",
+        "unit": "hours",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "latitude",
+        "source_variable": "latitude",
+        "unit": "deg_N",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "longitude",
+        "source_variable": "longitude",
+        "unit": "deg_E",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "elevation_m",
+        "source_variable": "elevation_m",
+        "unit": "m",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "day_of_year_sin",
+        "source_variable": "day_of_year_sin",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "day_of_year_cos",
+        "source_variable": "day_of_year_cos",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "zonal_shear",
+        "source_variable": "zonal_shear",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "monsoon_trough_intensity",
+        "source_variable": "monsoon_trough_intensity",
+        "unit": "hPa",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "meridional_flow",
+        "source_variable": "meridional_flow",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "humidity_proxy",
+        "source_variable": "humidity_proxy",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "UNIT_CONVERSION_REQUIRED",
+        "notes": "Unit conversion needed: dimensionless -> %"
+      }
+    ],
+    "is_ground_truth_only": false,
+    "promoted_path": null,
+    "rejected_path": null,
+    "rejected_reason": null
+  },
+  "ncum_ncum_00Z_20260927_lead24_1790534708_07c25a97": {
+    "import_id": "ncum_ncum_00Z_20260927_lead24_1790534708_07c25a97",
+    "source_id": "NCMRWF_NCUM",
+    "filename": "ncum_00Z_20260927_lead24_1790534708.nc",
+    "filepath": "D:\\SIH26080\\data\\real\\incoming\\ncum_00Z_20260927_lead24_1790534708.nc",
+    "provider": "NCMRWF",
+    "source_type": "NCUM",
+    "authority_level": "AUTHORITATIVE_PRIMARY",
+    "format": "NETCDF4",
+    "size_bytes": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "import_timestamp": "2026-09-27T18:45:08.835242+00:00",
+    "data_mode": "REAL_DATA_EXPERIMENT",
+    "validation_status": "PASS",
+    "validation_notes": [
+      "File satisfies all NCUM operational feature contracts and metadata standards."
+    ],
+    "validation_error_detail": null,
+    "failure_stage": "NONE",
+    "cycle": "00Z",
+    "initialization_time": "2026-09-27T00:00:00Z",
+    "valid_time": "2026-09-28T00:00:00Z",
+    "lead_time_hours": 24,
+    "variables": [
+      "lat",
+      "lon",
+      "precip_nwp_raw",
+      "u850",
+      "v850",
+      "mslp",
+      "t850",
+      "cape",
+      "wind_speed_850",
+      "wind_dir_850",
+      "lead_time_hours",
+      "latitude",
+      "longitude",
+      "elevation_m",
+      "day_of_year_sin",
+      "day_of_year_cos",
+      "zonal_shear",
+      "monsoon_trough_intensity",
+      "meridional_flow",
+      "humidity_proxy"
+    ],
+    "dimensions": {
+      "lat": 129,
+      "lon": 137
+    },
+    "lat_range": [
+      6.5,
+      38.5
+    ],
+    "lon_range": [
+      66.5,
+      100.5
+    ],
+    "resolution": 0.25,
+    "units_map": {
+      "lat": "deg_N",
+      "lon": "deg_E",
+      "precip_nwp_raw": "mm",
+      "u850": "m/s",
+      "v850": "m/s",
+      "mslp": "hPa",
+      "t850": "K",
+      "cape": "J/kg",
+      "wind_speed_850": "m/s",
+      "wind_dir_850": "deg",
+      "lead_time_hours": "hours",
+      "latitude": "deg_N",
+      "longitude": "deg_E",
+      "elevation_m": "m",
+      "day_of_year_sin": "dimensionless",
+      "day_of_year_cos": "dimensionless",
+      "zonal_shear": "m/s",
+      "monsoon_trough_intensity": "hPa",
+      "meridional_flow": "m/s",
+      "humidity_proxy": "dimensionless"
+    },
+    "feature_mappings": [
+      {
+        "ramp_feature": "precip_nwp_raw",
+        "source_variable": "precip_nwp_raw",
+        "unit": "mm",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "u850",
+        "source_variable": "u850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "v850",
+        "source_variable": "v850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "mslp",
+        "source_variable": "mslp",
+        "unit": "hPa",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "t850",
+        "source_variable": "t850",
+        "unit": "K",
+        "source_grid": null,
+        "status": "UNIT_CONVERSION_REQUIRED",
+        "notes": "Unit conversion needed: K -> degC"
+      },
+      {
+        "ramp_feature": "cape",
+        "source_variable": "cape",
+        "unit": "J/kg",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "wind_speed_850",
+        "source_variable": "wind_speed_850",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "wind_dir_850",
+        "source_variable": "wind_dir_850",
+        "unit": "deg",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "lead_time_hours",
+        "source_variable": "lead_time_hours",
+        "unit": "hours",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "latitude",
+        "source_variable": "latitude",
+        "unit": "deg_N",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "longitude",
+        "source_variable": "longitude",
+        "unit": "deg_E",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "elevation_m",
+        "source_variable": "elevation_m",
+        "unit": "m",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "day_of_year_sin",
+        "source_variable": "day_of_year_sin",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "day_of_year_cos",
+        "source_variable": "day_of_year_cos",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "zonal_shear",
+        "source_variable": "zonal_shear",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "monsoon_trough_intensity",
+        "source_variable": "monsoon_trough_intensity",
+        "unit": "hPa",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "meridional_flow",
+        "source_variable": "meridional_flow",
+        "unit": "m/s",
+        "source_grid": null,
+        "status": "AVAILABLE",
+        "notes": null
+      },
+      {
+        "ramp_feature": "humidity_proxy",
+        "source_variable": "humidity_proxy",
+        "unit": "dimensionless",
+        "source_grid": null,
+        "status": "UNIT_CONVERSION_REQUIRED",
+        "notes": "Unit conversion needed: dimensionless -> %"
+      }
+    ],
+    "is_ground_truth_only": false,
+    "promoted_path": null,
+    "rejected_path": null,
+    "rejected_reason": null
+  }
+}

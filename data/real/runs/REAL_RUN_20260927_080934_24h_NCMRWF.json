@@ -1,0 +1,23 @@
+{
+  "run_id": "REAL_RUN_20260927_080934_24h_NCMRWF",
+  "source_id": "NCMRWF_REAL",
+  "provider": "NCMRWF",
+  "file_hash": "fe362f459c4de32df58cab9293f8625d4b3400ced4a55bb62957220fef022412",
+  "cycle": "00Z",
+  "lead_hours": 24,
+  "initialization_time": "2026-09-27T00:00:00Z",
+  "valid_time": "2026-09-28T00:00:00Z",
+  "features_count": 20,
+  "missing_features": [],
+  "model_version": "v2.0.0",
+  "status": "FAILED",
+  "failure_stage": "GRID_FAILED",
+  "failure_detail": "NCUM inspection failed: Grid invalid: Domain bounds (50.0-70.0N, 10.0-30.0E) do not enclose India canonical extent",
+  "runtime_ms": 12.87,
+  "output_hash": null,
+  "verification_status": "NOT_AVAILABLE",
+  "data_mode": "REAL_DATA_EXPERIMENT",
+  "created_at": "2026-09-27T08:09:34.469206+00:00",
+  "manifest_path": null,
+  "report_path": null
+}

@@ -1,0 +1,27 @@
+groups:
+  - name: ramp_operational_alerts
+    rules:
+      - alert: RealDataFeedLost
+        expr: ramp_data_feed_status == 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Authoritative NCMRWF or IMD data feed unmounted or lost."
+          description: "RAMP operational cycle is blocked because live files disappeared from mount point."
+
+      - alert: InferenceFailureRateHigh
+        expr: ramp_inference_failure_rate > 5
+        for: 10m
+        labels:
+          severity: error
+        annotations:
+          summary: "RAMP forecast inference failure rate exceeded threshold."
+
+      - alert: DiskSpaceCritical
+        expr: ramp_disk_percent_used > 95
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "RAMP operational storage partition > 95% full."

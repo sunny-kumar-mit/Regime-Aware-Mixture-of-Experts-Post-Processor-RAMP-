@@ -3,16 +3,34 @@ RAMP Configuration Module
 SIH26080 | Regime-Aware AI Post-Processing of Monsoon Rainfall Forecasts
 """
 
+from pathlib import Path
 from typing import List, Union
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+def _find_project_root() -> Path:
+    """Walk up from this file to find the project root (contains 'backend/' and 'data/' dirs)."""
+    current = Path(__file__).resolve().parent
+    for _ in range(8):
+        if (current / "backend").is_dir() and (current / "data").is_dir():
+            return current
+        current = current.parent
+    # Fallback: two levels up from backend/src/ramp/config.py
+    return Path(__file__).resolve().parents[3]
+
+
+_PROJECT_ROOT = _find_project_root()
+_ENV_FILE = str(_PROJECT_ROOT / ".env")
+_DEV_ENV1 = str(_PROJECT_ROOT / "configs" / "dev.env")
+_DEV_ENV2 = str(_PROJECT_ROOT / "config" / "dev.env")
 
 
 class Settings(BaseSettings):
     """Application settings loaded from environment variables and .env files."""
 
     model_config = SettingsConfigDict(
-        env_file=(".env", "configs/dev.env", "config/dev.env"),
+        env_file=_ENV_FILE,  # absolute path — always correct regardless of CWD
         env_file_encoding="utf-8",
         extra="ignore",
     )

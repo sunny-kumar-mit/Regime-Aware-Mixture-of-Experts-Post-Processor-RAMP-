@@ -1,0 +1,24 @@
+{
+  "report_id": "VR_20260927",
+  "date": "2026-09-27",
+  "status": "NOT_AVAILABLE",
+  "cycles_evaluated": [],
+  "observation_date": null,
+  "sample_count": 0,
+  "coverage_percent": 0.0,
+  "lead_times": [
+    24,
+    48,
+    72
+  ],
+  "thresholds_evaluated": [
+    2.5,
+    15.6,
+    64.5,
+    115.6,
+    204.4
+  ],
+  "model_metrics": {},
+  "disclaimer": "REAL VERIFICATION NOT AVAILABLE: Authoritative IMD gridded observations are not mounted.",
+  "generated_at": "2026-09-27T18:57:00.201041+00:00"
+}

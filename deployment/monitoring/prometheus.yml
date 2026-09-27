@@ -1,0 +1,17 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  - "alerts.rules.yml"
+
+scrape_configs:
+  - job_name: "ramp-backend"
+    metrics_path: "/api/production/metrics"
+    static_configs:
+      - targets: ["backend:8000"]
+
+  - job_name: "ramp-health"
+    metrics_path: "/health/overall"
+    static_configs:
+      - targets: ["backend:8000"]

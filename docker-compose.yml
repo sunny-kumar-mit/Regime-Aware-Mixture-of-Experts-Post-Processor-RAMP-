@@ -1,4 +1,7 @@
-version: '3.8'
+# =============================================================================
+# RAMP — Regime-Aware Mixture-of-Experts Post-Processor (SIH26080)
+# MoES / NCMRWF Operational Production & Development Orchestration
+# =============================================================================
 
 services:
   # ---------------------------------------------------------------------------
@@ -16,10 +19,16 @@ services:
       - APP_ENV=production
       - APP_HOST=0.0.0.0
       - APP_PORT=8000
-      - RAMP_DATA_MODE=${RAMP_DATA_MODE:-SYNTHETIC_DEMO}
+      - RAMP_DATA_MODE=${RAMP_DATA_MODE:-REAL_OPERATIONAL}
       - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-ramp}:${POSTGRES_PASSWORD:-ramp}@db:5432/${POSTGRES_DB:-ramp_db}
       - REDIS_URL=redis://redis:6379/0
-      - CORS_ORIGINS=http://localhost:3000,http://localhost:5173
+      - CORS_ORIGINS=http://localhost:3000,http://localhost:5173,http://127.0.0.1:5173
+      # Object Storage: Use internal container URL for container-to-container traffic
+      - MINIO_ENDPOINT=http://minio:9000
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY:-admin}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY:-admin12345}
+      - MINIO_BUCKET=${MINIO_BUCKET:-ramp-meteorological-vault}
+      - STORAGE_MODE=${STORAGE_MODE:-MINIO}
     volumes:
       - ./data:/app/data
       - ./config:/app/config
@@ -27,6 +36,8 @@ services:
       db:
         condition: service_healthy
       redis:
+        condition: service_healthy
+      minio:
         condition: service_healthy
     networks:
       - ramp-network
@@ -43,8 +54,37 @@ services:
     ports:
       - "3000:80"
       - "5173:80"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+      - VITE_MAP_PROVIDER=maplibre
+      - VITE_MAP_TILE_URL=https://tile.openstreetmap.org/{z}/{x}/{y}.png
+      - VITE_MAP_STYLE_URL=https://tiles.openfreemap.org/styles/dark
     depends_on:
       - backend
+    networks:
+      - ramp-network
+
+  # ---------------------------------------------------------------------------
+  # MinIO Object Storage (S3-Compatible Meteorological Vault)
+  # ---------------------------------------------------------------------------
+  minio:
+    image: minio/minio:latest
+    container_name: ramp-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-admin}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-admin12345}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "mc ready local || curl -sf http://localhost:9000/minio/health/live || exit 0"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - ramp-network
 
@@ -94,3 +134,4 @@ networks:
 
 volumes:
   postgres_data:
+  minio_data:

@@ -1,0 +1,32 @@
+{
+  "model_id": "ramp_regime_v2.0.0",
+  "model_type": "WEATHER_REGIME_CLASSIFIER",
+  "dataset_version": "ramp_dataset_real_v1.0.0",
+  "data_mode": "SYNTHETIC_DEMO",
+  "feature_schema_version": "ramp_features_v1.0.0",
+  "regime_classes": [
+    "ACTIVE_MONSOON",
+    "BREAK_MONSOON",
+    "LOW_DEPRESSION",
+    "COASTAL",
+    "OROGRAPHIC",
+    "WESTERN_DISTURBANCE",
+    "TRANSITION_OTHER"
+  ],
+  "train_samples": 105,
+  "val_samples": 22,
+  "training_duration_seconds": 0.203,
+  "hyperparameters": {
+    "objective": "multiclass",
+    "num_class": 7,
+    "metric": "multi_logloss",
+    "n_estimators": 150,
+    "learning_rate": 0.05,
+    "num_leaves": 31,
+    "max_depth": 6,
+    "random_state": 42,
+    "verbosity": -1,
+    "n_jobs": -1
+  },
+  "trained_at": "2026-09-27T10:22:34.400181+00:00"
+}

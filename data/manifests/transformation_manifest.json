@@ -1,0 +1,83 @@
+[
+  {
+    "feature_name": "unknown",
+    "file_id": "unknown",
+    "source_unit": "Kelvin",
+    "target_unit": "degC",
+    "conversion": "x - 273.15",
+    "reason": "Kelvin to Celsius",
+    "timestamp": "2026-09-27T03:43:42.811990+00:00"
+  },
+  {
+    "feature_name": "unknown",
+    "file_id": "unknown",
+    "source_unit": "Kelvin",
+    "target_unit": "degC",
+    "conversion": "x - 273.15",
+    "reason": "Kelvin to Celsius",
+    "timestamp": "2026-09-27T03:46:29.466006+00:00"
+  },
+  {
+    "feature_name": "unknown",
+    "file_id": "unknown",
+    "source_unit": "Kelvin",
+    "target_unit": "degC",
+    "conversion": "x - 273.15",
+    "reason": "Kelvin to Celsius",
+    "timestamp": "2026-09-27T03:52:53.621017+00:00"
+  },
+  {
+    "feature_name": "unknown",
+    "file_id": "unknown",
+    "source_unit": "Kelvin",
+    "target_unit": "degC",
+    "conversion": "x - 273.15",
+    "reason": "Kelvin to Celsius",
+    "timestamp": "2026-09-27T03:55:27.585900+00:00"
+  },
+  {
+    "feature_name": "unknown",
+    "file_id": "unknown",
+    "source_unit": "Kelvin",
+    "target_unit": "degC",
+    "conversion": "x - 273.15",
+    "reason": "Kelvin to Celsius",
+    "timestamp": "2026-09-27T05:26:20.002356+00:00"
+  },
+  {
+    "feature_name": "unknown",
+    "file_id": "unknown",
+    "source_unit": "Kelvin",
+    "target_unit": "degC",
+    "conversion": "x - 273.15",
+    "reason": "Kelvin to Celsius",
+    "timestamp": "2026-09-27T05:27:08.416143+00:00"
+  },
+  {
+    "feature_name": "unknown",
+    "file_id": "unknown",
+    "source_unit": "Kelvin",
+    "target_unit": "degC",
+    "conversion": "x - 273.15",
+    "reason": "Kelvin to Celsius",
+    "timestamp": "2026-09-27T05:28:42.098902+00:00"
+  },
+  {
+    "feature_name": "unknown",
+    "file_id": "unknown",
+    "source_unit": "Kelvin",
+    "target_unit": "degC",
+    "conversion": "x - 273.15",
+    "reason": "Kelvin to Celsius",
+    "timestamp": "2026-09-27T06:32:57.298953+00:00"
+  },
+  {
+    "feature_name": "unknown",
+    "file_id": "unknown",
+    "source_unit": "Kelvin",
+    "target_unit": "degC",
+    "conversion": "x - 273.15",
+    "reason": "Kelvin to Celsius",
+    "timestamp": "2026-09-27T06:43:00.359921+00:00"
+  }
+]

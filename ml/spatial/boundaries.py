@@ -106,6 +106,10 @@ class DistrictBoundary:
         if self.area_km2 <= 0.0 and not self.geometry.is_empty:
             self.area_km2 = round(compute_physical_area_km2(self.geometry), 2)
 
+    @property
+    def bbox(self) -> Tuple[float, float, float, float]:
+        return self.geometry.bounds
+
     def to_geojson_feature(self) -> Dict[str, Any]:
         return {
             "type": "Feature",
@@ -127,6 +131,7 @@ class AdministrativeBoundaryProvider:
     """
     Loads, manages, and normalizes administrative boundaries for India, States, and Districts.
     """
+
 
     def __init__(self, shapefile_dir: str = "data/shapefiles") -> None:
         self.shapefile_dir = shapefile_dir
@@ -250,3 +255,8 @@ class AdministrativeBoundaryProvider:
             "total_districts": len(self._districts),
             "total_states": len(self._states),
         }
+
+
+# Canonical alias
+BoundaryProvider = AdministrativeBoundaryProvider
+

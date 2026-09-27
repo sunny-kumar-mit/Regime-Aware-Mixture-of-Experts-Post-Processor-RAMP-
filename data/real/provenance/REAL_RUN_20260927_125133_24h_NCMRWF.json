@@ -1,0 +1,32 @@
+{
+  "experiment_id": "REAL_RUN_20260927_125133_24h_NCMRWF",
+  "provider": "NCMRWF",
+  "dataset": "NCMRWF_REAL",
+  "official_source_url": "https://nwp.ncmrwf.gov.in/",
+  "source_page_url": "https://nwp.ncmrwf.gov.in/ncum_products.php",
+  "download_timestamp": "2026-09-27T12:51:33.342697+00:00",
+  "original_filename": "ncum_00Z_20260927_lead24_1790489080.nc",
+  "original_sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+  "converted_filename": null,
+  "converted_sha256": null,
+  "conversion_method": "DIRECT_INGEST",
+  "validation_status": "PASS",
+  "validation_version": "v1.0.0",
+  "feature_contract_version": "ramp_features_v1.0.0",
+  "target_contract_version": "ramp_targets_v1.0.0",
+  "model_version": "v2.0.0",
+  "forecast_cycle": "00Z",
+  "forecast_lead_hours": 24,
+  "forecast_valid_time": "2026-09-28T00:00:00Z",
+  "observation_date": "2026-09-28",
+  "observation_sha256": null,
+  "pairing_hash": null,
+  "user_configuration": {
+    "operator_id": "REAL_DATA_LAB_OPERATOR",
+    "source_id": "NCMRWF_REAL",
+    "cycle": "00Z",
+    "lead_hours": 24
+  },
+  "output_hash": "cedcdba10a52ad9708b577f8c6d40e95731a4e1abf4b1cc4c0866c6fc61f2b55",
+  "output_timestamp": "2026-09-27T12:51:33.374072+00:00"
+}

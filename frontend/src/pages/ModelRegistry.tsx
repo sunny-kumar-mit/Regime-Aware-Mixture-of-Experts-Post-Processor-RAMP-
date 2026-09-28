@@ -54,6 +54,8 @@ interface ModelSummary {
   promotion_eligible: boolean;
 }
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
+
 export const ModelRegistryPage: React.FC = () => {
   const [registryStatus, setRegistryStatus] = useState<RegistryStatusResponse | null>(null);
   const [models, setModels] = useState<ModelSummary[]>([]);
@@ -69,8 +71,8 @@ export const ModelRegistryPage: React.FC = () => {
     try {
       setLoading(true);
       const [statusRes, modelsRes] = await Promise.all([
-        fetch('http://localhost:8000/api/models/status'),
-        fetch('http://localhost:8000/api/models'),
+        fetch(`${API_BASE}/api/models/status`),
+        fetch(`${API_BASE}/api/models`),
       ]);
       const statusData = await statusRes.json();
       const modelsData = await modelsRes.json();
@@ -92,10 +94,10 @@ export const ModelRegistryPage: React.FC = () => {
   const loadModelArtifacts = async (modelId: string) => {
     try {
       const [detailsRes, metricsRes, calRes, provRes] = await Promise.all([
-        fetch(`http://localhost:8000/api/models/${modelId}`),
-        fetch(`http://localhost:8000/api/models/${modelId}/metrics`),
-        fetch(`http://localhost:8000/api/models/${modelId}/calibration`),
-        fetch(`http://localhost:8000/api/models/${modelId}/provenance`),
+        fetch(`${API_BASE}/api/models/${modelId}`),
+        fetch(`${API_BASE}/api/models/${modelId}/metrics`),
+        fetch(`${API_BASE}/api/models/${modelId}/calibration`),
+        fetch(`${API_BASE}/api/models/${modelId}/provenance`),
       ]);
 
       if (detailsRes.ok) setModelDetails(await detailsRes.json());

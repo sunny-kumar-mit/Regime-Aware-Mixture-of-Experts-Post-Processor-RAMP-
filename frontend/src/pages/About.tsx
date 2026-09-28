@@ -96,7 +96,7 @@ export const AboutPage: React.FC = () => {
           <div className="text-slate-400">Explore auto-generated Swagger UI and backend contracts</div>
         </div>
         <a
-          href="http://localhost:8000/docs"
+          href={import.meta.env.VITE_API_BASE_URL ? `${import.meta.env.VITE_API_BASE_URL}/docs` : '/docs'}
           target="_blank"
           rel="noreferrer"
           className="inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-lg bg-monsoon-600 hover:bg-monsoon-500 text-white font-medium transition-colors"

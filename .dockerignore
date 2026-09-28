@@ -1,0 +1,49 @@
+# RAMP Root .dockerignore
+# Prevents bloated build context on Render while preserving all required ML/backend/config code
+
+# Git
+.git
+.github
+.gitignore
+
+# Node & Frontend Build Artifacts
+**/node_modules
+frontend/dist
+frontend/.env
+frontend/.env.local
+
+# Python Artifacts & Virtual Environments
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.venv
+venv
+env
+*.egg-info
+dist
+build
+
+# Environment & Local Secrets
+.env
+.env.*
+!.env.example
+*.log
+
+# IDE & Editor Files
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS Temporary Files
+.DS_Store
+Thumbs.db
+
+# Scratch and Temporary Files
+scratch*
+tmp/
+temp/

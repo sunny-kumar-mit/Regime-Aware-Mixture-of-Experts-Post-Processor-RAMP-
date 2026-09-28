@@ -1,0 +1,33 @@
+# ==============================================================================
+# RAMP — Regime-Aware Mixture-of-Experts Post-Processor (SIH26080)
+# Render Infrastructure Blueprint Specification (render.yaml)
+# Repository ROOT Deployment Context
+# ==============================================================================
+
+services:
+  - type: web
+    name: ramp-sih26080
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: starter
+    healthCheckPath: /health/live
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DEBUG
+        value: "false"
+      - key: LOG_LEVEL
+        value: INFO
+      - key: RAMP_DATA_MODE
+        value: SYNTHETIC_DEMO
+      - key: RAMP_DATA_ROOT
+        value: /app/data
+      - key: RAMP_CONFIG_PATH
+        value: /app/config/model_config.yaml
+      - key: STORAGE_MODE
+        value: LOCAL_FALLBACK
+      - key: SECRET_KEY
+        generateValue: true
+      - key: CORS_ORIGINS
+        value: "*"

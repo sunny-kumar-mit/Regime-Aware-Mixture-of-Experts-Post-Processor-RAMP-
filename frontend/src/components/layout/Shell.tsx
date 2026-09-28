@@ -500,7 +500,7 @@ export const Shell: React.FC<ShellProps> = ({ children }) => {
 
             {/* Subtle API Docs Link (Section B8) */}
             <a
-              href="http://localhost:8000/docs"
+              href={import.meta.env.VITE_API_BASE_URL ? `${import.meta.env.VITE_API_BASE_URL}/docs` : '/docs'}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Open FastAPI documentation in a new tab"

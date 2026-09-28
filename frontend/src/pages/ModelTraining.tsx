@@ -24,6 +24,8 @@ interface TrainingStatusState {
   latest_training_run: any;
 }
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
+
 export const ModelTrainingPage: React.FC = () => {
   const [statusData, setStatusData] = useState<TrainingStatusState | null>(null);
   const [trainingLoading, setTrainingLoading] = useState<boolean>(false);
@@ -33,7 +35,7 @@ export const ModelTrainingPage: React.FC = () => {
 
   const fetchStatus = async () => {
     try {
-      const res = await fetch('http://localhost:8000/api/models/status');
+      const res = await fetch(`${API_BASE}/api/models/status`);
       if (res.ok) {
         const data = await res.json();
         setStatusData(data);
@@ -57,7 +59,7 @@ export const ModelTrainingPage: React.FC = () => {
     setTrainingLoading(true);
     setPipelineResult(null);
     try {
-      const res = await fetch('http://localhost:8000/api/models/pipeline', {
+      const res = await fetch(`${API_BASE}/api/models/pipeline`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

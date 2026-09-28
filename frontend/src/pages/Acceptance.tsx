@@ -18,7 +18,6 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
   ShieldCheck,
   ShieldAlert,
@@ -28,20 +27,13 @@ import {
   XCircle,
   AlertTriangle,
   Lock,
-  Unlock,
   RefreshCw,
   Clock,
   Layers,
   Award,
   Activity,
   ArrowRight,
-  ExternalLink,
-  Sliders,
-  Check,
   Radio,
-  FileCheck,
-  Boxes,
-  HelpCircle,
   GitBranch,
 } from 'lucide-react';
 import {
@@ -62,17 +54,13 @@ import {
 } from '../api/client';
 
 export const AcceptancePage: React.FC = () => {
-  const navigate = useNavigate();
-
   // Authoritative state from backend
   const [statusData, setStatusData] = useState<any | null>(null);
   const [sourcesData, setSourcesData] = useState<any | null>(null);
   const [cyclesData, setCyclesData] = useState<any | null>(null);
   const [gatesData, setGatesData] = useState<any | null>(null);
   const [inferenceData, setInferenceData] = useState<any | null>(null);
-  const [verificationData, setVerificationData] = useState<any | null>(null);
   const [baselinesData, setBaselinesData] = useState<any | null>(null);
-  const [spatialData, setSpatialData] = useState<any | null>(null);
   const [fssData, setFssData] = useState<any | null>(null);
   const [calibrationData, setCalibrationData] = useState<any | null>(null);
   const [auditData, setAuditData] = useState<any | null>(null);
@@ -81,7 +69,7 @@ export const AcceptancePage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'scorecard' | 'matrix' | 'verification' | 'cutover'>('scorecard');
   const [checkStatusFilter, setCheckStatusFilter] = useState<string>('ALL');
-  const [checkCategoryFilter, setCheckCategoryFilter] = useState<string>('ALL');
+  const [checkCategoryFilter] = useState<string>('ALL');
 
   // Staging state
   const [stagingLoading, setStagingLoading] = useState(false);
@@ -97,7 +85,7 @@ export const AcceptancePage: React.FC = () => {
   const [actionFeedback, setActionFeedback] = useState<{ text: string; error?: boolean } | null>(null);
 
   // Auto-refresh interval (default 20s)
-  const [autoRefreshInterval, setAutoRefreshInterval] = useState<number>(20);
+  const [autoRefreshInterval] = useState<number>(20);
 
   // Load all authoritative acceptance datasets
   const loadAll = useCallback(async () => {
@@ -109,9 +97,9 @@ export const AcceptancePage: React.FC = () => {
         cycRes,
         gtRes,
         infRes,
-        verRes,
+        _verRes,
         baseRes,
-        spRes,
+        _spRes,
         fssRes,
         calRes,
         audRes,
@@ -134,9 +122,7 @@ export const AcceptancePage: React.FC = () => {
       if (cycRes) setCyclesData(cycRes.data || cycRes);
       if (gtRes) setGatesData(gtRes.data || gtRes);
       if (infRes) setInferenceData(infRes.data || infRes);
-      if (verRes) setVerificationData(verRes.data || verRes);
       if (baseRes) setBaselinesData(baseRes.data || baseRes);
-      if (spRes) setSpatialData(spRes.data || spRes);
       if (fssRes) setFssData(fssRes.data || fssRes);
       if (calRes) setCalibrationData(calRes.data || calRes);
       if (audRes) setAuditData(audRes.data || audRes);
@@ -566,8 +552,6 @@ export const AcceptancePage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3.5">
             {gatesData?.category_verdicts &&
               Object.values(gatesData.category_verdicts).map((cat: any) => {
-                const isPass = cat.status === 'ACCEPTED';
-                const isBlocked = cat.status === 'BLOCKED';
                 return (
                   <div
                     key={cat.category_id}

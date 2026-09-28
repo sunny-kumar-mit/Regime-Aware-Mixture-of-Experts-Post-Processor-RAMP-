@@ -1122,7 +1122,7 @@ export const ProductionStatusPage: React.FC = () => {
                   <div className="flex justify-between">
                     <span className="text-slate-400">Endpoint:</span>
                     <span className="text-slate-200">
-                      {selectedService.key === 'minio' ? 'http://localhost:9000' : 'internal / local IPC'}
+                      {selectedService.key === 'minio' ? (healthData?.services?.minio?.endpoint || 'Meteorological Data Vault (S3 Emulation)') : 'internal / local IPC'}
                     </span>
                   </div>
                   {selectedService.bucket && (

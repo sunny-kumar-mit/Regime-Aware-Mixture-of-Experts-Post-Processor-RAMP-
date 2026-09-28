@@ -17,8 +17,23 @@ mkdir -p /app/data/raw \
          /app/data/processed \
          /app/data/cache \
          /app/data/audit \
-         /app/data/real/vault/objects \
+         /app/data/real/incoming \
+         /app/data/real/validated \
+         /app/data/real/rejected \
+         /app/data/real/runs \
+         /app/data/real/manifests \
+         /app/data/real/vault/objects/canonical/imd \
+         /app/data/real/vault/objects/canonical/ncmrwf \
+         /app/data/real/vault/objects/raw/imd \
+         /app/data/real/vault/objects/raw/ncmrwf \
          /app/data/models/regime
+
+# Seed canonical test fixtures into the local vault if missing
+if [ -d "/app/tests/fixtures/phase18" ]; then
+    cp -n /app/tests/fixtures/phase18/imd_*.nc /app/data/real/vault/objects/canonical/imd/ 2>/dev/null || true
+    cp -n /app/tests/fixtures/phase18/ncum_*.nc /app/data/real/vault/objects/canonical/ncmrwf/ 2>/dev/null || true
+    cp -n /app/tests/fixtures/phase18/neps_*.nc /app/data/real/vault/objects/canonical/ncmrwf/ 2>/dev/null || true
+fi
 
 # Ensure audit files exist so services can read/write without crashing
 touch /app/data/audit/cutover_state.json 2>/dev/null || true

@@ -61,11 +61,12 @@ RUN pip install --no-cache-dir -r requirements.render.txt
 COPY backend/ /app/backend/
 RUN pip install --no-cache-dir -e /app/backend
 
-# Copy application source code and configurations
+# Copy application source code, configurations, and test fixtures
 COPY ml/ /app/ml/
 COPY config/ /app/config/
 COPY configs/ /app/configs/
 COPY data/ /app/data/
+COPY tests/ /app/tests/
 COPY deployment/ /app/deployment/
 
 # Copy compiled React SPA from Stage 1 into Nginx HTML root

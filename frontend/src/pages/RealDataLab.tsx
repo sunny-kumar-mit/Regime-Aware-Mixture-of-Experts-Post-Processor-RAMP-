@@ -1642,7 +1642,11 @@ export const RealDataLabPage: React.FC<{ initialTab?: string }> = ({ initialTab 
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500">Storage Backend:</span>
-                <span className="text-cyan-400 font-bold">MINIO S3 (localhost:9000)</span>
+                <span className="text-cyan-400 font-bold">
+                  {diagnostic?.storage?.backend === 'MINIO'
+                    ? 'MINIO S3 (Cloud Connected)'
+                    : (diagnostic?.storage?.backend || 'METEOROLOGICAL DATA VAULT (S3 Emulation)')}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500">Vault Bucket:</span>

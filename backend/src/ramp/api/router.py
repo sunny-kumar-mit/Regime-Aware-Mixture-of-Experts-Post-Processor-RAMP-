@@ -71,6 +71,7 @@ async def get_system_info() -> SystemInfoResponse:
 
 
 @api_router.get("/system/diagnostics", tags=["System"])
+@api_router.get("/system/diagnostic", tags=["System"])
 async def get_system_diagnostics() -> dict:
     """
     Comprehensive system diagnostic report (Requirement 24):
@@ -138,6 +139,8 @@ async def get_system_diagnostics() -> dict:
     # Active Datasets
     vault_count = len(storage_svc.list_objects())
 
+    minio_endpoint = storage_report.get("endpoint") or os.environ.get("MINIO_ENDPOINT", "Meteorological Data Vault")
+
     return {
         "app_name": settings.APP_NAME,
         "version": settings.VERSION,
@@ -164,8 +167,10 @@ async def get_system_diagnostics() -> dict:
         "docker_environment": {
             "container_orchestrated": True,
             "internal_network": "ramp-network",
-            "minio_container_endpoint": "http://minio:9000",
-            "host_endpoint": "http://localhost:9000",
-            "browser_endpoint": "http://localhost:9000",
+            "minio_container_endpoint": minio_endpoint,
+            "host_endpoint": minio_endpoint,
+            "browser_endpoint": minio_endpoint,
+            "storage_backend": storage_report.get("backend", "LOCAL_VAULT"),
         },
     }
+

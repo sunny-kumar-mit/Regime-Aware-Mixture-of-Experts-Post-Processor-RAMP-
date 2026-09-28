@@ -4496,5 +4496,277 @@
       "resolution": "~12 km (control) / ~33 km (perturbed members)",
       "features_count": 23
     }
+  },
+  "ncum_ncum_00Z_20260927_lead24_1790534708_07c25a97": {
+    "id": "ncum_ncum_00Z_20260927_lead24_1790534708_07c25a97",
+    "provider": "NCMRWF",
+    "dataset": "NCUM",
+    "original_filename": "ncum_00Z_20260927_lead24_1790534708.nc",
+    "converted_filename": "ncum_00Z_20260927_lead24_1790534708.nc",
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "canonical/ncmrwf/ncum_00Z_20260927_lead24_1790534708.nc",
+    "storage_backend": "LOCAL_FALLBACK",
+    "file_size": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "downloaded_at": "2026-09-28T06:53:33.926851+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-28T06:53:33.926875+00:00",
+    "metadata": {
+      "import_id": "ncum_ncum_00Z_20260927_lead24_1790534708_07c25a97",
+      "source_id": "NCMRWF_NCUM",
+      "filename": "ncum_00Z_20260927_lead24_1790534708.nc",
+      "filepath": "D:\\SIH26080\\data\\real\\incoming\\ncum_00Z_20260927_lead24_1790534708.nc",
+      "provider": "NCMRWF",
+      "source_type": "NCUM",
+      "authority_level": "AUTHORITATIVE_PRIMARY",
+      "format": "NETCDF4",
+      "size_bytes": 1293896,
+      "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+      "import_timestamp": "2026-09-27T18:45:08.835242+00:00",
+      "data_mode": "REAL_DATA_EXPERIMENT",
+      "validation_status": "PASS",
+      "validation_notes": [
+        "File satisfies all NCUM operational feature contracts and metadata standards."
+      ],
+      "validation_error_detail": null,
+      "failure_stage": "NONE",
+      "cycle": "00Z",
+      "initialization_time": "2026-09-27T00:00:00Z",
+      "valid_time": "2026-09-28T00:00:00Z",
+      "lead_time_hours": 24,
+      "variables": [
+        "lat",
+        "lon",
+        "precip_nwp_raw",
+        "u850",
+        "v850",
+        "mslp",
+        "t850",
+        "cape",
+        "wind_speed_850",
+        "wind_dir_850",
+        "lead_time_hours",
+        "latitude",
+        "longitude",
+        "elevation_m",
+        "day_of_year_sin",
+        "day_of_year_cos",
+        "zonal_shear",
+        "monsoon_trough_intensity",
+        "meridional_flow",
+        "humidity_proxy"
+      ],
+      "dimensions": {
+        "lat": 129,
+        "lon": 137
+      },
+      "lat_range": [
+        6.5,
+        38.5
+      ],
+      "lon_range": [
+        66.5,
+        100.5
+      ],
+      "resolution": 0.25,
+      "units_map": {
+        "lat": "deg_N",
+        "lon": "deg_E",
+        "precip_nwp_raw": "mm",
+        "u850": "m/s",
+        "v850": "m/s",
+        "mslp": "hPa",
+        "t850": "K",
+        "cape": "J/kg",
+        "wind_speed_850": "m/s",
+        "wind_dir_850": "deg",
+        "lead_time_hours": "hours",
+        "latitude": "deg_N",
+        "longitude": "deg_E",
+        "elevation_m": "m",
+        "day_of_year_sin": "dimensionless",
+        "day_of_year_cos": "dimensionless",
+        "zonal_shear": "m/s",
+        "monsoon_trough_intensity": "hPa",
+        "meridional_flow": "m/s",
+        "humidity_proxy": "dimensionless"
+      },
+      "feature_mappings": [
+        {
+          "ramp_feature": "precip_nwp_raw",
+          "source_variable": "precip_nwp_raw",
+          "unit": "mm",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "u850",
+          "source_variable": "u850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "v850",
+          "source_variable": "v850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "mslp",
+          "source_variable": "mslp",
+          "unit": "hPa",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "t850",
+          "source_variable": "t850",
+          "unit": "K",
+          "source_grid": null,
+          "status": "UNIT_CONVERSION_REQUIRED",
+          "notes": "Unit conversion needed: K -> degC"
+        },
+        {
+          "ramp_feature": "cape",
+          "source_variable": "cape",
+          "unit": "J/kg",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "wind_speed_850",
+          "source_variable": "wind_speed_850",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "wind_dir_850",
+          "source_variable": "wind_dir_850",
+          "unit": "deg",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "lead_time_hours",
+          "source_variable": "lead_time_hours",
+          "unit": "hours",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "latitude",
+          "source_variable": "latitude",
+          "unit": "deg_N",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "longitude",
+          "source_variable": "longitude",
+          "unit": "deg_E",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "elevation_m",
+          "source_variable": "elevation_m",
+          "unit": "m",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "day_of_year_sin",
+          "source_variable": "day_of_year_sin",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "day_of_year_cos",
+          "source_variable": "day_of_year_cos",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "zonal_shear",
+          "source_variable": "zonal_shear",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "monsoon_trough_intensity",
+          "source_variable": "monsoon_trough_intensity",
+          "unit": "hPa",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "meridional_flow",
+          "source_variable": "meridional_flow",
+          "unit": "m/s",
+          "source_grid": null,
+          "status": "AVAILABLE",
+          "notes": null
+        },
+        {
+          "ramp_feature": "humidity_proxy",
+          "source_variable": "humidity_proxy",
+          "unit": "dimensionless",
+          "source_grid": null,
+          "status": "UNIT_CONVERSION_REQUIRED",
+          "notes": "Unit conversion needed: dimensionless -> %"
+        }
+      ],
+      "is_ground_truth_only": false,
+      "promoted_path": null,
+      "rejected_path": null,
+      "rejected_reason": null
+    }
+  },
+  "dl_ncmrwf_1790534703_20260927": {
+    "id": "dl_ncmrwf_1790534703_20260927",
+    "provider": "NCMRWF",
+    "dataset": "NCUM",
+    "original_filename": "ncum_00Z_20260927_lead24.nc",
+    "converted_filename": null,
+    "storage_bucket": "ramp-meteorological-vault",
+    "storage_key": "raw/ncmrwf/ncum_00Z_20260927_lead24.nc",
+    "storage_backend": "LOCAL_FALLBACK",
+    "file_size": 1293896,
+    "sha256": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+    "source_url": "https://nwp.ncmrwf.gov.in/",
+    "download_url": "https://nwp.ncmrwf.gov.in/archive/ncum/{cycle}/{date}/ncum_{lead}.nc",
+    "downloaded_at": "2026-09-27T18:45:03.123849+00:00",
+    "validation_status": "PASS",
+    "import_status": "ACTIVE",
+    "created_at": "2026-09-27T18:45:03.123849+00:00",
+    "metadata": {
+      "source_id": null,
+      "authority": "AUTHORITATIVE_PRIMARY",
+      "resolution": "~12 km (NCUM-G) / 0.12\u00b0",
+      "features_count": 20
+    }
   }
 }

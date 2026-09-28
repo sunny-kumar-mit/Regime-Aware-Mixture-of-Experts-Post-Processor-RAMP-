@@ -647,7 +647,9 @@ export const RawDataExplorerModal: React.FC<RawDataExplorerModalProps> = ({
                   <span className="text-slate-500 text-[10px] uppercase block">Storage Architecture</span>
                   <div className="flex justify-between text-slate-300">
                     <span>Object Storage:</span>
-                    <span className="text-white">MinIO / S3-Compatible</span>
+                    <span className="text-white">
+                      {summary?.storage_backend === 'MINIO' ? 'MinIO / S3 Cloud Storage' : 'Meteorological Data Vault (S3 Emulation)'}
+                    </span>
                   </div>
                   <div className="flex justify-between text-slate-300">
                     <span>Bucket:</span>

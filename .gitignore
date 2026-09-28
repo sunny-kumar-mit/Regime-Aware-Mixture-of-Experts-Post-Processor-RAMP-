@@ -70,6 +70,15 @@ yarn-error.log*
 *.grib2
 *.grb
 *.grb2
+
+# Whitelist essential test fixtures and canonical vault sample objects required for deployment
+!tests/fixtures/phase18/*.nc
+data/real/vault/objects/canonical/imd/*
+!data/real/vault/objects/canonical/imd/imd_valid_025_grid.nc
+data/real/vault/objects/canonical/ncmrwf/*
+!data/real/vault/objects/canonical/ncmrwf/ncum_valid_test_fixture.nc
+!data/real/vault/objects/canonical/ncmrwf/neps_valid_23_members.nc
+data/real/vault/objects/raw/
 *.idx
 *.hdf
 *.hdf5

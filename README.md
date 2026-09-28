@@ -12,6 +12,13 @@
 [![MinIO / S3](https://img.shields.io/badge/Storage-MinIO%20S3%20%2B%20Fallback-c72c48.svg)](https://min.io/)
 [![Docker Compose](https://img.shields.io/badge/Docker-Compose-2496ed.svg)](https://www.docker.com/)
 
+## 🚀 Deployed Software
+
+**Live Application:** [https://gatisura-ramp.onrender.com/](https://gatisura-ramp.onrender.com/)
+
+> The production deployment runs on Render Cloud using the RAMP full-stack architecture.
+
+
 ---
 
 ## 1. Executive Summary & Problem Statement

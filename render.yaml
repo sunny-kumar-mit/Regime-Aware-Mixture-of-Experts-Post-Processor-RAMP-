@@ -6,7 +6,7 @@
 
 services:
   - type: web
-    name: ramp-sih26080
+    name: gatisura-ramp
     runtime: docker
     dockerfilePath: ./Dockerfile
     dockerContext: .

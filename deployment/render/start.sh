@@ -43,9 +43,14 @@ touch /app/data/audit/cutover_state.json 2>/dev/null || true
 touch /app/data/audit/emergency_status.json 2>/dev/null || true
 
 # Configure Nginx port from Render's dynamic $PORT
-export PORT="${PORT:-8080}"
-echo "Configuring Nginx reverse proxy to listen on port ${PORT}..."
+export PORT="${PORT:-10000}"
+echo "Configuring Nginx reverse proxy to listen on 0.0.0.0:${PORT}..."
 envsubst '${PORT}' < /etc/nginx/conf.d/ramp.conf.template > /etc/nginx/conf.d/default.conf
+
+# Start Nginx immediately so Render detects port binding without delay
+echo "Starting Nginx reverse proxy on 0.0.0.0:${PORT}..."
+nginx -g "daemon off;" &
+NGINX_PID=$!
 
 # Start FastAPI backend in background on internal loopback (port 8000)
 echo "Starting FastAPI backend via Uvicorn on 127.0.0.1:8000..."
@@ -81,10 +86,10 @@ for i in $(seq 1 60); do
 done
 
 if [ "$READY" -ne 1 ]; then
-    echo "WARNING: FastAPI backend did not respond within 60s. Starting Nginx anyway..."
+    echo "WARNING: FastAPI backend did not respond within 60s."
 fi
 
-# Output comprehensive startup diagnostics (Requirement 19)
+# Output comprehensive startup diagnostics without heavy framework reloading
 echo "----------------------------------------"
 echo " RAMP STARTUP DIAGNOSTICS"
 echo "----------------------------------------"
@@ -99,7 +104,7 @@ from pathlib import Path
 p = Path('${RAMP_DATA_ROOT:-/app/data}/real/vault/data_objects.json')
 if p.exists():
     try:
-        data = json.loads(p.read_text())
+        data = json.loads(p.read_text(encoding='utf-8'))
         print(f'    Catalog objects:    {len(data)} datasets registered')
     except Exception as e:
         print(f'    Catalog error:      {e}')
@@ -109,28 +114,12 @@ else:
 echo "  Model Availability:"
 python3 -c "
 from pathlib import Path
-models = list(Path('/app/data/models').rglob('*.pt')) + list(Path('ml/model_registry').rglob('*.pt'))
-print(f'    Model checkpoints:  {len(models)} found')
-" 2>/dev/null || true
-echo "  Registered API Routes:"
-python3 -c "
-from ramp.main import app
-routes = [f'{r.methods} {r.path}' for r in app.routes if hasattr(r, 'methods')]
-api_routes = [r for r in routes if '/api' in r]
-print(f'    Total routes:       {len(routes)} (API routes: {len(api_routes)})')
-for r in sorted(api_routes)[:8]:
-    print(f'      {r}')
+models = list(Path('ml/model_registry/models').rglob('model.bin'))
+print(f'    Model artifacts:    {len(models)} found in model_registry')
 " 2>/dev/null || true
 echo "  Health Status:"
 curl -s http://127.0.0.1:8000/api/health 2>/dev/null || echo "    Health endpoint pending"
 echo ""
-echo "----------------------------------------"
-
-# Start Nginx in background
-echo "Starting Nginx reverse proxy on port ${PORT}..."
-nginx -g "daemon off;" &
-NGINX_PID=$!
-
 echo "========================================"
 echo " RAMP System is fully active on Render!"
 echo " Public Port: ${PORT}"

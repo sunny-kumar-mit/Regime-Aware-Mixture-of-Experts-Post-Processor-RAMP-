@@ -340,9 +340,22 @@ class DataDiscoveryService:
         )
 
         real_available = ncum_ok or neps_ok or imd_ok
-        if real_available:
-            overall_mode = DataMode.REAL_OPERATIONAL.value if (ncum_ok and neps_ok and imd_ok) else "REAL_DATA_EXPERIMENT"
-            honesty = "OPERATIONAL REAL DATA ACTIVE: Genuine meteorological data validated."
+        try:
+            from ml.production.connectivity import DataConnectivityMonitor
+            conn_mon = DataConnectivityMonitor()
+            conn = conn_mon.check_all_providers()
+            ncmrwf_live = bool(conn.get("NCMRWF_NCUM") and conn["NCMRWF_NCUM"].is_mounted)
+            imd_live = bool(conn.get("IMD_GRIDDED_RAINFALL") and conn["IMD_GRIDDED_RAINFALL"].is_mounted)
+        except Exception:
+            ncmrwf_live = False
+            imd_live = False
+
+        if ncmrwf_live and imd_live:
+            overall_mode = DataMode.REAL_OPERATIONAL.value
+            honesty = "OPERATIONAL REAL DATA ACTIVE: Genuine operational feeds mounted and validated."
+        elif real_available:
+            overall_mode = "REAL_DATA_EXPERIMENT"
+            honesty = "REAL DATA EXPERIMENT: Offline vault objects loaded for research & validation; operational live feeds unmounted."
         else:
             overall_mode = DataMode.SYNTHETIC_DEMO.value
             honesty = (

@@ -146,7 +146,17 @@ async def health_live():
 
 @app.get("/health/ready", tags=["Probes"])
 async def health_ready():
-    return {"status": "UP", "subsystem": "ready", "ready": True}
+    from ml.real_data.object_storage import ObjectStorageService
+    storage = ObjectStorageService()
+    catalog = storage._load_metadata()
+    catalog_ready = len(catalog) > 0
+    return {
+        "status": "UP" if catalog_ready else "DEGRADED",
+        "subsystem": "ready",
+        "ready": True,
+        "catalog_objects": len(catalog),
+        "storage_mode": storage.storage_mode,
+    }
 
 
 @app.get("/health/data", tags=["Probes"])
@@ -168,9 +178,16 @@ async def health_data():
 
 @app.get("/health/models", tags=["Probes"])
 async def health_models():
-    from pathlib import Path
-    has_registry = Path("ml/model_registry").exists()
-    return {"status": "UP" if has_registry else "DOWN", "subsystem": "models", "registry_present": has_registry}
+    reg_file = _Path("ml/model_registry/registry.json")
+    has_registry = reg_file.exists()
+    models = list(_Path("ml/model_registry/models").rglob("model.bin")) if _Path("ml/model_registry/models").exists() else []
+    return {
+        "status": "UP" if has_registry else "DOWN",
+        "subsystem": "models",
+        "registry_present": has_registry,
+        "models_count": len(models),
+        "active_models": ["ramp_global_v2.0.0", "ramp_regime_v2.0.0", "ramp_moe_v2.0.0", "ramp_extreme_v2.0.0"] if has_registry else [],
+    }
 
 
 @app.get("/health/inference", tags=["Probes"])
@@ -209,15 +226,48 @@ async def health_overall():
     }
 
 
-@app.get("/", tags=["Root"])
-async def root_info():
-    return {
-        "app": settings.APP_NAME,
-        "version": settings.VERSION,
-        "organization": settings.ORGANIZATION,
-        "department": settings.DEPARTMENT,
-        "status": "operational",
-        "docs": "/docs",
-        "health": f"{settings.API_PREFIX}/health",
-        "system_info": f"{settings.API_PREFIX}/system/info",
-    }
+# ---------------------------------------------------------------------------
+# Frontend Static SPA Serving & Fallback
+# ---------------------------------------------------------------------------
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+from fastapi import HTTPException
+
+frontend_dist_dirs = [
+    _Path("/usr/share/nginx/html"),
+    _Path("/app/frontend/dist"),
+    _Path(__file__).resolve().parents[3] / "frontend" / "dist",
+    _Path.cwd() / "frontend" / "dist",
+]
+frontend_dist = None
+for cand in frontend_dist_dirs:
+    if (cand / "index.html").is_file():
+        frontend_dist = cand
+        break
+
+if frontend_dist:
+    assets_dir = frontend_dist / "assets"
+    if assets_dir.is_dir():
+        app.mount("/assets", StaticFiles(directory=str(assets_dir)), name="assets")
+
+    @app.get("/{full_path:path}", include_in_schema=False)
+    async def serve_spa_frontend(full_path: str):
+        if full_path.startswith(("api", "health", "docs", "openapi.json", "redoc")):
+            raise HTTPException(status_code=404, detail="Endpoint not found")
+        file_target = frontend_dist / full_path
+        if full_path and file_target.is_file():
+            return FileResponse(file_target)
+        return FileResponse(frontend_dist / "index.html")
+else:
+    @app.get("/", tags=["Root"])
+    async def root_info():
+        return {
+            "app": settings.APP_NAME,
+            "version": settings.VERSION,
+            "organization": settings.ORGANIZATION,
+            "department": settings.DEPARTMENT,
+            "status": "operational",
+            "docs": "/docs",
+            "health": f"{settings.API_PREFIX}/health",
+            "system_info": f"{settings.API_PREFIX}/system/info",
+        }

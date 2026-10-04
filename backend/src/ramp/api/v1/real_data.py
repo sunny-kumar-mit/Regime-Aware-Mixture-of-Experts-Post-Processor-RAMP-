@@ -92,6 +92,47 @@ object_storage = ObjectStorageService()
 raw_data_service = RawDataService()
 
 
+def _normalize_filepath(p_str: Optional[str]) -> Optional[Path]:
+    """
+    Cleans raw file paths, strips Windows drive letters (D:/...), converts
+    backslashes to forward slashes, and resolves against project root or vault.
+    """
+    if not p_str:
+        return None
+    s = str(p_str).replace("\\", "/")
+    import re
+    s = re.sub(r"^[a-zA-Z]:/(?:SIH26080/)?", "", s)
+    p = Path(s)
+    if p.exists() and not p.is_dir():
+        return p.resolve()
+    # Check relative to cwd
+    if (Path.cwd() / s).exists() and not (Path.cwd() / s).is_dir():
+        return (Path.cwd() / s).resolve()
+    # Check relative to _DR (data root)
+    if s.startswith("data/"):
+        rel = s[len("data/"):]
+        if (_DR / rel).exists() and not (_DR / rel).is_dir():
+            return (_DR / rel).resolve()
+    elif (_DR / s).exists() and not (_DR / s).is_dir():
+        return (_DR / s).resolve()
+    # Check by filename in common locations
+    fn = Path(s).name
+    for cand in [
+        _DR / "real" / "vault" / "objects" / "canonical" / "ncmrwf" / fn,
+        _DR / "real" / "vault" / "objects" / "canonical" / "imd" / fn,
+        _DR / "real" / "vault" / "objects" / "raw" / "ncmrwf" / fn,
+        _DR / "real" / "vault" / "objects" / "raw" / "imd" / fn,
+        _DR / "real" / "incoming" / fn,
+        _DR / "real" / "validated" / fn,
+        _DR / "real" / "rejected" / fn,
+        Path.cwd() / "tests" / "fixtures" / "phase18" / fn,
+        Path("/app/tests/fixtures/phase18") / fn,
+    ]:
+        if cand.exists() and not cand.is_dir():
+            return cand.resolve()
+    return None
+
+
 def _load_files_index() -> Dict[str, Dict[str, Any]]:
     if INDEX_FILE.exists():
         try:
@@ -815,6 +856,28 @@ def get_experiment_run(run_id: str) -> Dict[str, Any]:
     return run_data
 
 
+@router.get("/run")
+def get_latest_real_run() -> Dict[str, Any]:
+    """
+    GET /api/real-data/run
+    Returns the latest real experiment run status or active runs.
+    """
+    runs = list(RUNS_DIR.glob("*.json"))
+    if runs:
+        latest = sorted(runs, key=lambda f: f.stat().st_mtime, reverse=True)[0]
+        try:
+            with open(latest, "r", encoding="utf-8") as rf:
+                return json.load(rf)
+        except Exception:
+            pass
+    return {
+        "status": "IDLE",
+        "data_mode": "REAL_DATA_EXPERIMENT",
+        "message": "No real-data experiment runs executed yet. Ready for trigger.",
+        "runs_count": len(runs),
+    }
+
+
 @router.post("/run")
 def execute_real_experiment(req: RunExperimentRequest) -> Dict[str, Any]:
     """
@@ -825,80 +888,110 @@ def execute_real_experiment(req: RunExperimentRequest) -> Dict[str, Any]:
     index = _load_files_index()
 
     # Resolve NCUM path
-    ncum_path = req.ncum_filepath
+    ncum_path: Optional[Path] = None
+    if req.ncum_filepath:
+        ncum_path = _normalize_filepath(req.ncum_filepath)
     if not ncum_path and req.ncum_file_id:
         if req.ncum_file_id in index:
-            ncum_path = index[req.ncum_file_id]["filepath"]
-        else:
+            ncum_path = _normalize_filepath(index[req.ncum_file_id].get("filepath"))
+        if not ncum_path:
             v_obj = object_storage.get_object(req.ncum_file_id)
             if v_obj:
                 p = object_storage.get_file_path(v_obj.converted_storage_key or v_obj.storage_key)
                 if p and p.exists():
-                    ncum_path = str(p)
-    if not ncum_path:
-        passed = [f["filepath"] for f in index.values() if f.get("source_type") == "NCUM" and f.get("validation_status") in ["PASS", "PROMOTED"]]
-        if passed:
-            ncum_path = passed[0]
-        else:
-            fix_path = Path("tests/fixtures/phase18/ncum_valid_test_fixture.nc")
-            if fix_path.exists():
-                ncum_path = str(fix_path)
+                    ncum_path = p
+        if not ncum_path:
+            ncum_path = _normalize_filepath(req.ncum_file_id)
 
-    if not ncum_path or not Path(ncum_path).exists():
+    if not ncum_path:
+        for f in index.values():
+            if f.get("source_type") == "NCUM" and f.get("validation_status") in ["PASS", "PROMOTED"]:
+                p = _normalize_filepath(f.get("filepath"))
+                if p and p.exists():
+                    ncum_path = p
+                    break
+
+    if not ncum_path:
+        for cand_name in [
+            "ncum_valid_test_fixture.nc",
+            "ncum_00Z_20260927_lead24.nc",
+        ]:
+            p = _normalize_filepath(cand_name)
+            if p and p.exists():
+                ncum_path = p
+                break
+
+    if not ncum_path or not ncum_path.exists():
         raise HTTPException(
             status_code=400,
             detail="No valid NCUM forecast file provided or discovered.",
         )
 
     # Resolve NEPS path
-    neps_path = req.neps_filepath
+    neps_path: Optional[Path] = None
+    if req.neps_filepath:
+        neps_path = _normalize_filepath(req.neps_filepath)
     if not neps_path and req.neps_file_id:
         if req.neps_file_id in index:
-            neps_path = index[req.neps_file_id]["filepath"]
-        else:
+            neps_path = _normalize_filepath(index[req.neps_file_id].get("filepath"))
+        if not neps_path:
             v_obj = object_storage.get_object(req.neps_file_id)
             if v_obj:
                 p = object_storage.get_file_path(v_obj.converted_storage_key or v_obj.storage_key)
                 if p and p.exists():
-                    neps_path = str(p)
+                    neps_path = p
+        if not neps_path:
+            neps_path = _normalize_filepath(req.neps_file_id)
+
     if not neps_path:
-        neps_passed = [f["filepath"] for f in index.values() if f.get("source_type") == "NEPS"]
-        if neps_passed:
-            neps_path = neps_passed[0]
-        else:
-            fix_neps = Path("tests/fixtures/phase18/neps_valid_23_members.nc")
-            if fix_neps.exists():
-                neps_path = str(fix_neps)
+        for f in index.values():
+            if f.get("source_type") == "NEPS":
+                p = _normalize_filepath(f.get("filepath"))
+                if p and p.exists():
+                    neps_path = p
+                    break
+
+    if not neps_path:
+        p = _normalize_filepath("neps_valid_23_members.nc")
+        if p and p.exists():
+            neps_path = p
 
     # Resolve IMD path
-    imd_path = req.imd_filepath
+    imd_path: Optional[Path] = None
     is_explicitly_unpaired = False
     if req.imd_file_id:
         if req.imd_file_id.strip().upper() in ["NONE", "UNPAIRED", "OFF", ""]:
             imd_path = None
             is_explicitly_unpaired = True
         elif req.imd_file_id in index:
-            imd_path = index[req.imd_file_id]["filepath"]
+            imd_path = _normalize_filepath(index[req.imd_file_id].get("filepath"))
         else:
             v_obj = object_storage.get_object(req.imd_file_id)
             if v_obj and v_obj.validation_status in ["PASS", "VALID", "PROMOTED"]:
                 p = object_storage.get_file_path(v_obj.converted_storage_key or v_obj.storage_key)
                 if p and p.exists():
-                    imd_path = str(p)
+                    imd_path = p
+            if not imd_path:
+                imd_path = _normalize_filepath(req.imd_file_id)
 
     if not imd_path and not is_explicitly_unpaired and req.imd_file_id is None:
-        imd_passed = [f["filepath"] for f in index.values() if f.get("source_type") == "IMD_OBSERVATION" and f.get("validation_status") in ["PASS", "PROMOTED"]]
-        if imd_passed:
-            imd_path = imd_passed[0]
-        else:
-            fix_imd = Path("tests/fixtures/phase18/imd_valid_025_grid.nc")
-            if fix_imd.exists():
-                imd_path = str(fix_imd)
+        for f in index.values():
+            if f.get("source_type") == "IMD_OBSERVATION" and f.get("validation_status") in ["PASS", "PROMOTED"]:
+                p = _normalize_filepath(f.get("filepath"))
+                if p and p.exists():
+                    imd_path = p
+                    break
+        if not imd_path:
+            for cand_name in ["imd_valid_025_grid.nc", "imd_rainfall_20260927.nc"]:
+                p = _normalize_filepath(cand_name)
+                if p and p.exists():
+                    imd_path = p
+                    break
 
     record = experiment_engine.execute_experiment(
-        ncum_filepath=ncum_path,
-        neps_filepath=neps_path,
-        imd_filepath=imd_path,
+        ncum_filepath=str(ncum_path),
+        neps_filepath=str(neps_path) if neps_path else None,
+        imd_filepath=str(imd_path) if imd_path else None,
         source_id=req.source_id,
         operator_id=req.operator_id,
         cycle=req.cycle,

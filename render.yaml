@@ -6,11 +6,11 @@
 
 services:
   - type: web
-    name: ramp-sih26080
+    name: gatisura-ramp
     runtime: docker
     dockerfilePath: ./Dockerfile
     dockerContext: .
-    plan: starter
+    plan: free
     healthCheckPath: /health/live
     envVars:
       - key: APP_ENV

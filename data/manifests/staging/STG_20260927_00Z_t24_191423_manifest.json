@@ -1,0 +1,70 @@
+{
+  "forecast_id": "FCST_20260927_00Z_t24",
+  "cycle_id": "20260927_00Z",
+  "initialization_time": "2026-09-27T00:00:00Z",
+  "valid_time": "2026-09-28T00:00:00Z",
+  "lead_time_hours": 24,
+  "ncum_source_checksum": "07c25a979b0db33a9fe75a53ea931939bf6e82a32a130f12b67c3b9e61cf73fe",
+  "neps_source_checksum": "2096c18dfff944715d26bfe7f45da96d93395efb23b81a5ad93e2c241c75c907",
+  "dataset_version": "ramp_dataset_real_v1.0.0",
+  "feature_contract": "ramp_features_v1.0.0",
+  "target_contract": "ramp_targets_v1.0.0",
+  "model_version": "ramp_moe_v2.0.0",
+  "git_commit": "e932b14",
+  "inference_timestamp": "2026-10-04T19:14:23.924226+00:00",
+  "data_mode": "STAGING_REAL_DATA",
+  "activation_id": "STG_20260927_00Z_t24_191423",
+  "operator_approval": "OPERATOR_MOES_01",
+  "output_checksum": "c5f398de7378f7c77eb5ecd0f8d8e1a9cc2207e83dab4970215ea8a4d0748382",
+  "publication_status": "DISABLED_FOR_STAGING",
+  "stages": [
+    {
+      "stage_num": 1,
+      "name": "Ingestion",
+      "status": "PASS",
+      "detail": "Loaded ncum_valid_test_fixture.nc (1293896 bytes)."
+    },
+    {
+      "stage_num": 2,
+      "name": "Validation",
+      "status": "PASS",
+      "detail": "CF-1.8 headers, coordinate dimensions [129x137], and variables valid."
+    },
+    {
+      "stage_num": 3,
+      "name": "QC",
+      "status": "PASS",
+      "detail": "Physical limits checked: Precip >= 0.0mm, CAPE >= 0, MSLP within [900, 1050] hPa."
+    },
+    {
+      "stage_num": 4,
+      "name": "Feature Map",
+      "status": "PASS",
+      "detail": "18 canonical predictors mapped via ramp_features_v1.0.0."
+    },
+    {
+      "stage_num": 5,
+      "name": "Frozen Model",
+      "status": "PASS",
+      "detail": "Models ['ramp_global_v2.0.0', 'ramp_regime_v2.0.0', 'ramp_moe_v2.0.0', 'ramp_extreme_v2.0.0'] verified immutable."
+    },
+    {
+      "stage_num": 6,
+      "name": "Inference",
+      "status": "PASS",
+      "detail": "Regime-Aware MoE inference completed; monotonicity satisfied."
+    },
+    {
+      "stage_num": 7,
+      "name": "Verification",
+      "status": "PASS",
+      "detail": "Paired against IMD 0.25\u00b0 grid."
+    },
+    {
+      "stage_num": 8,
+      "name": "Publication",
+      "status": "DISABLED",
+      "detail": "Publication is strictly disabled in STAGING_REAL_DATA mode."
+    }
+  ]
+}

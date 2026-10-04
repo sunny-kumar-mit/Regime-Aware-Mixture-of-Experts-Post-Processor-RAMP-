@@ -38,7 +38,10 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.types import TypeDecorator
 from geoalchemy2 import Geometry
 
-from backend.src.ramp.storage.connection import Base
+try:
+    from .connection import Base
+except (ImportError, ValueError):
+    from backend.src.ramp.storage.connection import Base
 
 
 class SafeGeometry(TypeDecorator):
@@ -488,3 +491,26 @@ class AuditEventModel(Base):
             "sha256_signature": self.sha256_signature,
             "previous_hash": self.previous_hash,
         }
+
+
+# =============================================================================
+# 10. System State (Persistent State Storage: Emergency, Cutover, Operational)
+# =============================================================================
+class SystemStateModel(Base):
+    __tablename__ = "system_state"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    state_key = Column(String(64), unique=True, index=True, nullable=False)
+    state_json = Column(JSON, nullable=False, default=dict)
+    updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    updated_by = Column(String(128), default="SYSTEM")
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "id": self.id,
+            "state_key": self.state_key,
+            "state_json": self.state_json or {},
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+            "updated_by": self.updated_by,
+        }
+

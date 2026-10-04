@@ -55,6 +55,9 @@ from ramp.api.v1.real_data import router as real_data_router
 
 
 
+from datetime import datetime, timezone
+from starlette.exceptions import HTTPException as StarletteHTTPException
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan lifecycle manager."""
@@ -62,6 +65,22 @@ async def lifespan(app: FastAPI):
         f"Starting {settings.APP_NAME} v{settings.VERSION} [{settings.APP_ENV}] "
         f"- DataMode: {settings.RAMP_DATA_MODE}"
     )
+    # Requirement 2 & 8: Initialize PostgreSQL schema and run startup diagnostics
+    try:
+        from backend.src.ramp.storage.connection import DatabaseManager
+        db_mgr = DatabaseManager.get_instance()
+        db_mgr.init_schema()
+        db_diag = db_mgr.run_startup_diagnostics()
+        logger.info(
+            f"Database Initialization Telemetry: "
+            f"host={db_diag.get('database_host')} | "
+            f"name={db_diag.get('database_name')} | "
+            f"connected={db_diag.get('database_connected')} | "
+            f"schema_ready={db_diag.get('database_schema_ready')}"
+        )
+    except Exception as e:
+        logger.warning(f"Database startup initialization note: {e}")
+
     yield
     logger.info(f"Shutting down {settings.APP_NAME}")
 
@@ -75,6 +94,31 @@ app = FastAPI(
     redoc_url="/redoc",
     openapi_url="/openapi.json",
 )
+
+# ---------------------------------------------------------------------------
+# Structured API Error Handling (Requirement 15)
+# ---------------------------------------------------------------------------
+@app.exception_handler(StarletteHTTPException)
+async def custom_http_exception_handler(request: Request, exc: StarletteHTTPException):
+    if isinstance(exc.detail, dict):
+        content = exc.detail
+        if "error" not in content:
+            content["error"] = "HTTP_ERROR"
+        content.setdefault("timestamp", datetime.now(timezone.utc).isoformat())
+    else:
+        error_code = "ROUTE_NOT_FOUND" if exc.status_code == 404 else "HTTP_ERROR"
+        if "/api/real-data" in request.url.path and exc.status_code == 404:
+            error_code = "REAL_DATA_ROUTE_NOT_FOUND"
+        content = {
+            "error": error_code,
+            "message": str(exc.detail),
+            "detail": str(exc.detail),
+            "path": request.url.path,
+            "status_code": exc.status_code,
+            "request_id": f"REQ_{int(time.time() * 1000)}",
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        }
+    return JSONResponse(status_code=exc.status_code, content=content)
 
 # ---------------------------------------------------------------------------
 # CORS Configuration
@@ -136,7 +180,7 @@ app.include_router(real_data_router, prefix=settings.API_PREFIX)
 
 
 # ---------------------------------------------------------------------------
-# Modular Production Health Probes (PART F)
+# Modular Production Health Probes (PART F & Requirements 2, 5)
 # ---------------------------------------------------------------------------
 @app.get("/health", tags=["Probes"], include_in_schema=False)
 @app.get("/health/live", tags=["Probes"])
@@ -147,15 +191,49 @@ async def health_live():
 @app.get("/health/ready", tags=["Probes"])
 async def health_ready():
     from ml.real_data.object_storage import ObjectStorageService
+    from backend.src.ramp.storage.connection import DatabaseManager
     storage = ObjectStorageService()
     catalog = storage._load_metadata()
     catalog_ready = len(catalog) > 0
+    db_health = DatabaseManager.get_instance().check_health()
+    is_ready = catalog_ready or db_health.get("connected", False)
     return {
-        "status": "UP" if catalog_ready else "DEGRADED",
+        "status": "UP" if is_ready else "DEGRADED",
         "subsystem": "ready",
-        "ready": True,
+        "ready": is_ready,
         "catalog_objects": len(catalog),
         "storage_mode": storage.storage_mode,
+        "database": db_health,
+    }
+
+
+@app.get("/health/routes", tags=["Probes"])
+async def health_routes():
+    """
+    Requirement 5: Production API route diagnostic endpoint
+    Exposes registered API prefixes and endpoints without leaking secrets.
+    """
+    routes_summary = []
+    prefixes = set()
+    for route in app.routes:
+        path = getattr(route, "path", None)
+        methods = getattr(route, "methods", None)
+        if path and methods:
+            parts = path.split("/")
+            if len(parts) > 1 and parts[1]:
+                prefixes.add(f"/{parts[1]}")
+            routes_summary.append({
+                "path": path,
+                "methods": sorted(list(methods - {"HEAD", "OPTIONS"})),
+                "name": getattr(route, "name", ""),
+            })
+
+    return {
+        "status": "UP",
+        "subsystem": "routes",
+        "total_routes": len(routes_summary),
+        "registered_prefixes": sorted(list(prefixes)),
+        "routes": sorted(routes_summary, key=lambda x: x["path"]),
     }
 
 

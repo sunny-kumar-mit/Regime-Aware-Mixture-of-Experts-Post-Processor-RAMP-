@@ -108,26 +108,57 @@ class OperationalStateService:
         self._load_cutover_state()
 
     def _load_emergency_state(self):
+        # 1. Attempt loading from PostgreSQL system_state table first (persistent across restarts)
+        try:
+            from backend.src.ramp.storage.connection import DatabaseManager
+            db_state = DatabaseManager.get_instance().get_state("emergency_state")
+            if db_state and isinstance(db_state, dict):
+                self.emergency_manager.status.is_emergency_active = db_state.get("is_emergency_active", False)
+                self.emergency_manager.status.triggered_at = db_state.get("triggered_at")
+                self.emergency_manager.status.triggered_by = db_state.get("triggered_by")
+                self.emergency_manager.status.reason = db_state.get("reason")
+                self.emergency_manager.status.recovered_at = db_state.get("recovered_at")
+                self.emergency_manager.status.recovered_by = db_state.get("recovered_by")
+                return
+        except Exception as dbe:
+            logger.debug(f"Database emergency state load deferred: {dbe}")
+
+        # 2. File fallback (guarded against 0-byte or corrupted files)
         if EMERGENCY_STATE_FILE.exists():
             try:
-                with open(EMERGENCY_STATE_FILE, "r", encoding="utf-8") as f:
-                    data = json.load(f)
-                    self.emergency_manager.status.is_emergency_active = data.get("is_emergency_active", False)
-                    self.emergency_manager.status.triggered_at = data.get("triggered_at")
-                    self.emergency_manager.status.triggered_by = data.get("triggered_by")
-                    self.emergency_manager.status.reason = data.get("reason")
-                    self.emergency_manager.status.recovered_at = data.get("recovered_at")
-                    self.emergency_manager.status.recovered_by = data.get("recovered_by")
+                if EMERGENCY_STATE_FILE.stat().st_size > 2:
+                    with open(EMERGENCY_STATE_FILE, "r", encoding="utf-8") as f:
+                        data = json.load(f)
+                        if isinstance(data, dict):
+                            self.emergency_manager.status.is_emergency_active = data.get("is_emergency_active", False)
+                            self.emergency_manager.status.triggered_at = data.get("triggered_at")
+                            self.emergency_manager.status.triggered_by = data.get("triggered_by")
+                            self.emergency_manager.status.reason = data.get("reason")
+                            self.emergency_manager.status.recovered_at = data.get("recovered_at")
+                            self.emergency_manager.status.recovered_by = data.get("recovered_by")
             except Exception as e:
-                logger.warning(f"Could not load emergency state: {e}")
+                logger.warning(f"Could not load emergency state from file: {e}")
 
     def _save_emergency_state(self):
+        state_dict = self.emergency_manager.status.to_dict()
+        # 1. Persist to PostgreSQL system_state table
+        try:
+            from backend.src.ramp.storage.connection import DatabaseManager
+            DatabaseManager.get_instance().set_state(
+                "emergency_state",
+                state_dict,
+                updated_by=self.emergency_manager.status.triggered_by or "SYSTEM",
+            )
+        except Exception as dbe:
+            logger.debug(f"Database emergency state persist deferred: {dbe}")
+
+        # 2. Sync to local file cache safely
         try:
             EMERGENCY_STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
             with open(EMERGENCY_STATE_FILE, "w", encoding="utf-8") as f:
-                json.dump(self.emergency_manager.status.to_dict(), f, indent=2)
+                json.dump(state_dict, f, indent=2)
         except Exception as e:
-            logger.warning(f"Could not save emergency state: {e}")
+            logger.warning(f"Could not save emergency state to file cache: {e}")
 
     def _load_cutover_state(self):
         self.cutover_record: Dict[str, Any] = {
@@ -140,20 +171,47 @@ class OperationalStateService:
             "supervisor_pin_hash": None,
             "last_updated": datetime.now(timezone.utc).isoformat(),
         }
+
+        # 1. Attempt loading from PostgreSQL system_state table first (persistent across restarts)
+        try:
+            from backend.src.ramp.storage.connection import DatabaseManager
+            db_state = DatabaseManager.get_instance().get_state("cutover_state")
+            if db_state and isinstance(db_state, dict):
+                self.cutover_record.update(db_state)
+                return
+        except Exception as dbe:
+            logger.debug(f"Database cutover state load deferred: {dbe}")
+
+        # 2. File fallback (guarded against 0-byte or corrupted files)
         if CUTOVER_STATE_FILE.exists():
             try:
-                with open(CUTOVER_STATE_FILE, "r", encoding="utf-8") as f:
-                    self.cutover_record.update(json.load(f))
+                if CUTOVER_STATE_FILE.stat().st_size > 2:
+                    with open(CUTOVER_STATE_FILE, "r", encoding="utf-8") as f:
+                        data = json.load(f)
+                        if isinstance(data, dict):
+                            self.cutover_record.update(data)
             except Exception as e:
-                logger.warning(f"Could not load cutover state: {e}")
+                logger.warning(f"Could not load cutover state from file: {e}")
 
     def _save_cutover_state(self):
+        # 1. Persist to PostgreSQL system_state table
+        try:
+            from backend.src.ramp.storage.connection import DatabaseManager
+            DatabaseManager.get_instance().set_state(
+                "cutover_state",
+                self.cutover_record,
+                updated_by=self.cutover_record.get("supervisor_id") or self.cutover_record.get("operator_id") or "SYSTEM",
+            )
+        except Exception as dbe:
+            logger.debug(f"Database cutover state persist deferred: {dbe}")
+
+        # 2. Sync to local file cache safely
         try:
             CUTOVER_STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
             with open(CUTOVER_STATE_FILE, "w", encoding="utf-8") as f:
                 json.dump(self.cutover_record, f, indent=2)
         except Exception as e:
-            logger.warning(f"Could not save cutover state: {e}")
+            logger.warning(f"Could not save cutover state to file cache: {e}")
 
     def check_minio_health(self) -> Dict[str, Any]:
         """Probes live MinIO object storage without leaking secrets."""

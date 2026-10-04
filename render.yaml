@@ -26,8 +26,19 @@ services:
       - key: RAMP_CONFIG_PATH
         value: /app/config/model_config.yaml
       - key: STORAGE_MODE
-        value: LOCAL_FALLBACK
+        value: POSTGRES
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ramp-db
+          property: connectionString
       - key: SECRET_KEY
         generateValue: true
       - key: CORS_ORIGINS
-        value: "*"
+        value: "https://gatisura-ramp.onrender.com"
+
+databases:
+  - name: ramp-db
+    plan: free
+    databaseName: ramp_db
+    user: ramp_user
+    ipAllowList: [] # Only allow internal Render connections for maximum security

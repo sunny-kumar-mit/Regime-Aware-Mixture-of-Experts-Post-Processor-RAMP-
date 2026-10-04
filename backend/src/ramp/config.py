@@ -55,7 +55,12 @@ class Settings(BaseSettings):
     # Security & CORS
     SECRET_KEY: str = "changeme-in-production-use-a-secure-random-secret-key-min-32-chars"
     CORS_ORIGINS: Union[List[str], str] = Field(
-        default=["http://localhost:5173", "http://localhost:3000", "http://127.0.0.1:5173"]
+        default=[
+            "https://gatisura-ramp.onrender.com",
+            "http://localhost:5173",
+            "http://localhost:3000",
+            "http://127.0.0.1:5173",
+        ]
     )
 
     # Operational Mode
@@ -83,11 +88,27 @@ class Settings(BaseSettings):
     @field_validator("CORS_ORIGINS", mode="before")
     @classmethod
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:
+        defaults = [
+            "https://gatisura-ramp.onrender.com",
+            "http://localhost:5173",
+            "http://localhost:3000",
+            "http://127.0.0.1:5173",
+        ]
         if isinstance(v, str):
-            return [i.strip() for i in v.split(",") if i.strip()]
+            if v == "*":
+                return ["*"]
+            parsed = [i.strip() for i in v.split(",") if i.strip()]
+            for d in defaults:
+                if d not in parsed:
+                    parsed.append(d)
+            return parsed
         elif isinstance(v, (list, tuple)):
-            return list(v)
-        return ["*"]
+            res = list(v)
+            for d in defaults:
+                if d not in res:
+                    res.append(d)
+            return res
+        return defaults
 
 
 settings = Settings()

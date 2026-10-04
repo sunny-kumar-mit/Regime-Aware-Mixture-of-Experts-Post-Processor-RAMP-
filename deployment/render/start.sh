@@ -38,9 +38,25 @@ if [ -d "/app/tests/fixtures/phase18" ]; then
     cp -n /app/tests/fixtures/phase18/neps_*.nc /app/data/real/vault/objects/raw/ncmrwf/ 2>/dev/null || true
 fi
 
-# Ensure audit files exist so services can read/write without crashing
-touch /app/data/audit/cutover_state.json 2>/dev/null || true
-touch /app/data/audit/emergency_status.json 2>/dev/null || true
+# Ensure audit and state files exist with valid JSON so services can read/write without crashing
+if [ ! -s /app/data/audit/cutover_state.json ]; then
+    echo "{}" > /app/data/audit/cutover_state.json 2>/dev/null || true
+fi
+if [ ! -s /app/data/audit/emergency_status.json ]; then
+    echo "{}" > /app/data/audit/emergency_status.json 2>/dev/null || true
+fi
+
+# Run database schema migrations & initialization
+export PYTHONPATH="/app:/app/backend/src"
+echo "Initializing database schema..."
+python3 -c "
+try:
+    from ramp.storage.connection import DatabaseManager
+except ImportError:
+    from backend.src.ramp.storage.connection import DatabaseManager
+mgr = DatabaseManager.get_instance()
+mgr.init_schema()
+" || echo "Database schema initialization deferred or completed with notes."
 
 # Configure Nginx port from Render's dynamic $PORT
 export PORT="${PORT:-10000}"

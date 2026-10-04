@@ -467,6 +467,11 @@ export const RealDataCasesPage: React.FC = () => {
           <div className="p-8 text-center bg-slate-900/60 rounded-xl border border-slate-800 font-mono text-xs text-slate-400">
             Scanning historical archives and discovered synoptic cycles...
           </div>
+        ) : casesList.length === 0 ? (
+          <div className="p-12 text-center bg-slate-900/60 rounded-xl border border-dashed border-slate-700/60 font-mono text-sm text-amber-400 flex flex-col items-center justify-center gap-2">
+            <span className="font-bold tracking-wider">NO_REAL_CASE_STUDIES_AVAILABLE</span>
+            <span className="text-xs text-slate-400">No verified synoptic case studies registered in PostgreSQL or Data Vault.</span>
+          </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {casesList.map((c) => {

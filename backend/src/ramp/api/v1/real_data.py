@@ -550,12 +550,25 @@ def get_lab_status() -> Dict[str, Any]:
 
 
 @router.get("/files")
-def list_imported_files() -> List[Dict[str, Any]]:
+def list_imported_files(
+    page: Optional[int] = None,
+    pageSize: Optional[int] = None,
+) -> Any:
     """
     Returns all registered real meteorological files.
+    Ensures every item has both `id` and `import_id`, as well as `filename` and `original_filename`.
     """
     index = _load_files_index()
-    return list(index.values())
+    res = []
+    for k, item in index.items():
+        rec = dict(item)
+        rec["id"] = rec.get("id") or rec.get("import_id") or k
+        rec["import_id"] = rec.get("import_id") or rec.get("id") or k
+        rec["original_filename"] = rec.get("original_filename") or rec.get("filename")
+        rec["filename"] = rec.get("filename") or rec.get("original_filename")
+        rec["converted_filename"] = rec.get("converted_filename") or rec.get("filename")
+        res.append(rec)
+    return res
 
 
 @router.post("/scan")

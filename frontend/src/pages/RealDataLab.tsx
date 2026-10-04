@@ -970,43 +970,50 @@ export const RealDataLabPage: React.FC<{ initialTab?: string }> = ({ initialTab 
                           </span>
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
-                          <button
-                            onClick={() => {
-                              setExplorerInitialTab('TABLE');
-                              setExplorerFileId(obj.id || obj.original_filename);
-                            }}
-                            className="px-2.5 py-1 rounded bg-indigo-950/80 hover:bg-indigo-900 text-indigo-300 border border-indigo-800 text-[11px] font-bold transition flex items-center gap-1 shadow"
-                          >
-                            <TableIcon className="h-3 w-3" />
-                            View Data (17k)
-                          </button>
-                          <a
-                            href={getFileDownloadUrl(obj.id || obj.original_filename, 'raw')}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-semibold transition flex items-center gap-1"
-                          >
-                            <Download className="h-3 w-3 text-indigo-400" />
-                            Download Raw
-                          </a>
-                          <button
-                            onClick={() => {
-                              setExplorerInitialTab('MAP');
-                              setExplorerFileId(obj.id || obj.original_filename);
-                            }}
-                            className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-semibold transition flex items-center gap-1"
-                          >
-                            <MapIcon className="h-3 w-3 text-emerald-400" />
-                            View Map
-                          </button>
-                          {!isObjRejected && obj.import_status !== 'ACTIVE' && (
-                            <button
-                              onClick={() => handleImportDownload(obj.id)}
-                              className="px-3 py-1 rounded bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-bold transition shadow"
-                            >
-                              Import
-                            </button>
-                          )}
+                          {(() => {
+                            const targetFileId = obj.id || obj.import_id || obj.converted_filename || obj.original_filename || obj.filename;
+                            return (
+                              <>
+                                <button
+                                  onClick={() => {
+                                    setExplorerInitialTab('TABLE');
+                                    setExplorerFileId(targetFileId);
+                                  }}
+                                  className="px-2.5 py-1 rounded bg-indigo-950/80 hover:bg-indigo-900 text-indigo-300 border border-indigo-800 text-[11px] font-bold transition flex items-center gap-1 shadow"
+                                >
+                                  <TableIcon className="h-3 w-3" />
+                                  View Data (17k)
+                                </button>
+                                <a
+                                  href={getFileDownloadUrl(targetFileId, 'raw')}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-semibold transition flex items-center gap-1"
+                                >
+                                  <Download className="h-3 w-3 text-indigo-400" />
+                                  Download Raw
+                                </a>
+                                <button
+                                  onClick={() => {
+                                    setExplorerInitialTab('MAP');
+                                    setExplorerFileId(targetFileId);
+                                  }}
+                                  className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-semibold transition flex items-center gap-1"
+                                >
+                                  <MapIcon className="h-3 w-3 text-emerald-400" />
+                                  View Map
+                                </button>
+                                {!isObjRejected && obj.import_status !== 'ACTIVE' && (
+                                  <button
+                                    onClick={() => handleImportDownload(targetFileId)}
+                                    className="px-3 py-1 rounded bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-bold transition shadow"
+                                  >
+                                    Import
+                                  </button>
+                                )}
+                              </>
+                            );
+                          })()}
                           <button
                             onClick={() => handleOpenDeleteModal(obj)}
                             className="px-2.5 py-1 rounded bg-rose-950/60 hover:bg-rose-900 text-rose-300 border border-rose-800 text-[11px] font-semibold transition flex items-center gap-1"

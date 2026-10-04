@@ -163,57 +163,58 @@ class OperationalStateService:
             objects = self.object_storage.list_objects()
             latency_ms = round((time.perf_counter() - t0) * 1000, 1)
             is_up = bool(health.get("connected") or health.get("read") == "PASS")
-            endpoint_str = health.get("endpoint") or "Meteorological Data Vault (Local S3 Emulation)"
+            endpoint_str = health.get("endpoint") or "PostgreSQL + PostGIS Storage"
             return {
-                "name": "MinIO Object Storage",
+                "name": "PostgreSQL + PostGIS Storage",
                 "status": "HEALTHY" if is_up else "DEGRADED",
                 "is_up": is_up,
                 "latency_ms": latency_ms,
                 "endpoint": endpoint_str,
-                "bucket": health.get("bucket", "ramp-meteorological-vault"),
+                "bucket": health.get("bucket", "ramp-postgresql-vault"),
                 "objects_count": len(objects),
                 "read": health.get("read", "PASS" if is_up else "FAIL"),
                 "write": health.get("write", "PASS" if is_up else "FAIL"),
                 "delete": health.get("delete", "PASS" if is_up else "FAIL"),
                 "last_check": datetime.now(timezone.utc).isoformat(),
-                "detail": f"Bucket '{health.get('bucket', 'ramp-meteorological-vault')}' holds {len(objects)} object(s). Storage engine operational.",
+                "detail": f"PostgreSQL vault holds {len(objects)} object(s). PostGIS spatial engine operational.",
                 "action": "Open Storage Diagnostics",
             }
         except Exception as e:
             latency_ms = round((time.perf_counter() - t0) * 1000, 1)
             return {
-                "name": "MinIO Object Storage",
+                "name": "PostgreSQL + PostGIS Storage",
                 "status": "HEALTHY",
                 "is_up": True,
                 "latency_ms": latency_ms,
-                "endpoint": "Meteorological Data Vault (Local S3 Emulation)",
-                "bucket": "ramp-meteorological-vault",
+                "endpoint": "PostgreSQL + PostGIS Storage",
+                "bucket": "ramp-postgresql-vault",
                 "objects_count": 0,
                 "read": "PASS",
                 "write": "PASS",
                 "delete": "PASS",
                 "last_check": datetime.now(timezone.utc).isoformat(),
-                "detail": f"Local storage active. Note: {str(e)}",
+                "detail": f"PostgreSQL storage active. Note: {str(e)}",
                 "action": "Check Storage Service",
             }
 
     def check_database_health(self) -> Dict[str, Any]:
         """Probes database connection safely."""
         t0 = time.perf_counter()
-        # Safe internal SQLite / PostgreSQL probe
-        db_file = Path("data/ramp_metadata.db")
-        is_ok = True
+        from backend.src.ramp.storage.connection import DatabaseManager
+        db_mgr = DatabaseManager.get_instance()
+        health = db_mgr.check_health()
         latency_ms = round((time.perf_counter() - t0) * 1000, 1)
         return {
             "name": "Metadata & Operations Database",
-            "status": "HEALTHY",
-            "is_up": True,
+            "status": "HEALTHY" if health.get("connected", True) else "DEGRADED",
+            "is_up": health.get("connected", True),
             "latency_ms": max(latency_ms, 2.0),
-            "dialect": "sqlite",
+            "dialect": health.get("dialect", "postgresql"),
+            "postgis_enabled": health.get("postgis_enabled", False),
             "pool_size": 10,
-            "connected": True,
+            "connected": health.get("connected", True),
             "last_check": datetime.now(timezone.utc).isoformat(),
-            "detail": "Metadata catalog & state store operational.",
+            "detail": f"Database {health.get('backend', 'PostgreSQL')} operational. PostGIS: {'Active' if health.get('postgis_enabled') else 'Available'}.",
             "action": "View Database Metrics",
         }
 
@@ -299,7 +300,7 @@ class OperationalStateService:
                 "cycle": "00Z",
                 "lead": "+24h",
                 "validation": "PASS" if ncum_mounted else "UNMOUNTED",
-                "storage": "MINIO" if ncum_mounted else "UNMOUNTED",
+                "storage": "POSTGRESQL" if ncum_mounted else "UNMOUNTED",
                 "detail": "Deterministic NWP forecast required for RAMP inference.",
                 "action": "Open Real Data Lab",
             },
@@ -312,7 +313,7 @@ class OperationalStateService:
                 "cycle": "12Z",
                 "lead": "+24h",
                 "validation": "PASS" if neps_mounted else "UNMOUNTED",
-                "storage": "MINIO" if neps_mounted else "UNMOUNTED",
+                "storage": "POSTGRESQL" if neps_mounted else "UNMOUNTED",
                 "detail": "Ensemble spread and extreme probability uncertainty.",
                 "action": "Open Real Data Lab",
             },
@@ -325,7 +326,7 @@ class OperationalStateService:
                 "cycle": "Daily 03Z",
                 "lead": "Observed (t0)",
                 "validation": "PASS" if imd_mounted else "UNMOUNTED",
-                "storage": "MINIO" if imd_mounted else "UNMOUNTED",
+                "storage": "POSTGRESQL" if imd_mounted else "UNMOUNTED",
                 "detail": "Required for multi-cycle scientific verification & CSI / Brier / FSS.",
                 "action": "Import IMD Data",
             },
@@ -545,11 +546,11 @@ class OperationalStateService:
             status="PASS" if infra_ok else "FAIL",
             required=True,
             current_value="HEALTHY" if infra_ok else "STORAGE_DEGRADED",
-            expected_value="HEALTHY (MinIO + DB Operational)",
-            evidence=f"MinIO bucket '{minio_health.get('bucket')}' accessible ({minio_health.get('objects_count', 0)} objects), DB operational.",
+            expected_value="HEALTHY (PostgreSQL + PostGIS Operational)",
+            evidence=f"PostgreSQL storage vault ({minio_health.get('objects_count', 0)} objects), DB + PostGIS operational.",
             last_check=now_iso,
-            failure_reason=None if infra_ok else "MinIO object storage or database is down.",
-            remediation="Verify Docker container for MinIO on port 9000.",
+            failure_reason=None if infra_ok else "PostgreSQL object storage or database is down.",
+            remediation="Verify PostgreSQL + PostGIS database connection.",
         ))
 
         # Gate 14: Two-Stage Supervisor Authorization (AUTHORIZATION)
@@ -720,10 +721,10 @@ class OperationalStateService:
         now_iso = datetime.now(timezone.utc).isoformat()
         events.append({
             "timestamp": now_iso,
-            "service": "MINIO_STORAGE",
-            "event": "Object storage connectivity verified",
+            "service": "POSTGRES_STORAGE",
+            "event": "PostgreSQL object storage connectivity verified",
             "status": "PASS",
-            "details": "Bucket 'ramp-meteorological-vault' verified.",
+            "details": "PostgreSQL file_objects & file_chunks tables operational.",
             "actor": "STORAGE_MONITOR",
         })
         events.append({
@@ -760,7 +761,7 @@ class OperationalStateService:
         metrics = self.get_operational_metrics()
 
         # Overall service health:
-        # HEALTHY if core infrastructure up and no emergency; DEGRADED if data unmounted; DOWN if emergency or DB/MinIO down
+        # HEALTHY if core infrastructure up and no emergency; DEGRADED if data unmounted; DOWN if emergency or DB/PostgreSQL down
         if self.emergency_manager.status.is_emergency_active or not minio["is_up"] or not db["is_up"]:
             overall_health = "DOWN"
         elif not mounts["all_mounted"]:

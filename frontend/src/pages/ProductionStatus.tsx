@@ -540,22 +540,22 @@ export const ProductionStatusPage: React.FC = () => {
               </div>
             </div>
 
-            {/* MinIO Object Storage Probe */}
+            {/* PostgreSQL + PostGIS Storage Probe */}
             <div
-              onClick={() => openServiceDrawer('minio', { name: 'MinIO Meteorological Data Vault' })}
+              onClick={() => openServiceDrawer('minio', { name: 'PostgreSQL + PostGIS Meteorological Vault' })}
               className="p-3 rounded-lg bg-slate-950/70 border border-slate-800 hover:border-cyan-500/50 cursor-pointer transition space-y-2 group"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <HardDrive className="w-4 h-4 text-purple-400 group-hover:scale-110 transition" />
-                  <span className="font-semibold text-slate-200">MinIO Storage</span>
+                  <span className="font-semibold text-slate-200">PostgreSQL + PostGIS</span>
                 </div>
                 <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold border ${getStatusColor(healthData?.services?.minio?.status || 'HEALTHY')}`}>
                   {healthData?.services?.minio?.status || 'HEALTHY'}
                 </span>
               </div>
               <div className="flex items-center justify-between text-[11px] text-slate-400 font-mono">
-                <span>Bucket: <strong className="text-slate-200 truncate max-w-[120px]">{healthData?.services?.minio?.bucket || 'ramp-vault'}</strong></span>
+                <span>Vault: <strong className="text-slate-200 truncate max-w-[120px]">{healthData?.services?.minio?.bucket || 'PostgreSQL Vault'}</strong></span>
                 <span>Objects: <strong className="text-purple-300 font-bold">{healthData?.services?.minio?.objects ?? 57}</strong></span>
               </div>
               <div className="text-[10px] text-slate-500 flex items-center justify-between pt-1 border-t border-slate-900">
@@ -889,7 +889,7 @@ export const ProductionStatusPage: React.FC = () => {
               <div className="grid grid-cols-3 gap-2 font-mono text-[11px] text-slate-400 pt-1">
                 <div>Cycle: <span className="text-slate-200">{dataReadiness?.ncum?.cycle || '00Z / 12Z'}</span></div>
                 <div>Leads: <span className="text-slate-200">+6h to +120h</span></div>
-                <div>Storage: <span className="text-slate-200">{dataReadiness?.ncum?.storage || 'MINIO / LOCAL'}</span></div>
+                <div>Storage: <span className="text-slate-200">{dataReadiness?.ncum?.storage || 'POSTGRESQL'}</span></div>
               </div>
               <div className="text-[10px] text-slate-500 flex justify-between items-center pt-1 border-t border-slate-900">
                 <span>Validation: {dataReadiness?.ncum?.validation || 'UNMOUNTED'}</span>
@@ -913,7 +913,7 @@ export const ProductionStatusPage: React.FC = () => {
               <div className="grid grid-cols-3 gap-2 font-mono text-[11px] text-slate-400 pt-1">
                 <div>Members: <span className="text-slate-200">23 Perturbed</span></div>
                 <div>Spread: <span className="text-slate-200">Ensemble Variance</span></div>
-                <div>Storage: <span className="text-slate-200">{dataReadiness?.neps?.storage || 'MINIO / LOCAL'}</span></div>
+                <div>Storage: <span className="text-slate-200">{dataReadiness?.neps?.storage || 'POSTGRESQL'}</span></div>
               </div>
               <div className="text-[10px] text-slate-500 flex justify-between items-center pt-1 border-t border-slate-900">
                 <span>Validation: {dataReadiness?.neps?.validation || 'UNMOUNTED'}</span>
@@ -1122,12 +1122,12 @@ export const ProductionStatusPage: React.FC = () => {
                   <div className="flex justify-between">
                     <span className="text-slate-400">Endpoint:</span>
                     <span className="text-slate-200">
-                      {selectedService.key === 'minio' ? (healthData?.services?.minio?.endpoint || 'Meteorological Data Vault (S3 Emulation)') : 'internal / local IPC'}
+                      {selectedService.key === 'minio' ? (healthData?.services?.minio?.endpoint || 'PostgreSQL + PostGIS Chunked Vault') : 'internal / local IPC'}
                     </span>
                   </div>
                   {selectedService.bucket && (
                     <div className="flex justify-between">
-                      <span className="text-slate-400">Vault Bucket:</span>
+                      <span className="text-slate-400">Vault Partition:</span>
                       <span className="text-purple-300 font-bold">{selectedService.bucket}</span>
                     </div>
                   )}

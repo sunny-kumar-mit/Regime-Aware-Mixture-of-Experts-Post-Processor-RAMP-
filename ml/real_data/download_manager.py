@@ -250,7 +250,7 @@ class DownloadManager:
             item.progress = 100
             item.metadata["adapter_note"] = "Downloaded and converted using official IMD adapter (IMD Pune)"
 
-            # Register in Object Storage Vault (MinIO/S3 compatible)
+            # Register in Object Storage Vault (PostgreSQL Chunked Storage)
             try:
                 if item.filepath and Path(item.filepath).exists():
                     self.object_storage.store_raw_object(

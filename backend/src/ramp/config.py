@@ -65,6 +65,21 @@ class Settings(BaseSettings):
     RAMP_DATA_ROOT: str = "./data"
     RAMP_CONFIG_PATH: str = "./config/model_config.yaml"
 
+    # Database & PostGIS Persistent Storage
+    DATABASE_URL: str = ""
+    POSTGRES_HOST: str = "localhost"
+    POSTGRES_PORT: int = 5432
+    POSTGRES_DB: str = "ramp_db"
+    POSTGRES_USER: str = "ramp"
+    POSTGRES_PASSWORD: str = "ramp"
+    STORAGE_MODE: str = "POSTGRESQL"
+
+    def get_database_url(self) -> str:
+        """Returns the configured PostgreSQL connection string."""
+        if self.DATABASE_URL:
+            return self.DATABASE_URL
+        return f"postgresql+psycopg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
+
     @field_validator("CORS_ORIGINS", mode="before")
     @classmethod
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:

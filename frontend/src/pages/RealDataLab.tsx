@@ -462,7 +462,7 @@ export const RealDataLabPage: React.FC<{ initialTab?: string }> = ({ initialTab 
                   </span>
                 </h1>
                 <p className="text-xs text-slate-400 font-mono mt-0.5">
-                  MoES / NCMRWF • S3/MinIO Object Storage • CF-1.8 Validation • MapLibre GL JS Real Forecast Maps
+                  MoES / NCMRWF • PostgreSQL + PostGIS Storage • CF-1.8 Validation • MapLibre GL JS Real Forecast Maps
                 </p>
               </div>
             </div>
@@ -832,7 +832,7 @@ export const RealDataLabPage: React.FC<{ initialTab?: string }> = ({ initialTab 
                   DATA VAULT (Object Storage & Catalog)
                 </h3>
                 <p className="text-xs text-slate-400 mt-0.5">
-                  MinIO / S3 Object Storage • Preserved RAW Files & Canonical NetCDF4 • User-Controlled Deletion
+                  PostgreSQL + PostGIS Chunked Storage • Preserved RAW Files & Canonical NetCDF4 • User-Controlled Deletion
                 </p>
               </div>
 
@@ -963,7 +963,7 @@ export const RealDataLabPage: React.FC<{ initialTab?: string }> = ({ initialTab 
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-slate-800/80 text-[11px]">
                         <div className="flex flex-wrap items-center gap-2 text-[10px] text-slate-400">
                           <span className="px-1.5 py-0.5 rounded bg-slate-800 font-mono text-[9px] text-cyan-300 border border-slate-700">
-                            BACKEND: {obj.storage_backend || 'MINIO'}
+                            BACKEND: {obj.storage_backend || 'POSTGRESQL'}
                           </span>
                           <span className="truncate max-w-sm">
                             Key: <span className="text-slate-300 font-mono">{obj.storage_key}</span>
@@ -1267,7 +1267,7 @@ export const RealDataLabPage: React.FC<{ initialTab?: string }> = ({ initialTab 
                   <ul className="space-y-1 text-[11px] text-emerald-300/90 pl-6 list-disc">
                     <li>Download complete from official provider</li>
                     <li>SHA-256 generated & cryptographic hash verified</li>
-                    <li>Raw file preserved in S3/MinIO vault (never overwritten)</li>
+                    <li>Raw file preserved in PostgreSQL chunked vault (never overwritten)</li>
                     <li>Metadata extracted into catalog database</li>
                   </ul>
                 </div>
@@ -1650,14 +1650,14 @@ export const RealDataLabPage: React.FC<{ initialTab?: string }> = ({ initialTab 
               <div className="flex justify-between">
                 <span className="text-slate-500">Storage Backend:</span>
                 <span className="text-cyan-400 font-bold">
-                  {diagnostic?.storage?.backend === 'MINIO'
-                    ? 'MINIO S3 (Cloud Connected)'
-                    : (diagnostic?.storage?.backend || 'METEOROLOGICAL DATA VAULT (S3 Emulation)')}
+                  {diagnostic?.storage?.backend === 'POSTGRESQL'
+                    ? 'PostgreSQL + PostGIS (Persistent Chunks)'
+                    : (diagnostic?.storage?.backend || 'PostgreSQL + PostGIS Vault')}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Vault Bucket:</span>
-                <span className="text-slate-300 font-mono">ramp-meteorological-vault</span>
+                <span className="text-slate-500">Vault Partition:</span>
+                <span className="text-slate-300 font-mono">{diagnostic?.storage?.bucket || 'ramp-postgresql-vault'}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500">Model Status:</span>

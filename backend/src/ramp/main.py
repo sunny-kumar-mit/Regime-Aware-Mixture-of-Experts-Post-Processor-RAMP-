@@ -162,16 +162,19 @@ async def health_ready():
 @app.get("/health/data", tags=["Probes"])
 async def health_data():
     from ml.production.connectivity import DataConnectivityMonitor
+    from backend.src.ramp.storage.connection import DatabaseManager
     mon = DataConnectivityMonitor()
     conn = mon.check_all_providers()
     ncmrwf = conn.get("NCMRWF_NCUM")
     imd = conn.get("IMD_GRIDDED_RAINFALL")
+    db_health = DatabaseManager.get_instance().check_health()
     if ncmrwf and ncmrwf.is_mounted and imd and imd.is_mounted:
-        return {"status": "UP", "subsystem": "data", "authoritative_mounted": True}
+        return {"status": "UP", "subsystem": "data", "authoritative_mounted": True, "database": db_health}
     return {
         "status": "BLOCKED",
         "subsystem": "data",
         "authoritative_mounted": False,
+        "database": db_health,
         "detail": "WAITING_FOR_AUTHORITATIVE_DATA: NCMRWF/IMD operational archives unmounted.",
     }
 
@@ -213,15 +216,18 @@ async def health_operations():
 @app.get("/health/overall", tags=["Probes"])
 async def health_overall():
     from ml.production.connectivity import DataConnectivityMonitor
+    from backend.src.ramp.storage.connection import DatabaseManager
     mon = DataConnectivityMonitor()
     conn = mon.check_all_providers()
     ncmrwf = conn.get("NCMRWF_NCUM")
     imd = conn.get("IMD_GRIDDED_RAINFALL")
     is_mounted = ncmrwf and ncmrwf.is_mounted and imd and imd.is_mounted
+    db_health = DatabaseManager.get_instance().check_health()
     return {
         "status": "UP" if is_mounted else "DEGRADED",
         "subsystem": "overall",
         "authoritative_data": "UP" if is_mounted else "BLOCKED",
+        "database": db_health,
         "detail": "System operational mechanics verified; real operational data unmounted." if not is_mounted else "All systems normal.",
     }
 

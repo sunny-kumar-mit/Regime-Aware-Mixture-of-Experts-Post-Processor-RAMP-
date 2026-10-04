@@ -20,15 +20,15 @@ services:
       - APP_HOST=0.0.0.0
       - APP_PORT=8000
       - RAMP_DATA_MODE=${RAMP_DATA_MODE:-REAL_OPERATIONAL}
-      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-ramp}:${POSTGRES_PASSWORD:-ramp}@db:5432/${POSTGRES_DB:-ramp_db}
+      - DATABASE_URL=postgresql+psycopg://${POSTGRES_USER:-ramp}:${POSTGRES_PASSWORD:-ramp}@db:5432/${POSTGRES_DB:-ramp_db}
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=${POSTGRES_DB:-ramp_db}
+      - POSTGRES_USER=${POSTGRES_USER:-ramp}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-ramp}
+      - STORAGE_MODE=POSTGRESQL
       - REDIS_URL=redis://redis:6379/0
       - CORS_ORIGINS=http://localhost:3000,http://localhost:5173,http://127.0.0.1:5173
-      # Object Storage: Use internal container URL for container-to-container traffic
-      - MINIO_ENDPOINT=http://minio:9000
-      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY:-admin}
-      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY:-admin12345}
-      - MINIO_BUCKET=${MINIO_BUCKET:-ramp-meteorological-vault}
-      - STORAGE_MODE=${STORAGE_MODE:-MINIO}
     volumes:
       - ./data:/app/data
       - ./config:/app/config
@@ -36,8 +36,6 @@ services:
       db:
         condition: service_healthy
       redis:
-        condition: service_healthy
-      minio:
         condition: service_healthy
     networks:
       - ramp-network
@@ -65,34 +63,10 @@ services:
       - ramp-network
 
   # ---------------------------------------------------------------------------
-  # MinIO Object Storage (S3-Compatible Meteorological Vault)
-  # ---------------------------------------------------------------------------
-  minio:
-    image: minio/minio:latest
-    container_name: ramp-minio
-    restart: unless-stopped
-    command: server /data --console-address ":9001"
-    environment:
-      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-admin}
-      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-admin12345}
-    ports:
-      - "9000:9000"
-      - "9001:9001"
-    volumes:
-      - minio_data:/data
-    healthcheck:
-      test: ["CMD-SHELL", "mc ready local || curl -sf http://localhost:9000/minio/health/live || exit 0"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - ramp-network
-
-  # ---------------------------------------------------------------------------
-  # PostgreSQL Metadata & Verification Store
+  # PostgreSQL + PostGIS Persistent Metadata, Raster & Chunked Storage
   # ---------------------------------------------------------------------------
   db:
-    image: postgres:15-alpine
+    image: postgis/postgis:15-3.4-alpine
     container_name: ramp-postgres
     restart: unless-stopped
     environment:
@@ -134,4 +108,3 @@ networks:
 
 volumes:
   postgres_data:
-  minio_data:

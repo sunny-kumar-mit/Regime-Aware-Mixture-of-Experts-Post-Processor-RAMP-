@@ -77,7 +77,8 @@ async def get_acceptance_status():
     """Returns the comprehensive institutional acceptance scorecard, summary KPIs, and live cutover verdict."""
     import asyncio
     mounts = op_state_service.check_authoritative_mounts()
-    has_real = mounts["all_mounted"]
+    audit = mounts.get("audit", {})
+    has_real = mounts.get("all_mounted", False) and not audit.get("real_operational_blocked", True) and (audit.get("overall_status") == "AUTHORITATIVE_DATA_AVAILABLE")
     try:
         scorecard = await asyncio.to_thread(acceptance_engine.evaluate_acceptance, has_real)
         scorecard_dict = scorecard.to_dict()
@@ -273,8 +274,36 @@ async def get_calibration_analysis():
 
 @router.get("/cases")
 async def get_case_studies():
-    """Returns catalog of verified real case studies for operational replay."""
+    """Returns catalog of verified real case studies and benchmark templates for operational replay."""
     return case_replay_service.list_cases()
+
+
+@router.get("/cases/{case_id}")
+async def get_case_detail(case_id: str):
+    """Returns detailed metadata and provenance for an individual case study."""
+    case = case_replay_service.get_case(case_id)
+    if not case:
+        raise HTTPException(status_code=404, detail=f"Case '{case_id}' not found.")
+    return case
+
+
+@router.get("/cases/{case_id}/grid")
+async def get_case_grid(
+    case_id: str,
+    lead: int = Query(24, description="Forecast lead time in hours"),
+):
+    """Returns synchronized grid points (Raw NCUM, NEPS, RAMP, IMD Obs, Error fields) for case replay."""
+    return case_replay_service.get_case_grid(case_id=case_id, lead_hours=lead)
+
+
+@router.get("/cases/{case_id}/failure-analysis")
+async def get_case_failure_analysis(
+    case_id: str,
+    lead: int = Query(24, description="Forecast lead time in hours"),
+):
+    """Returns scientific error classification and concrete failure incident records."""
+    return case_replay_service.get_case_failure_analysis(case_id=case_id, lead_hours=lead)
+
 
 
 @router.get("/audit")
@@ -314,7 +343,8 @@ async def trigger_staging_run(req: StagingRunRequest):
 async def request_cutover(req: OperatorActivationRequest):
     """Step 1 of Cutover: Operator initiates operational activation request."""
     mounts = op_state_service.check_authoritative_mounts()
-    has_real = mounts["all_mounted"]
+    audit = mounts.get("audit", {})
+    has_real = mounts.get("all_mounted", False) and not audit.get("real_operational_blocked", True) and (audit.get("overall_status") == "AUTHORITATIVE_DATA_AVAILABLE")
     success, msg = acceptance_engine.request_activation(
         operator_id=req.operator_id,
         reason=req.reason,

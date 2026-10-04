@@ -157,8 +157,22 @@ export const BASEMAP_STYLES: Record<BasemapStyleKey, { id: BasemapStyleKey; labe
   },
 };
 
+export const REGIME_COLOR_MAP: Record<string, string> = {
+  ACTIVE_MONSOON: '#3b82f6',
+  BREAK_MONSOON: '#ef4444',
+  DEPRESSION: '#8b5cf6',
+  WEST_COAST_OROGRAPHIC: '#06b6d4',
+  NORTH_EAST_OROGRAPHIC: '#10b981',
+  WESTERN_DISTURBANCE: '#f59e0b',
+  TRANSITION_OTHER: '#6b7280',
+};
+
 // Scientific rainfall color scale matching IMD / WMO color guidelines (0, 5, 15, 35, 65, 115, 204.5+)
-export function getRainfallColor(val: number | null, layer: string): string {
+export function getRainfallColor(val: number | null, layer: string, regimeStr?: string): string {
+  if (layer === 'regime') {
+    return REGIME_COLOR_MAP[regimeStr || 'TRANSITION_OTHER'] || '#6b7280';
+  }
+
   if (val === null || val === undefined) return '#334155'; // Slate for missing
 
   if (layer === 'extreme') {
@@ -171,7 +185,24 @@ export function getRainfallColor(val: number | null, layer: string): string {
     return '#1e293b';
   }
 
-  if (layer === 'diff' || layer === 'error') {
+  if (layer === 'abs_error') {
+    const a = Math.abs(val);
+    if (a > 30) return '#7f1d1d';
+    if (a > 15) return '#dc2626';
+    if (a > 8) return '#ea580c';
+    if (a > 3) return '#ca8a04';
+    if (a > 1) return '#0284c7';
+    return '#059669';
+  }
+
+  if (layer === 'neps_spread' || layer === 'uncertainty') {
+    if (val > 15) return '#dc2626';
+    if (val > 8) return '#f59e0b';
+    if (val > 4) return '#0284c7';
+    return '#10b981';
+  }
+
+  if (layer === 'diff' || layer === 'correction' || layer === 'error') {
     // Delta / Correction / Error (+/- mm)
     if (val > 15) return '#059669'; // High increase
     if (val > 5) return '#10b981';
@@ -341,11 +372,14 @@ export const InteractiveForecastMap: React.FC<InteractiveForecastMapProps> = ({
       type: 'FeatureCollection' as const,
       features: gridData.cells.map((cell) => {
         let displayVal: number | null = cell.ramp;
-        if (selectedLayer === 'raw') displayVal = cell.raw_ncum;
-        else if (selectedLayer === 'extreme') displayVal = cell.extreme_p64;
-        else if (selectedLayer === 'obs') displayVal = cell.imd_obs;
-        else if (selectedLayer === 'diff') displayVal = cell.correction;
+        if (selectedLayer === 'raw' || selectedLayer === 'raw_ncum') displayVal = cell.raw_ncum;
+        else if (selectedLayer === 'extreme' || selectedLayer === 'extreme_p64') displayVal = cell.extreme_p64;
+        else if (selectedLayer === 'obs' || selectedLayer === 'imd_obs') displayVal = cell.imd_obs;
+        else if (selectedLayer === 'diff' || selectedLayer === 'correction') displayVal = cell.correction;
         else if (selectedLayer === 'error') displayVal = cell.error;
+        else if (selectedLayer === 'abs_error') displayVal = cell.error !== null && cell.error !== undefined ? Math.abs(cell.error) : null;
+        else if (selectedLayer === 'neps_spread' || selectedLayer === 'uncertainty') displayVal = cell.uncertainty;
+        else if (selectedLayer === 'neps_mean') displayVal = (cell as any).neps_mean ?? cell.raw_ncum;
 
         return {
           type: 'Feature' as const,
@@ -366,7 +400,7 @@ export const InteractiveForecastMap: React.FC<InteractiveForecastMapProps> = ({
             regime: cell.regime,
             uncertainty: cell.uncertainty,
             displayVal: displayVal,
-            color: getRainfallColor(displayVal, selectedLayer),
+            color: getRainfallColor(displayVal, selectedLayer, cell.regime),
           },
         };
       }),
@@ -850,11 +884,14 @@ export const InteractiveForecastMap: React.FC<InteractiveForecastMapProps> = ({
 
   const layersList = [
     { id: 'ramp', name: 'RAMP Forecast', desc: 'AI calibrated post-processed rainfall' },
-    { id: 'raw', name: 'Raw NCUM', desc: 'Original numerical weather prediction' },
+    { id: 'raw', name: 'Raw NCUM / NWP', desc: 'Original numerical weather prediction' },
     { id: 'diff', name: 'RAMP Correction', desc: 'Model adjustment (RAMP − Raw NCUM)' },
-    { id: 'extreme', name: 'RAMP Extreme', desc: 'Probability of Rain ≥ 64.5 mm/day' },
+    { id: 'extreme', name: 'Extreme Probability', desc: 'Probability of Rain ≥ 64.5 mm/day' },
+    { id: 'regime', name: 'Weather Regime', desc: 'Dominant classified meteorological regime' },
     { id: 'obs', name: 'IMD Observation', desc: 'Ground truth observational data' },
     { id: 'error', name: 'Forecast Error', desc: 'Deviation (RAMP − IMD Obs)' },
+    { id: 'abs_error', name: 'Absolute Error', desc: 'Absolute Deviation |RAMP − IMD Obs|' },
+    { id: 'neps_spread', name: 'NEPS Ensemble Spread', desc: 'Ensemble uncertainty spread' },
   ];
 
   return (

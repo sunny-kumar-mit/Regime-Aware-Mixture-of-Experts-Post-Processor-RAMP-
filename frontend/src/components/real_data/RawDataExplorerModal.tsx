@@ -648,12 +648,12 @@ export const RawDataExplorerModal: React.FC<RawDataExplorerModalProps> = ({
                   <div className="flex justify-between text-slate-300">
                     <span>Object Storage:</span>
                     <span className="text-white">
-                      {summary?.storage_backend === 'MINIO' ? 'MinIO / S3 Cloud Storage' : 'Meteorological Data Vault (S3 Emulation)'}
+                      {summary?.storage_backend === 'POSTGRESQL' ? 'PostgreSQL + PostGIS (Chunked BYTEA)' : 'PostgreSQL Meteorological Vault'}
                     </span>
                   </div>
                   <div className="flex justify-between text-slate-300">
-                    <span>Bucket:</span>
-                    <span className="text-indigo-400">ramp-meteorological-vault</span>
+                    <span>Vault Partition:</span>
+                    <span className="text-indigo-400">ramp-postgresql-vault</span>
                   </div>
                   <div className="flex justify-between text-slate-300">
                     <span>Object Key:</span>

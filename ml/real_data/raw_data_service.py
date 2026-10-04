@@ -42,7 +42,7 @@ class RawDataService:
         """
         Resolves any file identifier (Catalog ID, original filename, converted filename,
         storage key, sha256 hash, or basename) to physical filepath and metadata record.
-        Transparently restores from MinIO object vault if missing from local cache.
+        Transparently restores from PostgreSQL chunked object vault if missing from local cache.
         """
         if not file_id:
             return None, None
@@ -104,12 +104,12 @@ class RawDataService:
                 if cp.exists() and not cp.is_dir() and cp.stat().st_size > 0:
                     return cp, matched_item
 
-            # If not found locally, attempt pull from MinIO
+            # If not found locally, attempt pull from PostgreSQL storage provider
             s_key = matched_item.get("converted_storage_key") or matched_item.get("storage_key") or fn
             if s_key:
-                minio_p = self.object_storage.get_file_path(s_key)
-                if minio_p and minio_p.exists():
-                    return minio_p, matched_item
+                pg_p = self.object_storage.get_file_path(s_key)
+                if pg_p and pg_p.exists():
+                    return pg_p, matched_item
 
             # Preserve metadata even if binary object is not yet locally cached
             return None, matched_item
@@ -209,18 +209,15 @@ class RawDataService:
                     }
                     return candidate, synth_meta
 
-        # 6. Fallback MinIO fetch
-        if self.object_storage.minio_client:
-            try:
-                for k in [file_id_clean, f"canonical/imd/{file_id_clean}", f"canonical/ncmrwf/{file_id_clean}", f"raw/ncmrwf/{file_id_clean}"]:
-                    dest = self.object_storage.OBJECTS_DIR / k
-                    dest.parent.mkdir(parents=True, exist_ok=True)
-                    self.object_storage.minio_client.fget_object(self.object_storage.s3_bucket, k, str(dest))
-                    if dest.exists() and dest.stat().st_size > 0:
-                        prov = "IMD" if "imd" in k.lower() else "NCMRWF"
-                        return dest, {"id": file_id_clean, "filename": dest.name, "provider": prov, "storage_key": k}
-            except Exception:
-                pass
+        # 6. Fallback PostgreSQL storage fetch
+        try:
+            for k in [file_id_clean, f"canonical/imd/{file_id_clean}", f"canonical/ncmrwf/{file_id_clean}", f"raw/ncmrwf/{file_id_clean}"]:
+                dest = self.object_storage.get_file_path(k)
+                if dest and dest.exists() and dest.stat().st_size > 0:
+                    prov = "IMD" if "imd" in k.lower() else "NCMRWF"
+                    return dest, {"id": file_id_clean, "filename": dest.name, "provider": prov, "storage_key": k}
+        except Exception:
+            pass
 
         # 7. Fallback to primary valid dataset if file_id is generic, uninitialized, or missing
         if file_id_clean.lower() in ("undefined", "null", "none", "default", "active"):
@@ -311,7 +308,7 @@ class RawDataService:
             record_count = 17673
             grid_dims = "129 × 137"
 
-        storage_backend = meta.get("storage_backend") or ("MINIO" if self.object_storage.minio_client else "LOCAL_VAULT")
+        storage_backend = meta.get("storage_backend") or "POSTGRESQL"
 
         return {
             "id": file_id,

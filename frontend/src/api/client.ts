@@ -1258,6 +1258,24 @@ export async function fetchAcceptanceCases(): Promise<Record<string, any>> {
   return res.json();
 }
 
+export async function fetchAcceptanceCaseDetail(caseId: string): Promise<Record<string, any>> {
+  const res = await fetch(`${API_BASE}/api/acceptance/cases/${encodeURIComponent(caseId)}`);
+  if (!res.ok) throw new Error(`Fetch case detail failed: ${res.status}`);
+  return res.json();
+}
+
+export async function fetchAcceptanceCaseGrid(caseId: string, lead = 24): Promise<Record<string, any>> {
+  const res = await fetch(`${API_BASE}/api/acceptance/cases/${encodeURIComponent(caseId)}/grid?lead=${lead}`);
+  if (!res.ok) throw new Error(`Fetch case grid failed: ${res.status}`);
+  return res.json();
+}
+
+export async function fetchAcceptanceCaseFailureAnalysis(caseId: string, lead = 24): Promise<Record<string, any>> {
+  const res = await fetch(`${API_BASE}/api/acceptance/cases/${encodeURIComponent(caseId)}/failure-analysis?lead=${lead}`);
+  if (!res.ok) throw new Error(`Fetch failure analysis failed: ${res.status}`);
+  return res.json();
+}
+
 export async function fetchAcceptanceAudit(): Promise<Record<string, any>> {
   const res = await fetch(`${API_BASE}/api/acceptance/audit`);
   if (!res.ok) throw new Error(`Acceptance audit failed: ${res.status}`);

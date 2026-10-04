@@ -503,7 +503,21 @@ def export_forecast_product(
         )
 
     elif format == "geojson":
-        # Form GeoJSON
+        # Form GeoJSON via PostGIS ForecastStore if persisted in database
+        try:
+            from backend.src.ramp.storage.forecast_store import ForecastStore
+            f_store = ForecastStore()
+            if f_store.get_forecast_run(forecast_run_id):
+                geojson_doc = f_store.generate_geojson(forecast_run_id)
+                return Response(
+                    content=json.dumps(geojson_doc, indent=2),
+                    media_type="application/geo+json",
+                    headers={"Content-Disposition": f"attachment; filename={forecast_run_id}.geojson"},
+                )
+        except Exception as e:
+            logger.debug(f"Direct PostGIS GeoJSON export fallback: {e}")
+
+        # Form GeoJSON from run cells
         geojson_doc = {
             "type": "FeatureCollection",
             "metadata": run_data.get("provenance", {}),
@@ -542,6 +556,16 @@ def get_forecast_provenance(forecast_run_id: str):
 
     if not manifest and forecast_run_id in _run_cache:
         manifest = _run_cache[forecast_run_id].get("provenance")
+
+    if not manifest:
+        try:
+            from backend.src.ramp.storage.provenance_store import ProvenanceStore
+            p_store = ProvenanceStore()
+            prov_rec = p_store.get_provenance(forecast_run_id)
+            if prov_rec and prov_rec.get("manifest"):
+                manifest = prov_rec["manifest"]
+        except Exception as e:
+            logger.debug(f"DB provenance lookup error: {e}")
 
     if not manifest:
         raise HTTPException(

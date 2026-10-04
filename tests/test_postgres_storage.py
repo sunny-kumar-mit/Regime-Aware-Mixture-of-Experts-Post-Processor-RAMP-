@@ -22,13 +22,22 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 import pytest
 
-from backend.src.ramp.storage.connection import DatabaseManager
-from backend.src.ramp.storage.postgres_storage import PostgresStorageProvider
-from backend.src.ramp.storage.dataset_store import DatasetStore
-from backend.src.ramp.storage.file_store import MeteorologicalFileStore
-from backend.src.ramp.storage.forecast_store import ForecastStore
-from backend.src.ramp.storage.provenance_store import ProvenanceStore
-from backend.src.ramp.storage.retention import RetentionPolicyManager
+try:
+    from ramp.storage.connection import DatabaseManager
+    from ramp.storage.postgres_storage import PostgresStorageProvider
+    from ramp.storage.dataset_store import DatasetStore
+    from ramp.storage.file_store import MeteorologicalFileStore
+    from ramp.storage.forecast_store import ForecastStore
+    from ramp.storage.provenance_store import ProvenanceStore
+    from ramp.storage.retention import RetentionPolicyManager
+except ImportError:
+    from backend.src.ramp.storage.connection import DatabaseManager
+    from backend.src.ramp.storage.postgres_storage import PostgresStorageProvider
+    from backend.src.ramp.storage.dataset_store import DatasetStore
+    from backend.src.ramp.storage.file_store import MeteorologicalFileStore
+    from backend.src.ramp.storage.forecast_store import ForecastStore
+    from backend.src.ramp.storage.provenance_store import ProvenanceStore
+    from backend.src.ramp.storage.retention import RetentionPolicyManager
 
 
 @pytest.fixture(scope="module")
@@ -392,7 +401,10 @@ class TestProvenanceAndAuditChain:
         """Verify atomic rollback if an operation encounters an error."""
         with pytest.raises(RuntimeError):
             with db_manager.session() as session:
-                from backend.src.ramp.storage.models import DatasetModel
+                try:
+                    from ramp.storage.models import DatasetModel
+                except ImportError:
+                    from backend.src.ramp.storage.models import DatasetModel
                 ds = DatasetModel(
                     dataset_id="ROLLBACK_TEST_DS",
                     dataset_type="TEST",

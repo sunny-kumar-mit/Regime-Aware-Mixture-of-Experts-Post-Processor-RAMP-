@@ -20,8 +20,10 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    # 0. Enable PostGIS Extension
-    op.execute("CREATE EXTENSION IF NOT EXISTS postgis;")
+    # 0. Enable PostGIS Extension (strictly on PostgreSQL)
+    bind = op.get_bind()
+    if bind.dialect.name == "postgresql":
+        op.execute("CREATE EXTENSION IF NOT EXISTS postgis;")
 
     # 1. datasets
     op.create_table(

@@ -10,8 +10,12 @@ from sqlalchemy import engine_from_config, pool
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from backend.src.ramp.storage.connection import Base, get_database_url
-import backend.src.ramp.storage.models
+try:
+    from ramp.storage.connection import Base, get_database_url
+    import ramp.storage.models
+except ImportError:
+    from backend.src.ramp.storage.connection import Base, get_database_url
+    import backend.src.ramp.storage.models
 
 config = context.config
 

@@ -30,8 +30,12 @@ from typing import Any, Dict, List
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "backend" / "src"))
 
-from backend.src.ramp.storage.connection import DatabaseManager
-from backend.src.ramp.storage.postgres_storage import PostgresStorageProvider
+try:
+    from ramp.storage.connection import DatabaseManager
+    from ramp.storage.postgres_storage import PostgresStorageProvider
+except ImportError:
+    from backend.src.ramp.storage.connection import DatabaseManager
+    from backend.src.ramp.storage.postgres_storage import PostgresStorageProvider
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("ramp.migrate")

@@ -488,34 +488,54 @@ export const RealDataLabPage: React.FC<{ initialTab?: string }> = ({ initialTab 
         </div>
 
         {/* Real Data Status Telemetry */}
-        <div className="mt-6 grid grid-cols-2 md:grid-cols-5 gap-3 font-mono">
+        <div className="mt-6 grid grid-cols-2 md:grid-cols-6 gap-3 font-mono">
+          <div className="rounded-lg bg-slate-950/60 p-3 border border-slate-800">
+            <span className="text-xs text-slate-400 block">DATABASE</span>
+            <span className={`text-sm font-bold flex items-center gap-1.5 mt-1 ${
+              labStatus?.database_connected ? 'text-emerald-400' : 'text-rose-400'
+            }`}>
+              <span className={`h-2 w-2 rounded-full ${
+                labStatus?.database_connected ? 'bg-emerald-400 animate-pulse' : 'bg-rose-500'
+              }`} />
+              {labStatus?.database_status || (labStatus ? 'DISCONNECTED' : 'CHECKING...')}
+            </span>
+          </div>
+
           <div className="rounded-lg bg-slate-950/60 p-3 border border-slate-800">
             <span className="text-xs text-slate-400 block">DATA MODE</span>
             <span className="text-sm font-bold text-indigo-300 flex items-center gap-1.5 mt-1">
-              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-              {labStatus?.data_mode || 'REAL_DATA_EXPERIMENT'}
+              <span className={`h-2 w-2 rounded-full ${labStatus ? 'bg-indigo-400 animate-pulse' : 'bg-slate-600'}`} />
+              {labStatus?.data_mode || 'NOT_CONNECTED'}
             </span>
           </div>
 
           <div className="rounded-lg bg-slate-950/60 p-3 border border-slate-800">
             <span className="text-xs text-slate-400 block">LIFECYCLE STATE</span>
-            <span className="text-sm font-bold mt-1 block text-emerald-400">
-              {labStatus?.lifecycle_state || 'DATA_AVAILABLE'}
+            <span className={`text-sm font-bold mt-1 block ${
+              labStatus?.lifecycle_state === 'VERIFIED' || labStatus?.lifecycle_state === 'REAL_INFERENCE_COMPLETED'
+                ? 'text-emerald-400'
+                : labStatus?.lifecycle_state === 'DATA_AVAILABLE'
+                ? 'text-cyan-400'
+                : 'text-amber-400'
+            }`}>
+              {labStatus?.lifecycle_state || 'NOT_READY'}
             </span>
           </div>
 
           <div className="rounded-lg bg-slate-950/60 p-3 border border-slate-800">
             <span className="text-xs text-slate-400 block">DATA VAULT</span>
-            <span className="text-sm font-bold mt-1 block text-cyan-300">
-              {vaultObjects.length} Objects Active
+            <span className={`text-sm font-bold mt-1 block ${vaultObjects.length > 0 ? 'text-cyan-300' : 'text-slate-400'}`}>
+              {vaultObjects.length > 0 ? `${vaultObjects.length} Objects Active` : '0 Objects (Empty)'}
             </span>
           </div>
 
           <div className="rounded-lg bg-slate-950/60 p-3 border border-slate-800">
             <span className="text-xs text-slate-400 block">MAP ENGINE</span>
-            <span className="text-sm font-bold mt-1 block text-emerald-400 flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-emerald-400" />
-              READY (MapLibre)
+            <span className={`text-sm font-bold mt-1 block flex items-center gap-1 ${
+              spatialGrid ? 'text-emerald-400' : 'text-amber-400'
+            }`}>
+              <span className={`w-2 h-2 rounded-full ${spatialGrid ? 'bg-emerald-400' : 'bg-amber-400'}`} />
+              {spatialGrid ? 'READY (MapLibre)' : (vaultObjects.length > 0 ? 'DATA LOADED' : 'NO GRID DATA')}
             </span>
           </div>
 

@@ -27,8 +27,12 @@ from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field
 
 from ml.real_data.checksum_service import ChecksumService
-from backend.src.ramp.storage.connection import DatabaseManager
-from backend.src.ramp.storage.postgres_storage import PostgresStorageProvider
+try:
+    from ramp.storage.connection import DatabaseManager
+    from ramp.storage.postgres_storage import PostgresStorageProvider
+except ImportError:
+    from backend.src.ramp.storage.connection import DatabaseManager
+    from backend.src.ramp.storage.postgres_storage import PostgresStorageProvider
 
 logger = logging.getLogger(__name__)
 
@@ -185,42 +189,82 @@ class ObjectStorageService:
         return report
 
     def _sync_existing_records(self) -> None:
-        """Syncs pre-existing imported and downloaded records into the vault catalog."""
+        """Syncs pre-existing imported and downloaded records into the vault catalog from files and PostgreSQL."""
         catalog = self._load_metadata()
         changed = False
 
-        imported_file = Path("data/real/imported_files_index.json")
-        if imported_file.exists():
-            try:
-                with open(imported_file, "r", encoding="utf-8") as f:
-                    idx = json.load(f)
-                for rec_id, rec in idx.items():
-                    if rec_id not in catalog:
-                        catalog[rec_id] = {
-                            "id": rec_id,
-                            "provider": rec.get("provider", "UNKNOWN"),
-                            "dataset": rec.get("dataset", "UNKNOWN"),
-                            "original_filename": rec.get("filename"),
-                            "converted_filename": rec.get("converted_filename"),
-                            "storage_bucket": self.s3_bucket,
-                            "storage_key": f"raw/{rec.get('provider', 'unknown').lower()}/{rec.get('filename')}",
-                            "converted_storage_key": f"canonical/{rec.get('provider', 'unknown').lower()}/{rec.get('converted_filename')}" if rec.get("converted_filename") else None,
-                            "storage_backend": "POSTGRESQL",
-                            "file_size": rec.get("size_bytes", 0),
-                            "sha256": rec.get("sha256"),
-                            "converted_sha256": rec.get("converted_sha256"),
-                            "source_url": rec.get("source_url"),
-                            "download_url": None,
-                            "downloaded_at": rec.get("created_at"),
-                            "validation_status": rec.get("validation_status", "PASS"),
-                            "import_status": "ACTIVE",
-                            "created_at": rec.get("created_at", datetime.now(timezone.utc).isoformat()),
-                            "is_deleted": False,
-                            "metadata": rec.get("metadata", {}),
-                        }
-                        changed = True
-            except Exception as e:
-                logger.warning(f"Error syncing imported records: {e}")
+        imported_files_candidates = [
+            Path("data/real/imported_files_index.json"),
+            _DATA_ROOT / "real" / "imported_files_index.json",
+        ]
+        for imported_file in imported_files_candidates:
+            if imported_file.exists():
+                try:
+                    with open(imported_file, "r", encoding="utf-8") as f:
+                        idx = json.load(f)
+                    for rec_id, rec in idx.items():
+                        if rec_id not in catalog:
+                            catalog[rec_id] = {
+                                "id": rec_id,
+                                "provider": rec.get("provider", "UNKNOWN"),
+                                "dataset": rec.get("dataset", "UNKNOWN"),
+                                "original_filename": rec.get("filename"),
+                                "converted_filename": rec.get("converted_filename"),
+                                "storage_bucket": self.s3_bucket,
+                                "storage_key": f"raw/{rec.get('provider', 'unknown').lower()}/{rec.get('filename')}",
+                                "converted_storage_key": f"canonical/{rec.get('provider', 'unknown').lower()}/{rec.get('converted_filename')}" if rec.get("converted_filename") else None,
+                                "storage_backend": "POSTGRESQL",
+                                "file_size": rec.get("size_bytes", 0),
+                                "sha256": rec.get("sha256"),
+                                "converted_sha256": rec.get("converted_sha256"),
+                                "source_url": rec.get("source_url"),
+                                "download_url": None,
+                                "downloaded_at": rec.get("created_at"),
+                                "validation_status": rec.get("validation_status", "PASS"),
+                                "import_status": "ACTIVE",
+                                "created_at": rec.get("created_at", datetime.now(timezone.utc).isoformat()),
+                                "is_deleted": False,
+                                "metadata": rec.get("metadata", {}),
+                            }
+                            changed = True
+                except Exception as e:
+                    logger.warning(f"Error syncing imported records from {imported_file}: {e}")
+
+        # Also sync from PostgreSQL chunked file storage if accessible
+        try:
+            pg_files = self.postgres_storage.list_files()
+            for pf in pg_files:
+                rec_id = pf.get("id") or pf.get("file_id")
+                if rec_id and rec_id not in catalog:
+                    fn = pf.get("filename", "")
+                    provider = pf.get("source_provider") or "UNKNOWN"
+                    dataset = pf.get("dataset_id") or "UNKNOWN"
+                    is_conv = fn.endswith((".nc", ".nc4"))
+                    catalog[rec_id] = {
+                        "id": rec_id,
+                        "provider": provider,
+                        "dataset": dataset,
+                        "original_filename": fn,
+                        "converted_filename": fn if is_conv else None,
+                        "storage_bucket": self.s3_bucket,
+                        "storage_key": rec_id,
+                        "converted_storage_key": rec_id if is_conv else None,
+                        "storage_backend": "POSTGRESQL",
+                        "file_size": pf.get("size_bytes", 0),
+                        "sha256": pf.get("sha256"),
+                        "converted_sha256": pf.get("sha256") if is_conv else None,
+                        "source_url": None,
+                        "download_url": None,
+                        "downloaded_at": pf.get("created_at"),
+                        "validation_status": "PASS",
+                        "import_status": "ACTIVE",
+                        "created_at": pf.get("created_at") or datetime.now(timezone.utc).isoformat(),
+                        "is_deleted": False,
+                        "metadata": pf.get("meta") or {},
+                    }
+                    changed = True
+        except Exception as e:
+            logger.debug(f"Could not sync file records from PostgreSQL: {e}")
 
         if changed:
             self._save_metadata(catalog)
@@ -462,6 +506,9 @@ class ObjectStorageService:
         include_deleted: bool = False,
     ) -> List[DataObjectRecord]:
         catalog = self._load_metadata()
+        if not catalog:
+            self._sync_existing_records()
+            catalog = self._load_metadata()
         results: List[DataObjectRecord] = []
         for obj_id, obj in catalog.items():
             if not include_deleted and obj.get("is_deleted", False):
@@ -478,6 +525,9 @@ class ObjectStorageService:
 
     def get_object(self, object_id: str) -> Optional[DataObjectRecord]:
         catalog = self._load_metadata()
+        if object_id not in catalog:
+            self._sync_existing_records()
+            catalog = self._load_metadata()
         if object_id in catalog:
             return DataObjectRecord(**catalog[object_id])
         return None

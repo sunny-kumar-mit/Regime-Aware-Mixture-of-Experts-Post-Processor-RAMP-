@@ -74,42 +74,60 @@ async def get_system_info() -> SystemInfoResponse:
 @api_router.get("/system/diagnostic", tags=["System"])
 async def get_system_diagnostics() -> dict:
     """
-    Comprehensive system diagnostic report (Requirement 24):
-    - MinIO Object Storage connectivity, health, bucket status, CRUD check
-    - Database connectivity status (safe, zero secrets)
-    - Map configuration (MapLibre / Leaflet public basemap)
-    - NCUM & IMD authoritative source status
-    - Active datasets and RAMP model readiness
-    - Docker container and runtime environment
-    Never returns secrets, passwords, or access keys.
+    Comprehensive system diagnostic report (Section 24):
+    Returns structured status without exposing secrets or passwords:
+      application, database, postgresql, postgis, schema,
+      data_vault, ncum, neps, imd, model, forecast_api, map_api.
     """
     import os
+    from ramp.storage.connection import DatabaseManager
     from ml.real_data.object_storage import ObjectStorageService
 
     storage_svc = ObjectStorageService()
     storage_report = storage_svc.check_storage_health()
+    vault_objects = storage_svc.list_objects()
+    vault_count = len(vault_objects)
 
-    # Database connectivity check (safe, sanitized)
-    db_dialect = "postgresql"
-    db_url_raw = getattr(settings, "DATABASE_URL", "")
-    if "postgresql" in db_url_raw:
-        db_dialect = "postgresql"
-    elif "sqlite" in db_url_raw:
-        db_dialect = "sqlite"
+    db_health = DatabaseManager.get_instance().check_health()
+    db_connected = db_health.get("connected", False)
+    db_schema_ready = db_health.get("schema_ready", False)
+    db_postgis = db_health.get("postgis_enabled", False)
+    is_postgres = (db_health.get("dialect") == "postgresql")
 
-    db_info = {
-        "status": "OPERATIONAL",
-        "dialect": db_dialect,
-        "connected": True,
-        "pool_size": 10,
+    has_ncum = any(o.provider == "NCMRWF" for o in vault_objects)
+    has_neps = any(o.dataset == "NEPS" for o in vault_objects)
+    has_imd = any(o.provider == "IMD" for o in vault_objects)
+
+    # Model readiness
+    try:
+        from ml.training.registry import ModelRegistry
+        reg = ModelRegistry()
+        models_ready = len(reg.list_models()) >= 1
+    except Exception:
+        models_ready = True
+
+    # Section 24 Structured Format
+    structured_status = {
+        "application": "READY",
+        "database": "CONNECTED" if db_connected else "DISCONNECTED",
+        "postgresql": "READY" if (db_connected and is_postgres) else ("UNAVAILABLE" if is_postgres or not db_connected else "NOT_POSTGRESQL"),
+        "postgis": "READY" if db_postgis else "UNAVAILABLE",
+        "schema": "READY" if db_schema_ready else "UNAVAILABLE",
+        "data_vault": "AVAILABLE" if vault_count > 0 else "EMPTY",
+        "ncum": "AVAILABLE" if has_ncum else "NOT_AVAILABLE",
+        "neps": "AVAILABLE" if has_neps else "NOT_AVAILABLE",
+        "imd": "AVAILABLE" if has_imd else "NOT_AVAILABLE",
+        "model": "READY" if models_ready else "NOT_READY",
+        "forecast_api": "READY",
+        "map_api": "READY",
     }
 
     # Meteorological sources config
     sources_info = {
         "ncmrwf_url": getattr(settings, "NCMRWF_BASE_URL", "https://nwp.ncmrwf.gov.in"),
         "imd_url": getattr(settings, "IMD_BASE_URL", "https://www.imdpune.gov.in"),
-        "ncmrwf_status": "AVAILABLE",
-        "imd_status": "AVAILABLE",
+        "ncmrwf_status": "AVAILABLE" if has_ncum else "NOT_AVAILABLE",
+        "imd_status": "AVAILABLE" if has_imd else "NOT_AVAILABLE",
     }
 
     # Map configuration
@@ -128,27 +146,15 @@ async def get_system_diagnostics() -> dict:
         },
     }
 
-    # Model readiness
-    try:
-        from ml.training.registry import ModelRegistry
-        reg = ModelRegistry()
-        models_ready = len(reg.list_models()) >= 1
-    except Exception:
-        models_ready = True
-
-    # Active Datasets
-    vault_count = len(storage_svc.list_objects())
-
-    minio_endpoint = storage_report.get("endpoint") or os.environ.get("MINIO_ENDPOINT", "Meteorological Data Vault")
-
     return {
+        **structured_status,
         "app_name": settings.APP_NAME,
         "version": settings.VERSION,
         "environment": settings.APP_ENV,
         "data_mode": settings.RAMP_DATA_MODE,
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "storage": storage_report,
-        "database": db_info,
+        "database_detail": db_health,
         "map_configuration": map_info,
         "sources": sources_info,
         "ramp_model_readiness": {
@@ -160,17 +166,9 @@ async def get_system_diagnostics() -> dict:
         },
         "active_datasets": {
             "vault_objects_count": vault_count,
-            "ncum_status": "ACTIVE",
-            "neps_status": "AVAILABLE",
-            "imd_data_in_vault": "AVAILABLE" if vault_count > 0 else "NOT_AVAILABLE",
-        },
-        "docker_environment": {
-            "container_orchestrated": True,
-            "internal_network": "ramp-network",
-            "minio_container_endpoint": minio_endpoint,
-            "host_endpoint": minio_endpoint,
-            "browser_endpoint": minio_endpoint,
-            "storage_backend": storage_report.get("backend", "LOCAL_VAULT"),
+            "ncum_status": "ACTIVE" if has_ncum else "NOT_AVAILABLE",
+            "neps_status": "AVAILABLE" if has_neps else "NOT_AVAILABLE",
+            "imd_data_in_vault": "AVAILABLE" if has_imd else "NOT_AVAILABLE",
         },
     }
 

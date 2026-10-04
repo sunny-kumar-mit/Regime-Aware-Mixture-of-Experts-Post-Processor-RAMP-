@@ -13,9 +13,14 @@ from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 from sqlalchemy import delete, select, update
 
-from backend.src.ramp.storage.connection import DatabaseManager
-from backend.src.ramp.storage.models import DatasetModel
-from backend.src.ramp.storage.repository import BaseRepository
+try:
+    from .connection import DatabaseManager
+    from .models import DatasetModel
+    from .repository import BaseRepository
+except (ImportError, ValueError):
+    from ramp.storage.connection import DatabaseManager
+    from ramp.storage.models import DatasetModel
+    from ramp.storage.repository import BaseRepository
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +32,6 @@ class DatasetStore(BaseRepository):
 
     def __init__(self, db_manager: Optional[DatabaseManager] = None):
         super().__init__(db_manager)
-        self.db.init_schema()
 
     def create_dataset(
         self,

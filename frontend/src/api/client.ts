@@ -23,6 +23,30 @@ export async function fetchSystemInfo(): Promise<SystemInfoResponse> {
   return res.json();
 }
 
+export interface SystemDiagnosticsData {
+  application: string;
+  database: string;
+  postgresql: string;
+  postgis: string;
+  schema: string;
+  data_vault: string;
+  ncum: string;
+  neps: string;
+  imd: string;
+  model: string;
+  forecast_api: string;
+  map_api: string;
+  [key: string]: any;
+}
+
+export async function fetchSystemDiagnostics(): Promise<SystemDiagnosticsData> {
+  const res = await fetch(`${API_BASE}/api/system/diagnostics`);
+  if (!res.ok) {
+    throw new Error(`Diagnostics check failed: ${res.status} ${res.statusText}`);
+  }
+  return res.json();
+}
+
 export async function fetchRegimeStatus(): Promise<import('../types/api').RegimeStatusData> {
   const res = await fetch(`${API_BASE}/api/regime/status`);
   if (!res.ok) throw new Error(`Regime status failed: ${res.status}`);

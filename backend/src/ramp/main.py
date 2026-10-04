@@ -67,7 +67,7 @@ async def lifespan(app: FastAPI):
     )
     # Requirement 2 & 8: Initialize PostgreSQL schema and run startup diagnostics
     try:
-        from backend.src.ramp.storage.connection import DatabaseManager
+        from ramp.storage.connection import DatabaseManager
         db_mgr = DatabaseManager.get_instance()
         db_mgr.init_schema()
         db_diag = db_mgr.run_startup_diagnostics()
@@ -184,21 +184,24 @@ app.include_router(real_data_router, prefix=settings.API_PREFIX)
 # ---------------------------------------------------------------------------
 @app.get("/health", tags=["Probes"], include_in_schema=False)
 @app.get("/health/live", tags=["Probes"])
+@app.get("/api/health/live", tags=["Probes"], include_in_schema=False)
 async def health_live():
     return {"status": "UP", "subsystem": "live", "app": settings.APP_NAME, "version": settings.VERSION}
 
 
 @app.get("/health/ready", tags=["Probes"])
+@app.get("/api/health/ready", tags=["Probes"], include_in_schema=False)
 async def health_ready():
     from ml.real_data.object_storage import ObjectStorageService
-    from backend.src.ramp.storage.connection import DatabaseManager
+    from ramp.storage.connection import DatabaseManager
     storage = ObjectStorageService()
     catalog = storage._load_metadata()
-    catalog_ready = len(catalog) > 0
     db_health = DatabaseManager.get_instance().check_health()
-    is_ready = catalog_ready or db_health.get("connected", False)
+    db_connected = db_health.get("connected", False)
+    db_schema_ready = db_health.get("schema_ready", False)
+    is_ready = db_connected and db_schema_ready
     return {
-        "status": "UP" if is_ready else "DEGRADED",
+        "status": "UP" if is_ready else "DOWN",
         "subsystem": "ready",
         "ready": is_ready,
         "catalog_objects": len(catalog),
@@ -240,7 +243,7 @@ async def health_routes():
 @app.get("/health/data", tags=["Probes"])
 async def health_data():
     from ml.production.connectivity import DataConnectivityMonitor
-    from backend.src.ramp.storage.connection import DatabaseManager
+    from ramp.storage.connection import DatabaseManager
     mon = DataConnectivityMonitor()
     conn = mon.check_all_providers()
     ncmrwf = conn.get("NCMRWF_NCUM")
@@ -294,7 +297,7 @@ async def health_operations():
 @app.get("/health/overall", tags=["Probes"])
 async def health_overall():
     from ml.production.connectivity import DataConnectivityMonitor
-    from backend.src.ramp.storage.connection import DatabaseManager
+    from ramp.storage.connection import DatabaseManager
     mon = DataConnectivityMonitor()
     conn = mon.check_all_providers()
     ncmrwf = conn.get("NCMRWF_NCUM")

@@ -41,7 +41,7 @@ from geoalchemy2 import Geometry
 try:
     from .connection import Base
 except (ImportError, ValueError):
-    from backend.src.ramp.storage.connection import Base
+    from ramp.storage.connection import Base
 
 
 class SafeGeometry(TypeDecorator):

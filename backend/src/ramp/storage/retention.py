@@ -16,16 +16,28 @@ from typing import Any, Dict, Optional
 
 from sqlalchemy import delete, select
 
-from backend.src.ramp.storage.connection import DatabaseManager
-from backend.src.ramp.storage.models import (
-    FileChunkModel,
-    FileObjectModel,
-    ForecastDistrictModel,
-    ForecastGridModel,
-    ForecastRunModel,
-    ForecastStateModel,
-    IMDObservationModel,
-)
+try:
+    from .connection import DatabaseManager
+    from .models import (
+        FileChunkModel,
+        FileObjectModel,
+        ForecastDistrictModel,
+        ForecastGridModel,
+        ForecastRunModel,
+        ForecastStateModel,
+        IMDObservationModel,
+    )
+except (ImportError, ValueError):
+    from ramp.storage.connection import DatabaseManager
+    from ramp.storage.models import (
+        FileChunkModel,
+        FileObjectModel,
+        ForecastDistrictModel,
+        ForecastGridModel,
+        ForecastRunModel,
+        ForecastStateModel,
+        IMDObservationModel,
+    )
 
 logger = logging.getLogger(__name__)
 

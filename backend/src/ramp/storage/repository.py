@@ -13,7 +13,10 @@ from typing import Any, Dict, Generator, Iterable, List, Optional, Type, TypeVar
 from sqlalchemy.orm import Session
 from sqlalchemy import select, delete, func
 
-from backend.src.ramp.storage.connection import DatabaseManager
+try:
+    from .connection import DatabaseManager
+except (ImportError, ValueError):
+    from ramp.storage.connection import DatabaseManager
 
 logger = logging.getLogger(__name__)
 T = TypeVar("T")

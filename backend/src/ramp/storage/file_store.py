@@ -20,9 +20,14 @@ from sqlalchemy import select
 from geoalchemy2.shape import from_shape
 from shapely.geometry import Point
 
-from backend.src.ramp.storage.connection import DatabaseManager
-from backend.src.ramp.storage.models import IMDObservationModel, NWPFileModel
-from backend.src.ramp.storage.postgres_storage import PostgresStorageProvider
+try:
+    from .connection import DatabaseManager
+    from .models import IMDObservationModel, NWPFileModel
+    from .postgres_storage import PostgresStorageProvider
+except (ImportError, ValueError):
+    from ramp.storage.connection import DatabaseManager
+    from ramp.storage.models import IMDObservationModel, NWPFileModel
+    from ramp.storage.postgres_storage import PostgresStorageProvider
 
 logger = logging.getLogger(__name__)
 

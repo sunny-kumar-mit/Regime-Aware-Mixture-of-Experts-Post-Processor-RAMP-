@@ -21,8 +21,12 @@ import logging
 from typing import Any, BinaryIO, Dict, Generator, Iterator, List, Optional, Union
 from sqlalchemy import select, delete
 
-from backend.src.ramp.storage.connection import DatabaseManager
-from backend.src.ramp.storage.models import FileChunkModel, FileObjectModel
+try:
+    from .connection import DatabaseManager
+    from .models import FileChunkModel, FileObjectModel
+except (ImportError, ValueError):
+    from ramp.storage.connection import DatabaseManager
+    from ramp.storage.models import FileChunkModel, FileObjectModel
 
 logger = logging.getLogger(__name__)
 
@@ -42,8 +46,6 @@ class PostgresStorageProvider:
     ):
         self.db = db_manager or DatabaseManager.get_instance()
         self.default_chunk_size = default_chunk_size
-        # Ensure schema is initialized
-        self.db.init_schema()
 
     def upload(
         self,

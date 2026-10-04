@@ -505,7 +505,10 @@ def export_forecast_product(
     elif format == "geojson":
         # Form GeoJSON via PostGIS ForecastStore if persisted in database
         try:
-            from backend.src.ramp.storage.forecast_store import ForecastStore
+            try:
+                from ramp.storage.forecast_store import ForecastStore
+            except ImportError:
+                from backend.src.ramp.storage.forecast_store import ForecastStore
             f_store = ForecastStore()
             if f_store.get_forecast_run(forecast_run_id):
                 geojson_doc = f_store.generate_geojson(forecast_run_id)
@@ -559,7 +562,10 @@ def get_forecast_provenance(forecast_run_id: str):
 
     if not manifest:
         try:
-            from backend.src.ramp.storage.provenance_store import ProvenanceStore
+            try:
+                from ramp.storage.provenance_store import ProvenanceStore
+            except ImportError:
+                from backend.src.ramp.storage.provenance_store import ProvenanceStore
             p_store = ProvenanceStore()
             prov_rec = p_store.get_provenance(forecast_run_id)
             if prov_rec and prov_rec.get("manifest"):

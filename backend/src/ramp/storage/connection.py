@@ -14,6 +14,7 @@ import os
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
+import time
 from typing import Any, Dict, Generator, List, Optional
 from urllib.parse import urlsplit, urlunsplit
 
@@ -43,8 +44,9 @@ REQUIRED_TABLES = [
 
 def is_production_env() -> bool:
     """Detects if running in Render or production deployment."""
+    app_env = (os.environ.get("APP_ENV") or os.environ.get("ENVIRONMENT") or "").lower()
     return (
-        os.environ.get("APP_ENV", "").lower() == "production"
+        app_env == "production"
         or "RENDER" in os.environ
         or "RENDER_SERVICE_ID" in os.environ
     )
@@ -54,10 +56,11 @@ def get_database_url() -> str:
     """
     Resolves the canonical database connection URL in an environment-aware manner.
     - Production (Render): Requires DATABASE_URL from Render PostgreSQL service.
-      Does NOT fall back to localhost/5432.
+      Does NOT fall back to localhost/5432 or SQLite.
     - Development: Uses DATABASE_URL if present, otherwise POSTGRES_* component env vars
       or localhost:5432 default.
-    - Normalizes postgres:// and postgresql:// to postgresql+psycopg:// for SQLAlchemy 2.
+    - Normalizes postgres://, postgresql://, postgresql+asyncpg://, postgresql+psycopg2://
+      to postgresql+psycopg:// for SQLAlchemy 2 with psycopg v3.
     """
     raw_url = os.environ.get("DATABASE_URL", "").strip()
 
@@ -67,7 +70,7 @@ def get_database_url() -> str:
                 "CRITICAL: DATABASE_URL is missing in Render production environment! "
                 "Render PostgreSQL connection string must be provided via render.yaml or environment."
             )
-            # Return empty or invalid string so diagnostics report DATABASE_UNAVAILABLE
+            # Return empty string so diagnostics report DATABASE_UNAVAILABLE and fail fast
             return ""
 
         # Local development fallback
@@ -78,8 +81,12 @@ def get_database_url() -> str:
         password = os.environ.get("POSTGRES_PASSWORD", "ramp")
         raw_url = f"postgresql+psycopg://{user}:{password}@{host}:{port}/{db}"
 
-    # Normalize dialect to psycopg v3 if standard postgresql:// or postgres:// provided
-    if raw_url.startswith("postgresql://"):
+    # Normalize dialect to psycopg v3 for all PostgreSQL URL varieties
+    if raw_url.startswith("postgresql+asyncpg://"):
+        raw_url = raw_url.replace("postgresql+asyncpg://", "postgresql+psycopg://", 1)
+    elif raw_url.startswith("postgresql+psycopg2://"):
+        raw_url = raw_url.replace("postgresql+psycopg2://", "postgresql+psycopg://", 1)
+    elif raw_url.startswith("postgresql://"):
         raw_url = raw_url.replace("postgresql://", "postgresql+psycopg://", 1)
     elif raw_url.startswith("postgres://"):
         raw_url = raw_url.replace("postgres://", "postgresql+psycopg://", 1)
@@ -184,9 +191,14 @@ class DatabaseManager:
         """Creates engine with connection pooling and fast connection timeout."""
         if not self.database_url:
             self._connected = False
+            self._schema_ready = False
             self._connection_error = "DATABASE_URL is not configured."
+            self.is_sqlite = True
             if self.is_production:
-                logger.error("Production database connection failed: DATABASE_URL is empty.")
+                logger.error(
+                    "FATAL CONFIGURATION: DATABASE_URL is missing in Render production environment! "
+                    "Render PostgreSQL connection string must be provided via render.yaml or environment."
+                )
             # Create a dummy sqlite memory engine to prevent hard crashes while health check reports DOWN
             return create_engine("sqlite:///:memory:", connect_args={"check_same_thread": False})
 
@@ -203,8 +215,9 @@ class DatabaseManager:
                     max_overflow=20,
                     pool_pre_ping=True,
                     pool_recycle=1800,
-                    connect_args={"connect_timeout": 5},
+                    connect_args={"connect_timeout": 2},
                 )
+            self.is_sqlite = (eng.dialect.name == "sqlite")
             return eng
         except Exception as e:
             self._connection_error = str(e)
@@ -217,6 +230,7 @@ class DatabaseManager:
                 return create_engine(self.database_url, connect_args={"check_same_thread": False})
             else:
                 # In production, do NOT mask failure by pretending SQLite has real data
+                self.is_sqlite = True
                 return create_engine("sqlite:///:memory:", connect_args={"check_same_thread": False})
 
     def run_startup_diagnostics(self) -> Dict[str, Any]:
@@ -228,6 +242,11 @@ class DatabaseManager:
         4. Verify PostGIS
         5. Log DATABASE_HOST, DATABASE_NAME, DATABASE_CONNECTED, DATABASE_SCHEMA_READY (no password!)
         """
+        now = time.time()
+        if hasattr(self, "_last_diag") and self._last_diag:
+            if (now - getattr(self, "_last_diag_time", 0)) < 3.0:
+                return dict(self._last_diag)
+
         diag = {
             "database_host": self.db_host,
             "database_name": self.db_name,
@@ -239,6 +258,21 @@ class DatabaseManager:
             "missing_tables": [],
         }
 
+        if not self.database_url:
+            self._connected = False
+            self._schema_ready = False
+            logger.error("DATABASE_CONNECTED: False (DATABASE_URL is missing)")
+            logger.error("DATABASE_SCHEMA_READY: False")
+            self._last_diag = dict(diag)
+            self._last_diag_time = now
+            return diag
+
+        # If a connection error occurred very recently, avoid compounding timeouts
+        if not self._connected and (now - getattr(self, "_last_error_time", 0)) < 5.0:
+            self._last_diag = dict(diag)
+            self._last_diag_time = now
+            return diag
+
         # 1. Connection check
         try:
             with self.engine.connect() as conn:
@@ -247,15 +281,21 @@ class DatabaseManager:
                     self._connected = True
                     diag["database_connected"] = True
 
-                # 2. Check PostGIS
-                if not self.is_sqlite:
+                # 2. Check PostGIS ONLY if PostgreSQL
+                if self.engine.dialect.name == "postgresql":
                     try:
                         pgis_ver = conn.execute(text("SELECT PostGIS_Version();")).scalar()
                         self._postgis_active = True
                         diag["postgis_active"] = True
                         diag["postgis_version"] = str(pgis_ver)
-                    except Exception:
+                    except Exception as pe:
                         self._postgis_active = False
+                        diag["postgis_active"] = False
+                        diag["postgis_error"] = str(pe)
+                else:
+                    self._postgis_active = False
+                    diag["postgis_active"] = False
+                    diag["postgis_version"] = f"N/A ({self.engine.dialect.name})"
 
                 # 3. Check Tables
                 inspector = inspect(conn)
@@ -269,6 +309,7 @@ class DatabaseManager:
         except Exception as e:
             self._connected = False
             self._connection_error = str(e)
+            self._last_error_time = time.time()
             logger.warning(f"Database connection check failed: {e}")
 
         # Requirement 2: Log diagnostics without password
@@ -277,6 +318,8 @@ class DatabaseManager:
         logger.info(f"DATABASE_CONNECTED: {diag['database_connected']}")
         logger.info(f"DATABASE_SCHEMA_READY: {diag['database_schema_ready']}")
 
+        self._last_diag = dict(diag)
+        self._last_diag_time = time.time()
         return diag
 
     def init_schema(self) -> bool:
@@ -284,22 +327,52 @@ class DatabaseManager:
         Enables PostGIS extension on PostgreSQL and creates all defined tables.
         Executes migrations/table creation safely.
         """
+        if self._schema_ready:
+            return True
+
+        if not self.database_url:
+            self._connected = False
+            self._schema_ready = False
+            self._connection_error = "DATABASE_URL is not configured."
+            logger.error("Cannot initialize schema: DATABASE_URL is missing.")
+            return False
+
+        now = time.time()
+        if not self._connected and (now - getattr(self, "_last_error_time", 0)) < 5.0:
+            return False
+
         try:
             with self.engine.begin() as conn:
-                if not self.is_sqlite:
-                    # Enable PostGIS extension
+                is_pg = (self.engine.dialect.name == "postgresql")
+                if is_pg:
+                    # 1. Verify PostgreSQL
+                    try:
+                        pg_ver = conn.execute(text("SELECT version();")).scalar()
+                        logger.info(f"Connected to PostgreSQL: {pg_ver}")
+                    except Exception as ve:
+                        logger.warning(f"Could not read PostgreSQL version: {ve}")
+
+                    # 2. Enable PostGIS extension ONLY if PostgreSQL
                     try:
                         conn.execute(text("CREATE EXTENSION IF NOT EXISTS postgis;"))
                         self._postgis_active = True
                         logger.info("PostGIS extension enabled.")
                     except Exception as ext_err:
+                        self._postgis_active = False
                         logger.warning(f"PostGIS extension notice: {ext_err}")
+                else:
+                    self._postgis_active = False
+                    if self.is_production:
+                        logger.error(
+                            f"Production requires PostgreSQL + PostGIS, but connected engine dialect is {self.engine.dialect.name}."
+                        )
+                        return False
 
-                # Create all tables defined in models
+                # 3. Create all tables defined in models
                 try:
                     from . import models
                 except (ImportError, ValueError):
-                    from backend.src.ramp.storage import models
+                    from ramp.storage import models
                 Base.metadata.create_all(bind=conn)
                 self._schema_ready = True
                 self._connected = True
@@ -311,24 +384,9 @@ class DatabaseManager:
         except Exception as err:
             logger.warning(f"Database schema initialization deferred or failed: {err}")
             self._connection_error = str(err)
-            if not self.is_production and not self.is_sqlite:
-                logger.info("Attempting local SQLite database initialization...")
-                self.database_url = "sqlite:///data/ramp_storage.db"
-                self.is_sqlite = True
-                Path("data").mkdir(exist_ok=True)
-                self.engine = create_engine(self.database_url, connect_args={"check_same_thread": False})
-                self.SessionFactory = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
-                try:
-                    try:
-                        from . import models
-                    except (ImportError, ValueError):
-                        from backend.src.ramp.storage import models
-                    Base.metadata.create_all(bind=self.engine)
-                    self._schema_ready = True
-                    self._connected = True
-                    return True
-                except Exception as sq_err:
-                    logger.error(f"Local SQLite fallback failed: {sq_err}")
+            self._connected = False
+            self._schema_ready = False
+            self._last_error_time = time.time()
             return False
 
     @contextmanager
@@ -352,7 +410,7 @@ class DatabaseManager:
             try:
                 from .models import SystemStateModel
             except (ImportError, ValueError):
-                from backend.src.ramp.storage.models import SystemStateModel
+                from ramp.storage.models import SystemStateModel
             with self.session() as s:
                 rec = s.query(SystemStateModel).filter(SystemStateModel.state_key == state_key).first()
                 if rec and rec.state_json:
@@ -369,7 +427,7 @@ class DatabaseManager:
             try:
                 from .models import SystemStateModel
             except (ImportError, ValueError):
-                from backend.src.ramp.storage.models import SystemStateModel
+                from ramp.storage.models import SystemStateModel
             with self.session() as s:
                 rec = s.query(SystemStateModel).filter(SystemStateModel.state_key == state_key).first()
                 if rec:
@@ -391,10 +449,32 @@ class DatabaseManager:
     def check_health(self) -> Dict[str, Any]:
         """
         Comprehensive database health probe testing connection and PostGIS availability.
+        Caches recent results for 3 seconds to protect from connection timeout cascades.
         """
+        now = time.time()
+        if hasattr(self, "_last_health_check") and self._last_health_check:
+            if (now - getattr(self, "_last_health_time", 0)) < 3.0:
+                return dict(self._last_health_check)
+
+        if not self.database_url:
+            return {
+                "status": "DOWN",
+                "backend": "PostgreSQL + PostGIS",
+                "connected": False,
+                "is_healthy": False,
+                "schema_ready": False,
+                "postgis_enabled": False,
+                "postgis_version": None,
+                "dialect": "none",
+                "engine": "none",
+                "host": self.db_host or "NONE",
+                "database": self.db_name or "NONE",
+                "error": "DATABASE_URL is not configured.",
+            }
+
         health: Dict[str, Any] = {
             "status": "DOWN",
-            "backend": "PostgreSQL + PostGIS" if not self.is_sqlite else "SQLite",
+            "backend": "PostgreSQL + PostGIS" if self.engine.dialect.name == "postgresql" else self.engine.dialect.name,
             "connected": False,
             "schema_ready": self._schema_ready,
             "postgis_enabled": self._postgis_active,
@@ -405,6 +485,13 @@ class DatabaseManager:
             "database": self.db_name,
         }
 
+        # If a connection error occurred very recently, return DOWN without waiting for TCP timeout
+        if not self._connected and (now - getattr(self, "_last_error_time", 0)) < 10.0:
+            health["error"] = getattr(self, "_connection_error", "Database connection offline")
+            self._last_health_check = dict(health)
+            self._last_health_time = now
+            return health
+
         try:
             with self.engine.connect() as conn:
                 res = conn.execute(text("SELECT 1;")).scalar()
@@ -412,7 +499,7 @@ class DatabaseManager:
                 health["is_healthy"] = health["connected"]
                 health["status"] = "HEALTHY" if health["connected"] else "DOWN"
 
-                if not self.is_sqlite:
+                if self.engine.dialect.name == "postgresql":
                     try:
                         pgis_ver = conn.execute(text("SELECT PostGIS_Version();")).scalar()
                         health["postgis_enabled"] = True
@@ -421,12 +508,17 @@ class DatabaseManager:
                         health["postgis_enabled"] = False
                 else:
                     health["postgis_enabled"] = False
-                    health["postgis_version"] = "N/A (SQLite)"
+                    health["postgis_version"] = f"N/A ({self.engine.dialect.name})"
         except Exception as e:
             health["error"] = str(e)
             health["is_healthy"] = False
             health["status"] = "DOWN"
+            self._connected = False
+            self._last_error_time = time.time()
+            self._connection_error = str(e)
 
+        self._last_health_check = dict(health)
+        self._last_health_time = time.time()
         return health
 
     def dispose(self):

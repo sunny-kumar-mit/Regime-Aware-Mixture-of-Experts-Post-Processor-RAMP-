@@ -16,9 +16,14 @@ from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 from sqlalchemy import desc, select
 
-from backend.src.ramp.storage.connection import DatabaseManager
-from backend.src.ramp.storage.models import AuditEventModel, ForecastProvenanceModel
-from backend.src.ramp.storage.repository import BaseRepository
+try:
+    from .connection import DatabaseManager
+    from .models import AuditEventModel, ForecastProvenanceModel
+    from .repository import BaseRepository
+except (ImportError, ValueError):
+    from ramp.storage.connection import DatabaseManager
+    from ramp.storage.models import AuditEventModel, ForecastProvenanceModel
+    from ramp.storage.repository import BaseRepository
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +37,6 @@ class ProvenanceStore(BaseRepository):
 
     def __init__(self, db_manager: Optional[DatabaseManager] = None):
         super().__init__(db_manager)
-        self.db.init_schema()
 
     def record_provenance(
         self,

@@ -42,6 +42,16 @@ from ml.training.registry import ModelRegistry
 
 logger = logging.getLogger(__name__)
 
+
+def _get_db_manager():
+    """Returns the canonical DatabaseManager instance without import-path duplication."""
+    try:
+        from ramp.storage.connection import DatabaseManager
+    except ImportError:
+        from backend.src.ramp.storage.connection import DatabaseManager
+    return DatabaseManager.get_instance()
+
+
 CUTOVER_STATE_FILE = Path("data/audit/cutover_state.json")
 EMERGENCY_STATE_FILE = Path("data/audit/emergency_status.json")
 AUDIT_LOG_FILE = Path("data/audit/production_audit.jsonl")
@@ -110,8 +120,7 @@ class OperationalStateService:
     def _load_emergency_state(self):
         # 1. Attempt loading from PostgreSQL system_state table first (persistent across restarts)
         try:
-            from backend.src.ramp.storage.connection import DatabaseManager
-            db_state = DatabaseManager.get_instance().get_state("emergency_state")
+            db_state = _get_db_manager().get_state("emergency_state")
             if db_state and isinstance(db_state, dict):
                 self.emergency_manager.status.is_emergency_active = db_state.get("is_emergency_active", False)
                 self.emergency_manager.status.triggered_at = db_state.get("triggered_at")
@@ -143,8 +152,7 @@ class OperationalStateService:
         state_dict = self.emergency_manager.status.to_dict()
         # 1. Persist to PostgreSQL system_state table
         try:
-            from backend.src.ramp.storage.connection import DatabaseManager
-            DatabaseManager.get_instance().set_state(
+            _get_db_manager().set_state(
                 "emergency_state",
                 state_dict,
                 updated_by=self.emergency_manager.status.triggered_by or "SYSTEM",
@@ -174,8 +182,7 @@ class OperationalStateService:
 
         # 1. Attempt loading from PostgreSQL system_state table first (persistent across restarts)
         try:
-            from backend.src.ramp.storage.connection import DatabaseManager
-            db_state = DatabaseManager.get_instance().get_state("cutover_state")
+            db_state = _get_db_manager().get_state("cutover_state")
             if db_state and isinstance(db_state, dict):
                 self.cutover_record.update(db_state)
                 return
@@ -196,8 +203,7 @@ class OperationalStateService:
     def _save_cutover_state(self):
         # 1. Persist to PostgreSQL system_state table
         try:
-            from backend.src.ramp.storage.connection import DatabaseManager
-            DatabaseManager.get_instance().set_state(
+            _get_db_manager().set_state(
                 "cutover_state",
                 self.cutover_record,
                 updated_by=self.cutover_record.get("supervisor_id") or self.cutover_record.get("operator_id") or "SYSTEM",
@@ -258,19 +264,19 @@ class OperationalStateService:
     def check_database_health(self) -> Dict[str, Any]:
         """Probes database connection safely."""
         t0 = time.perf_counter()
-        from backend.src.ramp.storage.connection import DatabaseManager
-        db_mgr = DatabaseManager.get_instance()
+        db_mgr = _get_db_manager()
         health = db_mgr.check_health()
         latency_ms = round((time.perf_counter() - t0) * 1000, 1)
+        is_conn = bool(health.get("connected", False))
         return {
             "name": "Metadata & Operations Database",
-            "status": "HEALTHY" if health.get("connected", True) else "DEGRADED",
-            "is_up": health.get("connected", True),
+            "status": "HEALTHY" if is_conn else "DEGRADED",
+            "is_up": is_conn,
             "latency_ms": max(latency_ms, 2.0),
             "dialect": health.get("dialect", "postgresql"),
             "postgis_enabled": health.get("postgis_enabled", False),
             "pool_size": 10,
-            "connected": health.get("connected", True),
+            "connected": is_conn,
             "last_check": datetime.now(timezone.utc).isoformat(),
             "detail": f"Database {health.get('backend', 'PostgreSQL')} operational. PostGIS: {'Active' if health.get('postgis_enabled') else 'Available'}.",
             "action": "View Database Metrics",

@@ -52,6 +52,51 @@ def is_production_env() -> bool:
     )
 
 
+def normalize_database_url(raw_url: str) -> str:
+    """
+    Normalizes a PostgreSQL URL for Render and psycopg 3:
+    1. Strips whitespace and surrounding quotes
+    2. Maps postgres:// and postgresql:// to postgresql+psycopg://
+    3. Auto-fills port 5432 if missing on Render internal or external hosts
+    4. For external Render hosts (*.render.com), ensures sslmode=require is configured
+    """
+    if not raw_url:
+        return ""
+
+    url = raw_url.strip().strip("'\"")
+    if not url:
+        return ""
+
+    # Normalize dialect to postgresql+psycopg://
+    if url.startswith("postgresql+asyncpg://"):
+        url = url.replace("postgresql+asyncpg://", "postgresql+psycopg://", 1)
+    elif url.startswith("postgresql+psycopg2://"):
+        url = url.replace("postgresql+psycopg2://", "postgresql+psycopg://", 1)
+    elif url.startswith("postgresql://"):
+        url = url.replace("postgresql://", "postgresql+psycopg://", 1)
+    elif url.startswith("postgres://"):
+        url = url.replace("postgres://", "postgresql+psycopg://", 1)
+
+    try:
+        url_obj = make_url(url)
+        host = url_obj.host or ""
+
+        # Auto-fill port 5432 if omitted for Render hosts
+        if not url_obj.port and ("dpg-" in host or "render.com" in host or "postgres" in host):
+            url_obj = url_obj.set(port=5432)
+
+        # For external Render databases (*.render.com), SSL is mandatory
+        if "render.com" in host:
+            query = dict(url_obj.query)
+            if "sslmode" not in query:
+                query["sslmode"] = "require"
+                url_obj = url_obj.set(query=query)
+
+        return url_obj.render_as_string(hide_password=False)
+    except Exception:
+        return url
+
+
 def get_database_url() -> str:
     """
     Resolves the canonical database connection URL in an environment-aware manner.
@@ -81,17 +126,7 @@ def get_database_url() -> str:
         password = os.environ.get("POSTGRES_PASSWORD", "ramp")
         raw_url = f"postgresql+psycopg://{user}:{password}@{host}:{port}/{db}"
 
-    # Normalize dialect to psycopg v3 for all PostgreSQL URL varieties
-    if raw_url.startswith("postgresql+asyncpg://"):
-        raw_url = raw_url.replace("postgresql+asyncpg://", "postgresql+psycopg://", 1)
-    elif raw_url.startswith("postgresql+psycopg2://"):
-        raw_url = raw_url.replace("postgresql+psycopg2://", "postgresql+psycopg://", 1)
-    elif raw_url.startswith("postgresql://"):
-        raw_url = raw_url.replace("postgresql://", "postgresql+psycopg://", 1)
-    elif raw_url.startswith("postgres://"):
-        raw_url = raw_url.replace("postgres://", "postgresql+psycopg://", 1)
-
-    return raw_url
+    return normalize_database_url(raw_url)
 
 
 def parse_database_url_safely(url_str: str) -> Dict[str, Any]:
@@ -209,13 +244,14 @@ class DatabaseManager:
                     connect_args={"check_same_thread": False},
                 )
             else:
+                connect_args = {"connect_timeout": 15}
                 eng = create_engine(
                     self.database_url,
                     pool_size=self.pool_size,
                     max_overflow=20,
                     pool_pre_ping=True,
                     pool_recycle=1800,
-                    connect_args={"connect_timeout": 2},
+                    connect_args=connect_args,
                 )
             self.is_sqlite = (eng.dialect.name == "sqlite")
             return eng
@@ -341,53 +377,57 @@ class DatabaseManager:
         if not self._connected and (now - getattr(self, "_last_error_time", 0)) < 5.0:
             return False
 
-        try:
-            with self.engine.begin() as conn:
-                is_pg = (self.engine.dialect.name == "postgresql")
-                if is_pg:
-                    # 1. Verify PostgreSQL
-                    try:
-                        pg_ver = conn.execute(text("SELECT version();")).scalar()
-                        logger.info(f"Connected to PostgreSQL: {pg_ver}")
-                    except Exception as ve:
-                        logger.warning(f"Could not read PostgreSQL version: {ve}")
+        max_attempts = 3 if self.is_production else 1
+        for attempt in range(1, max_attempts + 1):
+            try:
+                with self.engine.begin() as conn:
+                    is_pg = (self.engine.dialect.name == "postgresql")
+                    if is_pg:
+                        # 1. Verify PostgreSQL
+                        try:
+                            pg_ver = conn.execute(text("SELECT version();")).scalar()
+                            logger.info(f"Connected to PostgreSQL: {pg_ver}")
+                        except Exception as ve:
+                            logger.warning(f"Could not read PostgreSQL version: {ve}")
 
-                    # 2. Enable PostGIS extension ONLY if PostgreSQL
-                    try:
-                        conn.execute(text("CREATE EXTENSION IF NOT EXISTS postgis;"))
-                        self._postgis_active = True
-                        logger.info("PostGIS extension enabled.")
-                    except Exception as ext_err:
+                        # 2. Enable PostGIS extension ONLY if PostgreSQL
+                        try:
+                            conn.execute(text("CREATE EXTENSION IF NOT EXISTS postgis;"))
+                            self._postgis_active = True
+                            logger.info("PostGIS extension enabled.")
+                        except Exception as ext_err:
+                            self._postgis_active = False
+                            logger.warning(f"PostGIS extension notice: {ext_err}")
+                    else:
                         self._postgis_active = False
-                        logger.warning(f"PostGIS extension notice: {ext_err}")
-                else:
-                    self._postgis_active = False
-                    if self.is_production:
-                        logger.error(
-                            f"Production requires PostgreSQL + PostGIS, but connected engine dialect is {self.engine.dialect.name}."
-                        )
-                        return False
+                        if self.is_production:
+                            logger.error(
+                                f"Production requires PostgreSQL + PostGIS, but connected engine dialect is {self.engine.dialect.name}."
+                            )
+                            return False
 
-                # 3. Create all tables defined in models
-                try:
-                    from . import models
-                except (ImportError, ValueError):
-                    from ramp.storage import models
-                Base.metadata.create_all(bind=conn)
-                self._schema_ready = True
-                self._connected = True
-                logger.info("Database schema initialized successfully.")
+                    # 3. Create all tables defined in models
+                    try:
+                        from . import models
+                    except (ImportError, ValueError):
+                        from ramp.storage import models
+                    Base.metadata.create_all(bind=conn)
+                    self._schema_ready = True
+                    self._connected = True
+                    logger.info("Database schema initialized successfully.")
 
-            # Run diagnostics to confirm
-            self.run_startup_diagnostics()
-            return True
-        except Exception as err:
-            logger.warning(f"Database schema initialization deferred or failed: {err}")
-            self._connection_error = str(err)
-            self._connected = False
-            self._schema_ready = False
-            self._last_error_time = time.time()
-            return False
+                # Run diagnostics to confirm
+                self.run_startup_diagnostics()
+                return True
+            except Exception as err:
+                self._connected = False
+                self._schema_ready = False
+                self._connection_error = str(err)
+                self._last_error_time = time.time()
+                logger.warning(f"Database schema initialization attempt {attempt}/{max_attempts} failed: {err}")
+                if attempt < max_attempts:
+                    time.sleep(2.0)
+        return False
 
     @contextmanager
     def session(self) -> Generator[Session, None, None]:

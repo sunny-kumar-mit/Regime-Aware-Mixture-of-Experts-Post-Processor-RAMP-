@@ -38,6 +38,9 @@ ENV DEBIAN_FRONTEND=noninteractive \
     RAMP_DATA_ROOT="/app/data" \
     RAMP_CONFIG_PATH="/app/config/model_config.yaml" \
     STORAGE_MODE="LOCAL_FALLBACK" \
+    OMP_NUM_THREADS=1 \
+    MKL_NUM_THREADS=1 \
+    OPENBLAS_NUM_THREADS=1 \
     PORT=8080
 
 WORKDIR /app

@@ -102,7 +102,8 @@ def get_production_status():
         "activation_status": "REAL_OPERATIONAL_ACTIVE" if st.get("cutover_status") == "ACTIVE" else "REAL_OPERATIONAL_BLOCKED",
         "emergency_stop": st.get("is_emergency_active", False),
         "is_emergency_active": st.get("is_emergency_active", False),
-        "authoritative_data_present": st.get("data_readiness", {}).get("all_mounted", False),
+        "authoritative_data_present": st.get("data_mode") in ("REAL_DATA", "REAL_OPERATIONAL") and st.get("cutover_status") == "ACTIVE",
+        "real_operational_blocked": not st.get("gates", {}).get("real_operational", False),
         "summary": st.get("disclaimer", ""),
     }
     return {
@@ -253,7 +254,7 @@ def list_production_cycles():
     engine = OperationsEngine.get_instance()
     cycles = engine.list_cycles()
     return {
-        "status": "SUCCESS",
+        "status": "success",
         "count": len(cycles),
         "cycles": cycles,
         "data": {"cycles": cycles},
@@ -310,7 +311,7 @@ def get_data_health():
     providers = dh.get("providers", {})
     obs_health = providers.get("IMD_GRIDDED_OBSERVATION", {})
     return {
-        "status": "SUCCESS",
+        "status": "success",
         "providers": providers,
         "observation_health": obs_health,
         "timestamp": dh.get("timestamp"),
@@ -329,7 +330,7 @@ def get_data_freshness():
     fn = engine.get_data_freshness()
     records = fn.get("freshness_records", [])
     return {
-        "status": "SUCCESS",
+        "status": "success",
         "freshness_records": records,
         "timestamp": fn.get("timestamp"),
         "data": {
@@ -429,30 +430,44 @@ def list_production_alerts(active_only: bool = False):
 
 
 @router.post("/cycle/{cycle_id}/retry")
-def retry_cycle_lead(cycle_id: str, payload: RetryCycleRequest):
+def retry_cycle_lead(
+    cycle_id: str,
+    payload: Optional[RetryCycleRequest] = None,
+    lead_hours: Optional[int] = Query(None, description="Lead hours to retry (default 24)"),
+):
     """Retries a transiently failed forecast job with bounded retry limits."""
     if emergency_manager.status.is_emergency_active:
         raise HTTPException(status_code=400, detail="EMERGENCY_STOP is active. Job execution blocked.")
 
+    resolved_lead_hours = 24
+    actor = "OPERATOR"
+    if payload:
+        if payload.lead_hours is not None:
+            resolved_lead_hours = payload.lead_hours
+        if payload.actor:
+            actor = payload.actor
+    elif lead_hours is not None:
+        resolved_lead_hours = lead_hours
+
     # Find job for lead
     target_job = None
     for j in job_queue.list_jobs():
-        if j.cycle_id == cycle_id and j.lead_hours == payload.lead_hours:
+        if j.cycle_id == cycle_id and j.lead_hours == resolved_lead_hours:
             target_job = j
             break
 
     if not target_job:
         # Enqueue and execute
-        res = cycle_manager.execute_cycle_lead(cycle_id, payload.lead_hours or 24)
+        res = cycle_manager.execute_cycle_lead(cycle_id, resolved_lead_hours)
         return {"status": "success", "job": res.to_dict()}
 
     try:
         res = cycle_manager.retry_job(target_job.job_id)
         ProductionAuditLogger.log_action(
-            actor=payload.actor,
+            actor=actor,
             role=UserRole.OPERATOR,
             action="RETRY_JOB",
-            resource=f"{cycle_id}_t{payload.lead_hours}",
+            resource=f"{cycle_id}_t{resolved_lead_hours}",
             reason="Operator manual retry",
         )
         return {"status": "success", "job": res.to_dict()}
@@ -461,20 +476,27 @@ def retry_cycle_lead(cycle_id: str, payload: RetryCycleRequest):
 
 
 @router.post("/publication/{publication_id}/retract")
-def retract_publication(publication_id: str, payload: RetractPublicationRequest):
+def retract_publication(
+    publication_id: str,
+    payload: Optional[RetractPublicationRequest] = None,
+    reason: Optional[str] = Query(None, description="Reason for retracting published forecast"),
+    operator_id: Optional[str] = Query(None, description="Operator ID authorizing retraction"),
+):
     """Retracts an erroneous published forecast product."""
+    resolved_reason = (payload.reason if payload and payload.reason else reason) or "Operator manual retraction"
+    resolved_op = (payload.operator_id if payload and payload.operator_id else operator_id) or "OPERATOR_CONSOLE"
     try:
         item = pub_engine.retract_publication(
             publication_id=publication_id,
-            reason=payload.reason,
-            operator_id=payload.operator_id,
+            reason=resolved_reason,
+            operator_id=resolved_op,
         )
         ProductionAuditLogger.log_action(
-            actor=payload.operator_id,
+            actor=resolved_op,
             role=UserRole.OPERATOR,
             action="RETRACT_PUBLICATION",
             resource=publication_id,
-            reason=payload.reason,
+            reason=resolved_reason,
         )
         return {"status": "success", "publication": item.to_dict()}
     except KeyError:

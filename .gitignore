@@ -163,3 +163,4 @@ junit.xml
 *.tmp
 *.orig
 scratch/
+data/backups/

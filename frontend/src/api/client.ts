@@ -1193,6 +1193,7 @@ export async function postRetryCycle(cycleId: string, leadHours?: number): Promi
   const res = await fetch(`${API_BASE}/api/production/cycle/${encodeURIComponent(cycleId)}/retry${params}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ lead_hours: leadHours ?? 24, actor: 'OPERATOR' }),
   });
   if (!res.ok) throw new Error(`Retry cycle failed: ${res.status}`);
   return res.json();
@@ -1202,6 +1203,7 @@ export async function postRetractPublication(id: string, reason: string): Promis
   const res = await fetch(`${API_BASE}/api/production/publication/${encodeURIComponent(id)}/retract?reason=${encodeURIComponent(reason)}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ reason, operator_id: 'OPERATOR_CONSOLE' }),
   });
   if (!res.ok) throw new Error(`Retract publication failed: ${res.status}`);
   return res.json();

@@ -639,6 +639,7 @@ class DatabaseManager:
                     self._connected = True
                     health["connected"] = True
                     health["is_healthy"] = True
+                    health["schema_ready"] = True
                     health["status"] = "HEALTHY"
                     health["backend"] = "sqlite"
                     health["dialect"] = "sqlite"

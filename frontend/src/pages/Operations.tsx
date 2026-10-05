@@ -227,9 +227,9 @@ const LiveOperationsTab: React.FC = () => {
   const [verification, setVerification] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const loadLiveOps = useCallback(async () => {
+  const loadLiveOps = useCallback(async (isInitial = false) => {
     try {
-      setLoading(true);
+      if (isInitial) setLoading(true);
       const [ps, dh, fn, cy, pb, hl, vf] = await Promise.all([
         fetchProductionStatus().catch(() => null),
         fetchProductionDataHealth().catch(() => null),
@@ -239,13 +239,13 @@ const LiveOperationsTab: React.FC = () => {
         fetchProductionHealth().catch(() => null),
         fetchProductionVerification().catch(() => null),
       ]);
-      if (ps && ps.status === 'SUCCESS') setProdStatus(ps.data);
-      if (dh && dh.status === 'SUCCESS') setDataHealth(dh.data);
-      if (fn && fn.status === 'SUCCESS') setFreshness(fn.data);
-      if (cy && cy.status === 'SUCCESS') setCycles(cy.data?.cycles || cy.cycles || []);
-      if (pb && pb.status === 'SUCCESS') setPublications(pb.data);
-      if (hl && hl.status === 'SUCCESS') setHealth(hl.data);
-      if (vf && vf.status === 'SUCCESS') setVerification(vf.data);
+      if (ps) setProdStatus(ps.data || ps);
+      if (dh) setDataHealth(dh.data || dh);
+      if (fn) setFreshness(fn.data || fn);
+      if (cy) setCycles(cy.data?.cycles || cy.cycles || []);
+      if (pb) setPublications(pb.data || pb);
+      if (hl) setHealth(hl.data || hl);
+      if (vf) setVerification(vf.data || vf);
     } catch (e) {
       console.error('Failed to load live ops:', e);
     } finally {
@@ -254,8 +254,8 @@ const LiveOperationsTab: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    loadLiveOps();
-    const interval = setInterval(loadLiveOps, 8000);
+    loadLiveOps(true);
+    const interval = setInterval(() => loadLiveOps(false), 8000);
     return () => clearInterval(interval);
   }, [loadLiveOps]);
 
@@ -560,7 +560,8 @@ const OverviewTab: React.FC<{
   loading: boolean;
   onTransition: (state: string) => void;
 }> = ({ status, stateData, loading, onTransition }) => {
-  if (loading || !status) return <LoadingSpinner />;
+  if (loading && !status) return <LoadingSpinner />;
+  if (!status) return <div style={{ color: '#475569', padding: '40px', textAlign: 'center' }}>No operations status available.</div>;
 
   const sm = status.state_machine;
   const currentState = sm?.current_state || 'UNKNOWN';
@@ -748,7 +749,7 @@ const SchedulerTab: React.FC<{
   const [leadHours, setLeadHours] = useState(24);
   const [submitting, setSubmitting] = useState(false);
 
-  if (loading) return <LoadingSpinner />;
+  if (loading && !scheduler && !jobs) return <LoadingSpinner />;
 
   const s = scheduler || {};
   const isRunning = s.is_running || false;
@@ -922,7 +923,7 @@ const AlertsTab: React.FC<{
   onAcknowledge: (id: string) => void;
   onResolve: (id: string) => void;
 }> = ({ alertsData, loading, onAcknowledge, onResolve }) => {
-  if (loading) return <LoadingSpinner />;
+  if (loading && !alertsData) return <LoadingSpinner />;
 
   const alerts: any[] = alertsData?.alerts || [];
   const rules: any[] = alertsData?.rules || [];
@@ -1057,7 +1058,7 @@ const DriftTab: React.FC<{ driftData: Record<string, any> | null; loading: boole
   driftData,
   loading,
 }) => {
-  if (loading) return <LoadingSpinner />;
+  if (loading && !driftData) return <LoadingSpinner />;
   if (!driftData) return <div style={{ color: '#475569' }}>No drift data available.</div>;
 
   const feats: any[] = driftData.feature_drift || [];
@@ -1170,7 +1171,7 @@ const ReadinessTab: React.FC<{ readinessData: Record<string, any> | null; loadin
   readinessData,
   loading,
 }) => {
-  if (loading) return <LoadingSpinner />;
+  if (loading && !readinessData) return <LoadingSpinner />;
   if (!readinessData) return <div style={{ color: '#475569' }}>No readiness data.</div>;
 
   const checks: any[] = readinessData.checks || [];
@@ -1456,8 +1457,8 @@ export const OperationsPage: React.FC = () => {
   const [readinessData, setReadinessData] = useState<Record<string, any> | null>(null);
   const [dataHealth, setDataHealth] = useState<Record<string, any> | null>(null);
 
-  const loadAll = useCallback(async () => {
-    setLoading(true);
+  const loadAll = useCallback(async (isInitial = false) => {
+    if (isInitial) setLoading(true);
     setError(null);
     try {
       const [st, sd, sc, jb, al, dr, rd, dh] = await Promise.all([
@@ -1470,14 +1471,14 @@ export const OperationsPage: React.FC = () => {
         fetchOperationsReadiness().catch(() => null),
         fetchProductionDataHealth().catch(() => null),
       ]);
-      setStatus(st as OpsStatus);
-      setStateData(sd);
-      setScheduler(sc);
-      setJobs(jb?.jobs || []);
-      setAlertsData(al);
-      setDriftData(dr);
-      setReadinessData(rd);
-      if (dh && dh.status === 'SUCCESS') setDataHealth(dh.data);
+      if (st) setStatus(st as OpsStatus);
+      if (sd) setStateData(sd);
+      if (sc) setScheduler(sc);
+      if (jb?.jobs) setJobs(jb.jobs);
+      if (al) setAlertsData(al);
+      if (dr) setDriftData(dr);
+      if (rd) setReadinessData(rd);
+      if (dh) setDataHealth(dh.data || dh);
       setLastRefresh(new Date().toLocaleTimeString('en-IN', { hour12: false }));
     } catch (e: any) {
       setError(String(e));
@@ -1487,8 +1488,8 @@ export const OperationsPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    loadAll();
-    const interval = setInterval(loadAll, 8000);  // live operational polling every 8s
+    loadAll(true);
+    const interval = setInterval(() => loadAll(false), 8000);  // live operational polling every 8s
     return () => clearInterval(interval);
   }, [loadAll]);
 
@@ -1600,7 +1601,7 @@ export const OperationsPage: React.FC = () => {
           )}
           <span style={{ color: '#475569', fontSize: '11px' }}>Refreshed {lastRefresh}</span>
           <button
-            onClick={loadAll}
+            onClick={() => loadAll(true)}
             style={{
               padding: '8px', borderRadius: '8px',
               background: '#1e293b', border: '1px solid #334155',

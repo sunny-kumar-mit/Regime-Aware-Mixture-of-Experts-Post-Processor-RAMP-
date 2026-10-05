@@ -1733,17 +1733,17 @@ def delete_imported_file(file_id: str, force: bool = False) -> Dict[str, Any]:
 def get_map_configuration() -> Dict[str, Any]:
     """
     Returns public map configuration and health status for MapLibre GL JS / Leaflet.
-    Uses open, keyless basemaps (OpenFreeMap Dark Vector / OpenStreetMap Raster).
+    Uses open, keyless basemaps (CartoDB Dark Matter / Esri Canvas / OpenStreetMap Raster).
     Never requires paid API keys or shows watermark banners.
     """
     provider = os.environ.get("VITE_MAP_PROVIDER", "maplibre")
     style_url = os.environ.get(
         "VITE_MAP_STYLE_URL",
-        "https://tiles.openfreemap.org/styles/dark"
+        "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
     )
     tile_url = os.environ.get(
         "VITE_MAP_TILE_URL",
-        "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+        "https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png"
     )
     api_key = os.environ.get("VITE_MAP_API_KEY", "")
 
@@ -1752,7 +1752,7 @@ def get_map_configuration() -> Dict[str, Any]:
         "engine": "MapLibre GL JS (Vector/Raster)",
         "style_url": style_url,
         "tile_url": tile_url,
-        "attribution": "&copy; OpenStreetMap contributors &copy; OpenFreeMap",
+        "attribution": "&copy; OpenStreetMap contributors &copy; CARTO",
         "has_api_key": bool(api_key),
         "is_public_style": True,
         "requires_key": False,
@@ -1760,7 +1760,7 @@ def get_map_configuration() -> Dict[str, Any]:
         "style_status": "Loaded (Keyless Open Basemap)",
         "tiles_status": "Available",
         "available_basemaps": [
-            {"id": "openfreemap-dark", "name": "Dark Vector (OpenFreeMap)", "type": "vector", "requires_key": False},
+            {"id": "carto-dark", "name": "Dark Matter (CartoDB)", "type": "raster", "requires_key": False},
             {"id": "esri-dark", "name": "Dark Canvas (Esri)", "type": "raster", "requires_key": False},
             {"id": "osm-standard", "name": "OpenStreetMap (Standard)", "type": "raster", "requires_key": False},
         ],
@@ -1771,7 +1771,7 @@ def get_map_configuration() -> Dict[str, Any]:
             "max_lon": 100.5,
         },
         "last_initialization": datetime.now(timezone.utc).isoformat(),
-        "documentation": "OpenFreeMap Dark vector tiles & OpenStreetMap raster require zero API keys.",
+        "documentation": "CartoDB Dark Matter, Esri Dark Canvas & OpenStreetMap require zero API keys.",
     }
 
 

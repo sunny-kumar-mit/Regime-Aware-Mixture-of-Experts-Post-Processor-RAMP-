@@ -134,9 +134,9 @@ async def get_system_diagnostics() -> dict:
     map_info = {
         "provider": os.environ.get("VITE_MAP_PROVIDER", "maplibre"),
         "engine": "MapLibre GL JS / Leaflet (Configurable)",
-        "style_url": os.environ.get("VITE_MAP_STYLE_URL", "https://tiles.openfreemap.org/styles/dark"),
-        "tile_url": os.environ.get("VITE_MAP_TILE_URL", "https://tile.openstreetmap.org/{z}/{x}/{y}.png"),
-        "attribution": os.environ.get("VITE_MAP_ATTRIBUTION", "&copy; OpenStreetMap contributors &copy; OpenFreeMap"),
+        "style_url": os.environ.get("VITE_MAP_STYLE_URL", "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"),
+        "tile_url": os.environ.get("VITE_MAP_TILE_URL", "https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png"),
+        "attribution": os.environ.get("VITE_MAP_ATTRIBUTION", "&copy; OpenStreetMap contributors &copy; CARTO"),
         "public_key_required": False,
         "india_domain": {
             "min_lat": 6.5,

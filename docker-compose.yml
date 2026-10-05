@@ -56,7 +56,7 @@ services:
       - VITE_API_URL=http://localhost:8000
       - VITE_MAP_PROVIDER=maplibre
       - VITE_MAP_TILE_URL=https://tile.openstreetmap.org/{z}/{x}/{y}.png
-      - VITE_MAP_STYLE_URL=https://tiles.openfreemap.org/styles/dark
+      - VITE_MAP_STYLE_URL=https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json
     depends_on:
       - backend
     networks:

@@ -168,6 +168,18 @@ export const RealDataLabPage: React.FC<{ initialTab?: string }> = ({ initialTab 
     loadData();
   }, []);
 
+  // Ensure forecast grid is immediately loaded when switching to maps tab
+  useEffect(() => {
+    if (activeTab === 'maps' && !spatialGrid) {
+      const runId = runs && runs.length > 0 ? runs[0].run_id : 'REAL_RUN_20260927_064301_24h_NCMRWF';
+      fetchRealDataGrid(runId)
+        .then((res) => {
+          if (res) setSpatialGrid(res as any);
+        })
+        .catch((e) => console.warn('Could not auto-fetch spatial grid for maps tab:', e));
+    }
+  }, [activeTab, spatialGrid, runs]);
+
   // 8-stage state machine (Requirement 8)
   const stateSteps = [
     { id: 'NOT_READY', label: '1. Not Ready', desc: 'No data mounted' },
@@ -1171,7 +1183,7 @@ export const RealDataLabPage: React.FC<{ initialTab?: string }> = ({ initialTab 
           selectedCell={selectedGridCell}
           onSelectCell={setSelectedGridCell}
           dataMode="REAL_DATA_EXPERIMENT"
-          activeRunId={runs && runs.length > 0 ? runs[0].run_id : undefined}
+          activeRunId={runs && runs.length > 0 ? runs[0].run_id : 'REAL_RUN_20260927_064301_24h_NCMRWF'}
           onPairSuccess={(updatedGrid) => {
             setSpatialGrid(updatedGrid);
             loadData();

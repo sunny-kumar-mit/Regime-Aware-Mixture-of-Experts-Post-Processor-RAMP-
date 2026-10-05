@@ -155,80 +155,145 @@ export const RawDataExplorerModal: React.FC<RawDataExplorerModalProps> = ({
     };
   }, [fileId, selectedVar, activeTab]);
 
-  // Initialize MapLibre in Map Tab
+// Reliable keyless Dark Basemap for Raw Data Explorer
+const MODAL_BASEMAP_STYLE: any = {
+  version: 8,
+  sources: {
+    'carto-dark-raster': {
+      type: 'raster',
+      tiles: [
+        'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+        'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+        'https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+      ],
+      tileSize: 256,
+      attribution: '&copy; CartoDB &copy; OpenStreetMap contributors',
+    },
+  },
+  layers: [
+    {
+      id: 'carto-dark-layer',
+      type: 'raster',
+      source: 'carto-dark-raster',
+      minzoom: 0,
+      maxzoom: 19,
+    },
+  ],
+};
+
+  // Helper to sync raw GeoJSON grid points onto MapLibre
+  const syncRawGridPoints = (map: maplibregl.Map, points: any, op: number) => {
+    if (!map) return;
+    if (!map.isStyleLoaded()) {
+      map.once('styledata', () => syncRawGridPoints(map, points, op));
+      setTimeout(() => {
+        if (mapRef.current) syncRawGridPoints(mapRef.current, points, op);
+      }, 150);
+      return;
+    }
+
+    if (!points || !points.features || points.features.length === 0) return;
+
+    const minVal = points.min ?? 0;
+    const maxVal = Math.max(points.max ?? 10, minVal + 1);
+    const span = Math.max(maxVal - minVal, 1);
+
+    if (map.getSource('raw-grid-source')) {
+      (map.getSource('raw-grid-source') as maplibregl.GeoJSONSource).setData(points);
+    } else {
+      map.addSource('raw-grid-source', {
+        type: 'geojson',
+        data: points,
+      });
+    }
+
+    if (!map.getLayer('raw-grid-points')) {
+      map.addLayer({
+        id: 'raw-grid-points',
+        type: 'circle',
+        source: 'raw-grid-source',
+        paint: {
+          'circle-radius': [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            3, 3,
+            5, 5.5,
+            7, 9,
+            10, 16,
+          ],
+          'circle-color': [
+            'interpolate',
+            ['linear'],
+            ['get', 'val'],
+            minVal, '#334155',
+            minVal + span * 0.08, '#0284c7',
+            minVal + span * 0.22, '#10b981',
+            minVal + span * 0.45, '#f59e0b',
+            minVal + span * 0.75, '#ef4444',
+            maxVal, '#7c3aed',
+          ],
+          'circle-opacity': op,
+          'circle-stroke-width': 0.7,
+          'circle-stroke-color': '#020617',
+        },
+      });
+
+      map.on('click', 'raw-grid-points', (e: any) => {
+        if (e.features && e.features.length > 0) {
+          const props = e.features[0].properties;
+          setSelectedCell(props);
+        }
+      });
+
+      map.on('mouseenter', 'raw-grid-points', () => {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+      map.on('mouseleave', 'raw-grid-points', () => {
+        map.getCanvas().style.cursor = '';
+      });
+    } else {
+      map.setPaintProperty('raw-grid-points', 'circle-opacity', op);
+    }
+  };
+
+  // Initialize MapLibre ONCE when MAP tab becomes active
   useEffect(() => {
     if (activeTab !== 'MAP' || !mapContainerRef.current) return;
 
+    let mapInstance: maplibregl.Map | null = null;
     try {
       if (mapRef.current) {
         mapRef.current.remove();
         mapRef.current = null;
       }
 
-      const map = new maplibregl.Map({
+      mapInstance = new maplibregl.Map({
         container: mapContainerRef.current,
-        style: 'https://tiles.openfreemap.org/styles/dark',
+        style: MODAL_BASEMAP_STYLE,
         center: [78.9629, 22.5937],
-        zoom: 4.3,
+        zoom: 4.4,
         minZoom: 2,
-        maxZoom: 12,
+        maxZoom: 14,
       });
 
-      map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'top-left');
+      mapInstance.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'top-left');
 
-      map.on('load', () => {
-        if (!mapPoints || !mapPoints.features) return;
-
-        map.addSource('raw-grid-source', {
-          type: 'geojson',
-          data: mapPoints as any,
-        });
-
-        // Color based on value range
-        const minVal = mapPoints.min || 0;
-        const maxVal = mapPoints.max || 100;
-        const span = Math.max(maxVal - minVal, 1);
-
-        map.addLayer({
-          id: 'raw-grid-points',
-          type: 'circle',
-          source: 'raw-grid-source',
-          paint: {
-            'circle-radius': [
-              'interpolate',
-              ['linear'],
-              ['zoom'],
-              3, 2,
-              5, 4.5,
-              8, 8,
-              11, 14
-            ],
-            'circle-color': [
-              'interpolate',
-              ['linear'],
-              ['get', 'val'],
-              minVal, '#0f172a',
-              minVal + span * 0.1, '#0284c7',
-              minVal + span * 0.3, '#10b981',
-              minVal + span * 0.6, '#f59e0b',
-              minVal + span * 0.85, '#ef4444',
-              maxVal, '#dc2626'
-            ],
-            'circle-opacity': opacity,
-            'circle-stroke-width': 0.5,
-            'circle-stroke-color': '#0f172a',
-          },
-        });
-
-        map.on('click', 'raw-grid-points', (e: any) => {
-          if (e.features && e.features.length > 0) {
-            const props = e.features[0].properties;
-            setSelectedCell(props);
-          }
-        });
+      mapInstance.on('load', () => {
+        mapInstance?.resize();
+        mapInstance?.fitBounds(
+          [
+            [66.0, 6.5],
+            [98.0, 38.0],
+          ],
+          { padding: 30, duration: 400 }
+        );
+        if (mapPoints) {
+          syncRawGridPoints(mapInstance!, mapPoints, opacity);
+        }
       });
 
-      mapRef.current = map;
+      mapRef.current = mapInstance;
     } catch (err) {
       console.error('Failed to init MapLibre preview:', err);
     }
@@ -239,7 +304,21 @@ export const RawDataExplorerModal: React.FC<RawDataExplorerModalProps> = ({
         mapRef.current = null;
       }
     };
-  }, [activeTab, mapPoints]);
+  }, [activeTab]);
+
+  // Sync MapLibre Data when mapPoints change
+  useEffect(() => {
+    if (activeTab === 'MAP' && mapRef.current && mapPoints) {
+      syncRawGridPoints(mapRef.current, mapPoints, opacity);
+    }
+  }, [mapPoints, activeTab]);
+
+  // Update Opacity when slider changes without map reload
+  useEffect(() => {
+    if (mapRef.current && mapRef.current.getLayer('raw-grid-points')) {
+      mapRef.current.setPaintProperty('raw-grid-points', 'circle-opacity', opacity);
+    }
+  }, [opacity]);
 
   const totalPages = Math.max(1, Math.ceil(tableData.total / pageSize));
   const isRejected = summary?.validation_status === 'REJECTED' || summary?.validation_status === 'FAIL';

@@ -233,6 +233,20 @@ class DatabaseManager:
                 pass
             cls._instance = None
 
+    @staticmethod
+    def _configure_sqlite_engine(eng: Engine):
+        """Enables WAL mode and 30s busy timeout for concurrent SQLite transactions."""
+        from sqlalchemy import event
+        @event.listens_for(eng, "connect")
+        def _set_sqlite_pragma(dbapi_conn, conn_record):
+            try:
+                cursor = dbapi_conn.cursor()
+                cursor.execute("PRAGMA journal_mode=WAL;")
+                cursor.execute("PRAGMA busy_timeout=30000;")
+                cursor.close()
+            except Exception:
+                pass
+
     def _create_engine(self) -> Engine:
         """Creates engine with connection pooling and fast connection timeout."""
         if not self.database_url:
@@ -252,7 +266,7 @@ class DatabaseManager:
             if self.is_sqlite:
                 eng = create_engine(
                     self.database_url,
-                    connect_args={"check_same_thread": False},
+                    connect_args={"check_same_thread": False, "timeout": 30},
                 )
             else:
                 connect_args = {"connect_timeout": 2}
@@ -265,6 +279,8 @@ class DatabaseManager:
                     connect_args=connect_args,
                 )
             self.is_sqlite = (eng.dialect.name == "sqlite")
+            if self.is_sqlite:
+                self._configure_sqlite_engine(eng)
             return eng
         except Exception as e:
             self._connection_error = str(e)
@@ -274,7 +290,9 @@ class DatabaseManager:
                 self.database_url = "sqlite:///data/ramp_storage.db"
                 self.is_sqlite = True
                 Path("data").mkdir(exist_ok=True)
-                return create_engine(self.database_url, connect_args={"check_same_thread": False})
+                eng = create_engine(self.database_url, connect_args={"check_same_thread": False, "timeout": 30})
+                self._configure_sqlite_engine(eng)
+                return eng
             else:
                 # In production, do NOT mask failure by pretending SQLite has real data
                 self.is_sqlite = True
@@ -630,7 +648,8 @@ class DatabaseManager:
                     self.database_url = "sqlite:///data/ramp_storage.db"
                     self.is_sqlite = True
                     Path("data").mkdir(exist_ok=True)
-                    self.engine = create_engine(self.database_url, connect_args={"check_same_thread": False})
+                    self.engine = create_engine(self.database_url, connect_args={"check_same_thread": False, "timeout": 30})
+                    self._configure_sqlite_engine(self.engine)
                     self.SessionFactory = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
                     from ramp.storage.models import Base
                     Base.metadata.create_all(bind=self.engine)

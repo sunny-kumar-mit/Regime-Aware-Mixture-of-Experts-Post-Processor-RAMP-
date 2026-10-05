@@ -107,8 +107,13 @@ const SEVERITY_COLOR: Record<string, string> = {
 
 const DRIFT_LEVEL_COLOR: Record<string, string> = {
   NONE: '#10b981',
+  NO_DRIFT: '#10b981',
+  LOW: '#10b981',
   WARNING: '#f59e0b',
+  MODERATE: '#f59e0b',
   CRITICAL: '#ef4444',
+  HIGH: '#ef4444',
+  INSUFFICIENT_DATA: '#64748b',
 };
 
 const CHECK_STATUS_COLOR: Record<string, string> = {
@@ -1065,6 +1070,7 @@ const DriftTab: React.FC<{ driftData: Record<string, any> | null; loading: boole
   const pred = driftData.prediction_drift;
   const cal: any[] = driftData.calibration_drift || [];
   const overall = driftData.overall_drift_level || 'NONE';
+  const overallColor = DRIFT_LEVEL_COLOR[overall] || '#64748b';
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -1072,21 +1078,21 @@ const DriftTab: React.FC<{ driftData: Record<string, any> | null; loading: boole
       <div style={{
         padding: '14px 20px',
         borderRadius: '10px',
-        background: `${DRIFT_LEVEL_COLOR[overall]}15`,
-        border: `1px solid ${DRIFT_LEVEL_COLOR[overall]}50`,
+        background: `${overallColor}15`,
+        border: `1px solid ${overallColor}50`,
         display: 'flex',
         alignItems: 'center',
         gap: '12px',
       }}>
-        <TrendingUp size={20} color={DRIFT_LEVEL_COLOR[overall]} />
+        <TrendingUp size={20} color={overallColor} />
         <div>
-          <div style={{ color: DRIFT_LEVEL_COLOR[overall], fontWeight: 700, fontSize: '15px' }}>
+          <div style={{ color: overallColor, fontWeight: 700, fontSize: '15px' }}>
             Overall Drift: {overall}
           </div>
           <div style={{ color: '#64748b', fontSize: '12px', marginTop: '2px' }}>{driftData.summary}</div>
         </div>
         <div style={{ marginLeft: 'auto', color: '#475569', fontSize: '11px' }}>
-          Window: {driftData.window_size} cycles | {ts(driftData.generated_at)}
+          Window: {driftData.window_size ?? 0} cycles | {ts(driftData.generated_at)}
         </div>
       </div>
 
@@ -1097,9 +1103,25 @@ const DriftTab: React.FC<{ driftData: Record<string, any> | null; loading: boole
             📈 Prediction Distribution Drift
           </h3>
           <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-            <StatCard label="Baseline Mean" value={`${pred.baseline_mean_forecast_mm} mm`} icon={<BarChart3 size={14} />} color="#3b82f6" />
-            <StatCard label="Current Mean" value={`${pred.current_mean_forecast_mm} mm`} icon={<BarChart3 size={14} />} color="#8b5cf6" />
-            <StatCard label="Shift" value={`${pred.mean_shift_pct}%`} icon={<TrendingUp size={14} />} color={DRIFT_LEVEL_COLOR[pred.drift_level]} sub={`${pred.mean_shift_mm > 0 ? '+' : ''}${pred.mean_shift_mm} mm`} />
+            <StatCard
+              label="Baseline Mean"
+              value={pred.baseline_mean_forecast_mm != null ? `${Number(pred.baseline_mean_forecast_mm).toFixed(2)} mm` : 'N/A'}
+              icon={<BarChart3 size={14} />}
+              color="#3b82f6"
+            />
+            <StatCard
+              label="Current Mean"
+              value={pred.current_mean_forecast_mm != null ? `${Number(pred.current_mean_forecast_mm).toFixed(2)} mm` : 'N/A'}
+              icon={<BarChart3 size={14} />}
+              color="#8b5cf6"
+            />
+            <StatCard
+              label="Shift"
+              value={pred.mean_shift_pct != null ? `${Number(pred.mean_shift_pct).toFixed(2)}%` : 'N/A'}
+              icon={<TrendingUp size={14} />}
+              color={DRIFT_LEVEL_COLOR[pred.drift_level] || '#64748b'}
+              sub={pred.mean_shift_mm != null ? `${pred.mean_shift_mm > 0 ? '+' : ''}${Number(pred.mean_shift_mm).toFixed(2)} mm` : undefined}
+            />
           </div>
         </div>
       )}
@@ -1116,22 +1138,26 @@ const DriftTab: React.FC<{ driftData: Record<string, any> | null; loading: boole
           }}>
             <span>FEATURE</span><span>KS-STAT</span><span>BASELINE μ</span><span>CURRENT μ</span><span>DRIFT</span>
           </div>
-          {feats.map((f: any) => (
-            <div key={f.feature_name} style={{
-              display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr',
-              gap: '8px', padding: '8px 10px', background: '#1e293b', borderRadius: '6px', fontSize: '12px',
-            }}>
-              <span style={{ color: '#94a3b8', fontFamily: 'monospace' }}>{f.feature_name}</span>
-              <span style={{ color: '#e2e8f0' }}>{f.ks_statistic.toFixed(4)}</span>
-              <span style={{ color: '#64748b' }}>{f.baseline_mean.toFixed(2)}</span>
-              <span style={{ color: '#94a3b8' }}>{f.current_mean.toFixed(2)}</span>
-              <span style={{
-                color: DRIFT_LEVEL_COLOR[f.drift_level],
-                fontWeight: 700,
-                fontSize: '11px',
-              }}>{f.drift_level}</span>
-            </div>
-          ))}
+          {feats.map((f: any) => {
+            const fColor = DRIFT_LEVEL_COLOR[f.drift_level] || DRIFT_LEVEL_COLOR[f.drift_status] || '#64748b';
+            const featName = f.feature_name || f.feature || 'unknown';
+            return (
+              <div key={featName} style={{
+                display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr',
+                gap: '8px', padding: '8px 10px', background: '#1e293b', borderRadius: '6px', fontSize: '12px',
+              }}>
+                <span style={{ color: '#94a3b8', fontFamily: 'monospace' }}>{featName}</span>
+                <span style={{ color: '#e2e8f0' }}>{f.ks_statistic != null ? Number(f.ks_statistic).toFixed(4) : 'N/A (Pending)'}</span>
+                <span style={{ color: '#64748b' }}>{f.baseline_mean != null ? Number(f.baseline_mean).toFixed(2) : 'N/A'}</span>
+                <span style={{ color: '#94a3b8' }}>{f.current_mean != null ? Number(f.current_mean).toFixed(2) : 'N/A'}</span>
+                <span style={{
+                  color: fColor,
+                  fontWeight: 700,
+                  fontSize: '11px',
+                }}>{f.drift_level || f.drift_status || 'NONE'}</span>
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -1141,19 +1167,26 @@ const DriftTab: React.FC<{ driftData: Record<string, any> | null; loading: boole
           🎯 Calibration ECE Drift
         </h3>
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-          {cal.map((c: any) => (
-            <div key={c.threshold_mm} style={{
-              padding: '12px 16px', borderRadius: '8px', background: '#1e293b',
-              border: `1px solid ${DRIFT_LEVEL_COLOR[c.drift_level]}40`, flex: 1, minWidth: '140px',
-            }}>
-              <div style={{ color: '#64748b', fontSize: '11px', fontWeight: 600 }}>≥{c.threshold_mm}mm</div>
-              <div style={{ color: '#e2e8f0', fontSize: '18px', fontWeight: 700, marginTop: '4px' }}>{c.current_ece.toFixed(4)}</div>
-              <div style={{ color: '#475569', fontSize: '11px' }}>baseline: {c.baseline_ece.toFixed(4)}</div>
-              <div style={{ color: DRIFT_LEVEL_COLOR[c.drift_level], fontSize: '11px', fontWeight: 700, marginTop: '4px' }}>
-                Δ {c.ece_delta > 0 ? '+' : ''}{c.ece_delta.toFixed(4)} — {c.drift_level}
+          {cal.map((c: any) => {
+            const cColor = DRIFT_LEVEL_COLOR[c.drift_level] || '#64748b';
+            return (
+              <div key={c.threshold_mm} style={{
+                padding: '12px 16px', borderRadius: '8px', background: '#1e293b',
+                border: `1px solid ${cColor}40`, flex: 1, minWidth: '140px',
+              }}>
+                <div style={{ color: '#64748b', fontSize: '11px', fontWeight: 600 }}>≥{c.threshold_mm}mm</div>
+                <div style={{ color: '#e2e8f0', fontSize: '18px', fontWeight: 700, marginTop: '4px' }}>
+                  {c.current_ece != null ? Number(c.current_ece).toFixed(4) : 'N/A'}
+                </div>
+                <div style={{ color: '#475569', fontSize: '11px' }}>
+                  baseline: {c.baseline_ece != null ? Number(c.baseline_ece).toFixed(4) : 'N/A'}
+                </div>
+                <div style={{ color: cColor, fontSize: '11px', fontWeight: 700, marginTop: '4px' }}>
+                  Δ {c.ece_delta != null ? `${c.ece_delta > 0 ? '+' : ''}${Number(c.ece_delta).toFixed(4)}` : '0.0000'} — {c.drift_level || 'NONE'}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
@@ -1440,6 +1473,71 @@ const LoadingSpinner: React.FC = () => (
   </div>
 );
 
+// ── Tab Error Boundary ───────────────────────────────────────────────────
+
+interface TabErrorBoundaryProps {
+  children: React.ReactNode;
+  tabName?: string;
+}
+
+interface TabErrorBoundaryState {
+  hasError: boolean;
+  error?: Error;
+}
+
+class TabErrorBoundary extends React.Component<TabErrorBoundaryProps, TabErrorBoundaryState> {
+  constructor(props: TabErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: Error): TabErrorBoundaryState {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, info: any) {
+    console.error(`TabErrorBoundary caught error in ${this.props.tabName || 'tab'}:`, error, info);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{
+          padding: '24px',
+          borderRadius: '10px',
+          background: '#1a0a0a',
+          border: '1px solid #ef444455',
+          color: '#ef4444',
+          margin: '20px 0',
+        }}>
+          <div style={{ fontWeight: 700, fontSize: '14px', marginBottom: '8px' }}>
+            ⚠️ Error loading {this.props.tabName || 'tab'}
+          </div>
+          <div style={{ color: '#94a3b8', fontSize: '12px', marginBottom: '16px' }}>
+            {this.state.error?.message || 'An unexpected rendering error occurred.'}
+          </div>
+          <button
+            onClick={() => this.setState({ hasError: false, error: undefined })}
+            style={{
+              padding: '6px 14px',
+              borderRadius: '6px',
+              background: '#ef444420',
+              border: '1px solid #ef4444',
+              color: '#ef4444',
+              cursor: 'pointer',
+              fontSize: '12px',
+              fontWeight: 600,
+            }}
+          >
+            Retry Tab
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 // ── Main Page ──────────────────────────────────────────────────────────────
 
 export const OperationsPage: React.FC = () => {
@@ -1669,44 +1767,46 @@ export const OperationsPage: React.FC = () => {
       )}
 
       {/* Tab Content */}
-      {activeTab === 'live_ops' && (
-        <LiveOperationsTab />
-      )}
-      {activeTab === 'overview' && (
-        <OverviewTab
-          status={status}
-          stateData={stateData}
-          loading={loading}
-          onTransition={handleTransition}
-        />
-      )}
-      {activeTab === 'scheduler' && (
-        <SchedulerTab
-          scheduler={scheduler}
-          jobs={jobs}
-          loading={loading}
-          onStart={handleStartScheduler}
-          onStop={handleStopScheduler}
-          onSubmitJob={handleSubmitJob}
-        />
-      )}
-      {activeTab === 'alerts' && (
-        <AlertsTab
-          alertsData={alertsData}
-          loading={loading}
-          onAcknowledge={handleAcknowledge}
-          onResolve={handleResolve}
-        />
-      )}
-      {activeTab === 'drift' && (
-        <DriftTab driftData={driftData} loading={loading} />
-      )}
-      {activeTab === 'readiness' && (
-        <ReadinessTab readinessData={readinessData} loading={loading} />
-      )}
-      {activeTab === 'real_activation' && (
-        <RealActivationTab prodStatus={status} dataHealth={dataHealth} />
-      )}
+      <TabErrorBoundary tabName={activeTab}>
+        {activeTab === 'live_ops' && (
+          <LiveOperationsTab />
+        )}
+        {activeTab === 'overview' && (
+          <OverviewTab
+            status={status}
+            stateData={stateData}
+            loading={loading}
+            onTransition={handleTransition}
+          />
+        )}
+        {activeTab === 'scheduler' && (
+          <SchedulerTab
+            scheduler={scheduler}
+            jobs={jobs}
+            loading={loading}
+            onStart={handleStartScheduler}
+            onStop={handleStopScheduler}
+            onSubmitJob={handleSubmitJob}
+          />
+        )}
+        {activeTab === 'alerts' && (
+          <AlertsTab
+            alertsData={alertsData}
+            loading={loading}
+            onAcknowledge={handleAcknowledge}
+            onResolve={handleResolve}
+          />
+        )}
+        {activeTab === 'drift' && (
+          <DriftTab driftData={driftData} loading={loading} />
+        )}
+        {activeTab === 'readiness' && (
+          <ReadinessTab readinessData={readinessData} loading={loading} />
+        )}
+        {activeTab === 'real_activation' && (
+          <RealActivationTab prodStatus={status} dataHealth={dataHealth} />
+        )}
+      </TabErrorBoundary>
 
       <style>{`
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }

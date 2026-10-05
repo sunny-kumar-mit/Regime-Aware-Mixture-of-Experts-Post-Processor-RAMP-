@@ -449,19 +449,46 @@ def retry_cycle_lead(
     elif lead_hours is not None:
         resolved_lead_hours = lead_hours
 
-    # Find job for lead
+    # 1. Try OperationsEngine first (PostgreSQL-backed operational state)
+    try:
+        from ramp.services.operations_engine import OperationsEngine
+        engine = OperationsEngine.get_instance()
+        detail = engine.get_cycle_detail(cycle_id)
+        if detail:
+            res = engine.submit_forecast_job(cycle_id=cycle_id, lead_hours=resolved_lead_hours)
+            ProductionAuditLogger.log_action(
+                actor=actor,
+                role=UserRole.OPERATOR,
+                action="RETRY_JOB",
+                resource=f"{cycle_id}_t{resolved_lead_hours}",
+                reason="Operator manual retry via OperationsEngine",
+            )
+            return {
+                "status": "success",
+                "message": f"Retry queued for cycle {cycle_id} (+{resolved_lead_hours}h).",
+                "job": res.get("job") or res,
+            }
+    except Exception as e:
+        logger.warning(f"OperationsEngine retry attempt: {e}")
+
+    # 2. Try in-memory job_queue / cycle_manager
     target_job = None
     for j in job_queue.list_jobs():
         if j.cycle_id == cycle_id and j.lead_hours == resolved_lead_hours:
             target_job = j
             break
 
-    if not target_job:
-        # Enqueue and execute
-        res = cycle_manager.execute_cycle_lead(cycle_id, resolved_lead_hours)
-        return {"status": "success", "job": res.to_dict()}
-
     try:
+        if not target_job:
+            if cycle_id not in cycle_manager._cycles:
+                cycle_manager.create_cycle(cycle_id=cycle_id)
+            res = cycle_manager.execute_cycle_lead(cycle_id, resolved_lead_hours)
+            return {
+                "status": "success",
+                "message": f"Retry queued for cycle {cycle_id} (+{resolved_lead_hours}h).",
+                "job": res.to_dict() if hasattr(res, "to_dict") else res,
+            }
+
         res = cycle_manager.retry_job(target_job.job_id)
         ProductionAuditLogger.log_action(
             actor=actor,
@@ -470,7 +497,11 @@ def retry_cycle_lead(
             resource=f"{cycle_id}_t{resolved_lead_hours}",
             reason="Operator manual retry",
         )
-        return {"status": "success", "job": res.to_dict()}
+        return {
+            "status": "success",
+            "message": f"Retry queued for job {target_job.job_id}.",
+            "job": res.to_dict() if hasattr(res, "to_dict") else res,
+        }
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 

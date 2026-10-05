@@ -119,13 +119,15 @@ class OperationalInferencePipeline:
     def run_forecast(
         self,
         cycle_id: str,
-        lead_time_hours: int,
+        lead_time_hours: Optional[int] = None,
+        lead_hours: Optional[int] = None,
         user_action: str = "SCHEDULED_RUN",
         enforce_monotonicity: bool = True,
     ) -> Dict[str, Any]:
         """
         Executes complete 16-step operational inference workflow.
         """
+        actual_lead = lead_time_hours if lead_time_hours is not None else (lead_hours if lead_hours is not None else 24)
         t_start = time.perf_counter()
         perf: Dict[str, float] = {}
 
@@ -140,11 +142,11 @@ class OperationalInferencePipeline:
         # -----------------------------------------------------------------
         # STEP 2 & 3: Resolve Lead Time & Valid Time
         # -----------------------------------------------------------------
-        forecast_valid_time = self.cycle_resolver.resolve_valid_time(cycle_info, lead_time_hours)
+        forecast_valid_time = self.cycle_resolver.resolve_valid_time(cycle_info, actual_lead)
         forecast_run_id = generate_forecast_run_id(
             initialization_time=cycle_info.initialization_time,
             cycle_utc=cycle_info.cycle_utc,
-            lead_time_hours=lead_time_hours,
+            lead_time_hours=actual_lead,
             source_model=cycle_info.model,
         )
         perf["input_loading_time_ms"] = round((time.perf_counter() - t0) * 1000, 2)

@@ -114,6 +114,27 @@ class ForecastCycleResolver:
         for c in cycles:
             if c.cycle_id == cycle_id:
                 return c
+
+        # Support operational synoptic cycles (e.g. 20261005_12Z, CYCLE_20261005_12Z)
+        clean_id = cycle_id.replace("CYCLE_", "")
+        if "_" in clean_id:
+            parts = clean_id.split("_")
+            if len(parts) == 2 and len(parts[0]) == 8:
+                date_str = f"{parts[0][:4]}-{parts[0][4:6]}-{parts[0][6:]}"
+                utc_hour = parts[1].replace("Z", "")
+                init_iso = f"{date_str}T{utc_hour.zfill(2)}:00:00Z"
+                return ResolvedCycleInfo(
+                    cycle_id=cycle_id,
+                    date=parts[0],
+                    cycle_utc=parts[1],
+                    model="NCUM_SYNOPTIC",
+                    provider_id="ncmrwf_synoptic",
+                    initialization_time=init_iso,
+                    available_leads=STANDARD_DEMO_LEADS,
+                    status="READY",
+                    data_mode="SYNTHETIC_DEMO",
+                    is_real=False,
+                )
         return None
 
     def resolve_valid_time(self, cycle: ResolvedCycleInfo, lead_hours: int) -> str:

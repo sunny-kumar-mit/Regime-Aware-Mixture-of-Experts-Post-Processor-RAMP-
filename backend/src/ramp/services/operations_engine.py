@@ -798,16 +798,25 @@ class OperationsEngine:
             if sched_rec:
                 sched_rec.total_jobs = (sched_rec.total_jobs or 0) + 1
                 sched_rec.updated_at = now_utc
+            s.commit()
+            job_dict = job.to_dict()
 
-            # Trigger immediate execution
-            self._execute_forecast_job_internal(job_id, s)
-            s.refresh(job)
-            return {
-                "submitted": True,
-                "status": job.status,
-                "is_duplicate": False,
-                "job": job.to_dict(),
-            }
+        # Trigger immediate execution in dedicated session
+        try:
+            with self.db.session() as exec_s:
+                self._execute_forecast_job_internal(job_id, exec_s)
+                upd = exec_s.query(ForecastJobModel).filter_by(job_id=job_id).first()
+                if upd:
+                    job_dict = upd.to_dict()
+        except Exception as e:
+            logger.warning(f"Error executing forecast job {job_id}: {e}")
+
+        return {
+            "submitted": True,
+            "status": job_dict.get("status", "RUNNING"),
+            "is_duplicate": False,
+            "job": job_dict,
+        }
 
     def _execute_forecast_job_internal(self, job_id: str, s) -> None:
         """Executes a queued forecast job and records execution telemetry."""
@@ -818,7 +827,7 @@ class OperationsEngine:
         now_utc = datetime.now(timezone.utc)
         job.started_at = now_utc
         job.status = "RUNNING"
-        s.flush()
+        s.commit()
 
         t0 = time.perf_counter()
         try:
@@ -834,7 +843,7 @@ class OperationsEngine:
             from ml.inference.pipeline import OperationalInferencePipeline
             from ml.inference.model_resolver import ModelResolver
             pipeline = OperationalInferencePipeline(model_resolver=ModelResolver())
-            result = pipeline.run_forecast(cycle_id=job.cycle_id, lead_hours=job.lead_hours)
+            result = pipeline.run_forecast(cycle_id=job.cycle_id, lead_time_hours=job.lead_hours)
 
             duration_ms = (time.perf_counter() - t0) * 1000.0
             job.completed_at = datetime.now(timezone.utc)

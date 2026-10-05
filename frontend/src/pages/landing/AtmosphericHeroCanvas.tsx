@@ -1,64 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 
-// Accurate geographical anchor coordinates for the Indian subcontinent (mapped to [-6, 6] 3D coordinates)
-// Lon: 68E to 97E -> X: -5.0 to 5.0 | Lat: 8N to 36N -> Y: -5.5 to 5.5
-const INDIA_GEO_POINTS: [number, number][] = [
-  // Northern frontiers (Kashmir, Ladakh, Himachal, Uttarakhand)
-  [-1.2, 5.2],
-  [-0.4, 5.5],
-  [0.6, 5.2],
-  [1.4, 4.4],
-  [2.4, 4.0],
-  // Himalayan Arc / Nepal Border / Sikkim / Bhutan
-  [3.2, 3.8],
-  [3.8, 3.6],
-  [4.6, 3.7],
-  // Northeast (Assam, Arunachal, Nagaland, Meghalaya)
-  [5.4, 3.8],
-  [5.6, 3.1],
-  [5.0, 2.4],
-  [4.4, 2.2],
-  [3.8, 2.0],
-  // Bengal Delta / Odisha Coast
-  [3.2, 1.4],
-  [2.6, 0.4],
-  [2.0, -0.6],
-  [1.5, -1.8],
-  // Andhra Coast / Coromandel / Tamil Nadu
-  [1.0, -3.2],
-  [0.6, -4.4],
-  [0.2, -5.2],
-  // Kanyakumari (Southern Tip)
-  [-0.2, -5.4],
-  [-0.6, -4.8],
-  // Malabar Coast (Kerala)
-  [-1.2, -3.8],
-  [-1.6, -2.4],
-  // Konkan / Goa / Maharashtra Coast
-  [-2.2, -0.8],
-  [-2.8, 0.4],
-  // Gujarat / Kathiawar Peninsula / Rann of Kutch
-  [-3.8, 0.8],
-  [-4.6, 1.4],
-  [-4.2, 2.2],
-  [-3.6, 2.6],
-  // Rajasthan / Punjab / Northwest Border
-  [-3.0, 3.6],
-  [-2.2, 4.4],
-  [-1.2, 5.2], // close loop
-];
-
-// Operational NCMRWF NWP forecast stations
+// Operational meteorological forecast grid coordinate anchors
 const OPERATIONAL_FORECAST_STATIONS: { name: string; x: number; y: number }[] = [
   { name: 'Western Ghats / Mumbai', x: -2.6, y: 0.2 },
   { name: 'Northern Plains / Delhi', x: -1.0, y: 3.4 },
-  { name: 'Bengal Delta / Kolkata', x: 3.2, y: 1.5 },
+  { name: 'Eastern Delta / Kolkata', x: 3.2, y: 1.5 },
   { name: 'Southern Peninsular / Chennai', x: 0.8, y: -3.4 },
   { name: 'Plateau / Bengaluru', x: -0.2, y: -3.2 },
   { name: 'Central Trough / Nagpur', x: 0.4, y: 0.8 },
   { name: 'Coastal SW / Kochi', x: -1.1, y: -4.4 },
-  { name: 'Brahmaputra / Guwahati', x: 4.8, y: 2.8 },
+  { name: 'Northeast Valley / Guwahati', x: 4.8, y: 2.8 },
 ];
 
 export const AtmosphericHeroCanvas: React.FC = () => {
@@ -156,34 +108,7 @@ export const AtmosphericHeroCanvas: React.FC = () => {
     rootGroup.add(contourMesh);
 
     // =========================================================================
-    // 2. INDIA REGION SILHOUETTE (Subtle Geopolitical Land Mask)
-    // =========================================================================
-    const indiaPoints3D: THREE.Vector3[] = INDIA_GEO_POINTS.map(
-      ([x, y]) => new THREE.Vector3(x, y, 0.05)
-    );
-    const indiaLineGeom = new THREE.BufferGeometry().setFromPoints(indiaPoints3D);
-    const indiaLineMaterial = new THREE.LineBasicMaterial({
-      color: 0x38bdf8,
-      transparent: true,
-      opacity: 0.85,
-      linewidth: 2,
-    });
-    const indiaOutline = new THREE.Line(indiaLineGeom, indiaLineMaterial);
-    rootGroup.add(indiaOutline);
-
-    // Glowing border vertices on India outline
-    const indiaPointsGeom = new THREE.BufferGeometry().setFromPoints(indiaPoints3D);
-    const indiaPointsMaterial = new THREE.PointsMaterial({
-      color: 0x06b6d4,
-      size: isMobile ? 0.12 : 0.16,
-      transparent: true,
-      opacity: 0.9,
-    });
-    const indiaNodes = new THREE.Points(indiaPointsGeom, indiaPointsMaterial);
-    rootGroup.add(indiaNodes);
-
-    // =========================================================================
-    // 3. OPERATIONAL NWP FORECAST STATIONS (Pulsing Grid Nodes)
+    // 2. OPERATIONAL NWP FORECAST STATIONS (Pulsing Grid Nodes)
     // =========================================================================
     const stationPositions: number[] = [];
     OPERATIONAL_FORECAST_STATIONS.forEach((st) => {
@@ -527,10 +452,6 @@ export const AtmosphericHeroCanvas: React.FC = () => {
       surfaceGeometry.dispose();
       surfaceMaterial.dispose();
       contourMaterial.dispose();
-      indiaLineGeom.dispose();
-      indiaLineMaterial.dispose();
-      indiaPointsGeom.dispose();
-      indiaPointsMaterial.dispose();
       stationGeom.dispose();
       stationMaterial.dispose();
       windGeom.dispose();

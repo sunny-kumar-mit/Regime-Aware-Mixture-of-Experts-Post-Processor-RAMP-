@@ -17,6 +17,7 @@ import {
   Info
 } from 'lucide-react';
 import { AtmosphericHeroCanvas } from './landing/AtmosphericHeroCanvas';
+import { TypewriterHeroSubtitle } from './landing/TypewriterHeroHeadline';
 import {
   CANONICAL_REGIMES,
   ARCHITECTURE_LAYERS,
@@ -241,19 +242,29 @@ export const LandingPage: React.FC = () => {
             </span>
           </div>
 
-          {/* Main Hero Headline */}
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.1] mb-6">
-            Forecast Rainfall. <br />
-            <span className="bg-gradient-to-r from-cyan-400 via-sky-300 to-blue-500 bg-clip-text text-transparent">
+          {/* Main Hero Headline (Loading Text Animation) */}
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.1] mb-6 select-none">
+            <span className="block animate-text-loading">
+              Forecast Rainfall.
+            </span>
+            <span className="block animate-gradient-loading">
               Understand the Atmosphere.
-            </span> <br />
-            Act Before the Extremes.
+            </span>
+            <span className="block animate-text-loading">
+              Act Before the Extremes.
+            </span>
           </h1>
 
-          {/* Subtitle & Core Thesis */}
-          <p className="text-lg sm:text-xl text-slate-300 max-w-3xl mx-auto mb-4 font-normal leading-relaxed">
-            Regime-Aware Mixture-of-Experts Post-Processor for next-generation tropical precipitation forecasting.
-          </p>
+          {/* Subtitle & Core Thesis (Yellow Color with Typewriting Effect) */}
+          <div className="max-w-3xl mx-auto mb-4 min-h-[3.2rem] flex items-center justify-center">
+            <p className="text-lg sm:text-xl leading-relaxed">
+              <TypewriterHeroSubtitle
+                text="Regime-Aware Mixture-of-Experts Post-Processor for next-generation tropical precipitation forecasting."
+                className="text-yellow-400 text-yellow-glow font-medium"
+                cursorClassName="bg-yellow-400 shadow-[0_0_10px_#facc15]"
+              />
+            </p>
+          </div>
 
           <p className="text-sm sm:text-base text-slate-400 max-w-2xl mx-auto mb-8 font-light leading-relaxed">
             Raw numerical weather prediction delivers the raw physics grid. RAMP diagnoses the instantaneous atmospheric regime — and probabilistically routes the forecast to specialized correction experts.

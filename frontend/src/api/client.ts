@@ -1676,5 +1676,67 @@ export async function fetchFileProvenance(fileId: string): Promise<Record<string
   return res.json();
 }
 
+// ---------------------------------------------------------------------------
+// Phase-21 Dashboard API functions
+// ---------------------------------------------------------------------------
+
+export async function fetchDashboardSummary(
+  cycle_id?: string,
+  lead = 24
+): Promise<Record<string, any>> {
+  const params = new URLSearchParams({ lead: lead.toString() });
+  if (cycle_id) params.set('cycle_id', cycle_id);
+  const res = await fetch(`${API_BASE}/api/dashboard/summary?${params.toString()}`);
+  if (!res.ok) throw new Error(`Dashboard summary failed: ${res.status}`);
+  return res.json();
+}
+
+export async function fetchDashboardPipeline(): Promise<Record<string, any>> {
+  const res = await fetch(`${API_BASE}/api/dashboard/pipeline`);
+  if (!res.ok) throw new Error(`Dashboard pipeline failed: ${res.status}`);
+  return res.json();
+}
+
+export async function fetchDashboardRegimes(lead = 24): Promise<Record<string, any>> {
+  const res = await fetch(`${API_BASE}/api/dashboard/regimes?lead=${lead}`);
+  if (!res.ok) throw new Error(`Dashboard regimes failed: ${res.status}`);
+  return res.json();
+}
+
+export async function fetchDashboardRisk(lead = 24): Promise<Record<string, any>> {
+  const res = await fetch(`${API_BASE}/api/dashboard/risk?lead=${lead}`);
+  if (!res.ok) throw new Error(`Dashboard risk failed: ${res.status}`);
+  return res.json();
+}
+
+export async function fetchDashboardProvenance(): Promise<Record<string, any>> {
+  const res = await fetch(`${API_BASE}/api/dashboard/provenance`);
+  if (!res.ok) throw new Error(`Dashboard provenance failed: ${res.status}`);
+  return res.json();
+}
+
+export async function fetchDashboardEvents(limit = 20): Promise<Record<string, any>> {
+  const res = await fetch(`${API_BASE}/api/dashboard/events?limit=${limit}`);
+  if (!res.ok) throw new Error(`Dashboard events failed: ${res.status}`);
+  return res.json();
+}
+
+// ---------------------------------------------------------------------------
+// Phase-21 Spatial GeoJSON API (uses fetchSpatialGeoJSON from line 432)
+
+
+export async function fetchSpatialLayers(): Promise<Record<string, any>> {
+  const res = await fetch(`${API_BASE}/api/spatial/layers`);
+  if (!res.ok) throw new Error(`Spatial layers failed: ${res.status}`);
+  return res.json();
+}
+
+export async function fetchSpatialVerification(lead_hours = 24): Promise<Record<string, any>> {
+  const res = await fetch(`${API_BASE}/api/spatial/verification?lead_hours=${lead_hours}`);
+  if (!res.ok) throw new Error(`Spatial verification failed: ${res.status}`);
+  return res.json();
+}
+
+
 
 

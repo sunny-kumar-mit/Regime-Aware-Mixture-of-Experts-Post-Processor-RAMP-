@@ -186,7 +186,7 @@ class OperationsEngine:
     """
 
     _instance: Optional["OperationsEngine"] = None
-    _lock = threading.Lock()
+    _lock = threading.RLock()
 
     @classmethod
     def get_instance(cls) -> "OperationsEngine":

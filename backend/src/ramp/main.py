@@ -53,6 +53,7 @@ from ramp.api.v1.production import router as production_router
 from ramp.api.v1.acceptance import router as acceptance_router
 from ramp.api.v1.real_data import router as real_data_router
 from ramp.api.v1.data_health import router as data_health_router
+from ramp.api.v1.dashboard import router as dashboard_router
 
 
 
@@ -179,6 +180,10 @@ app.include_router(production_router, prefix=settings.API_PREFIX)
 app.include_router(acceptance_router, prefix=settings.API_PREFIX)
 app.include_router(real_data_router, prefix=settings.API_PREFIX)
 app.include_router(data_health_router, prefix=settings.API_PREFIX)
+app.include_router(dashboard_router, prefix=settings.API_PREFIX)
+
+# /api/forecast/spatial/* aliases for Phase-21 Spatial Forecast module
+app.include_router(spatial_router, prefix="/api/forecast")
 
 # Also mount under /api/v1 for v1 route compatibility
 app.include_router(operations_router, prefix="/api/v1")

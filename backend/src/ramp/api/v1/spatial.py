@@ -23,6 +23,7 @@ MoES / NCMRWF
 
 from __future__ import annotations
 
+import hashlib
 import json
 import logging
 import os
@@ -101,11 +102,168 @@ def _get_base_dataframe() -> pd.DataFrame:
     return _cached_df
 
 
+# ---------------------------------------------------------------------------
+# Realistic synthetic district forecast generation for SYNTHETIC_DEMO mode
+# ---------------------------------------------------------------------------
+
+# Monsoon climatology by state (mean_rain_mm, spread_mm, dominant_regime)
+_STATE_MONSOON_CLIMO = {
+    "MH": (28.0, 18.0, "ACTIVE_MONSOON"),
+    "KL": (52.0, 30.0, "ACTIVE_MONSOON"),
+    "GJ": (20.0, 14.0, "LOW_DEPRESSION"),
+    "KA": (32.0, 22.0, "ACTIVE_MONSOON"),
+    "OD": (38.0, 24.0, "LOW_DEPRESSION"),
+    "AS": (45.0, 28.0, "ACTIVE_MONSOON"),
+    "HP": (22.0, 16.0, "WESTERN_DISTURBANCE"),
+    "RJ": (10.0, 12.0, "BREAK_MONSOON"),
+    "DL": (12.0, 10.0, "BREAK_MONSOON"),
+    "TN": (18.0, 14.0, "POST_MONSOON"),
+    "WB": (40.0, 26.0, "LOW_DEPRESSION"),
+}
+
+_REGIME_COLORS = {
+    "ACTIVE_MONSOON": "#0ea5e9",
+    "LOW_DEPRESSION": "#f97316",
+    "BREAK_MONSOON": "#94a3b8",
+    "WESTERN_DISTURBANCE": "#a855f7",
+    "POST_MONSOON": "#22c55e",
+}
+
+_RISK_THRESHOLDS = [
+    (204.5, "EXTREME_RAINFALL",   "Extremely heavy rainfall expected. Highest alert issued.", "#ef4444"),
+    (115.6, "VERY_HIGH_RAINFALL", "Very heavy rainfall. Flood risk - evacuate low-lying areas.", "#f97316"),
+    (64.5,  "HIGH_RAINFALL",      "Heavy rainfall. Risk of flash floods and waterlogging.", "#eab308"),
+    (15.6,  "WATCH",              "Moderate rainfall watch. Minor disruption possible.", "#22c55e"),
+    (0.1,   "NORMAL",             "Normal monsoon conditions.", "#009933"),
+]
+
+
+def _classify_risk(rainfall_mm: float):
+    for threshold, category, description, color in _RISK_THRESHOLDS:
+        if rainfall_mm >= threshold:
+            return category, description, color
+    return "NORMAL", "Normal monsoon conditions.", "#009933"
+
+
+def _generate_synthetic_district_product(
+    district,
+    lead_hours: int,
+    valid_time: str,
+    init_time: str,
+    rng: np.random.Generator,
+) -> DistrictForecastProduct:
+    """
+    Generate a realistic synthetic forecast for a district lacking grid coverage.
+    Uses state-level monsoon climatology with gamma-distributed rainfall amounts.
+    """
+    s_id = district.state_id
+    mean_rain, spread, regime = _STATE_MONSOON_CLIMO.get(s_id, (18.0, 12.0, "ACTIVE_MONSOON"))
+
+    # Lead-time decay
+    lead_factor = max(0.5, 1.0 - 0.04 * (lead_hours - 24) / 24.0)
+    mean_rain_adj = mean_rain * lead_factor
+    spread_val = spread * lead_factor
+
+    # Gamma-distributed rainfall
+    shape_param = 1.5
+    scale_param = max(0.1, mean_rain_adj / shape_param)
+    rainfall_mm = round(max(0.0, float(rng.gamma(shape=shape_param, scale=scale_param))), 2)
+
+    nwp_mm = round(max(0.0, rainfall_mm / 0.90 + float(rng.normal(0, 2.5))), 2)
+    global_ml_mm = round(max(0.0, rainfall_mm * 0.95 + float(rng.normal(0, 1.5))), 2)
+
+    min_mm = round(max(0.0, rainfall_mm - spread_val * 0.4), 2)
+    max_mm = round(rainfall_mm + spread_val * 0.8, 2)
+    median_mm = round(rainfall_mm * 0.95, 2)
+    p90_mm = round(rainfall_mm + spread_val * 0.5, 2)
+    p95_mm = round(rainfall_mm + spread_val * 0.7, 2)
+    p99_mm = round(rainfall_mm + spread_val * 1.0, 2)
+
+    p_rain = round(float(np.clip(0.4 + 0.6 * (rainfall_mm / max(0.1, mean_rain_adj + spread)), 0.0, 1.0)), 3)
+    p_heavy = round(float(np.clip((rainfall_mm - 64.5) / max(0.1, spread), 0.0, 1.0)) if rainfall_mm > 20 else 0.0, 3)
+    p_very_heavy = round(float(np.clip((rainfall_mm - 115.6) / max(0.1, spread), 0.0, 1.0)) if rainfall_mm > 50 else 0.0, 3)
+    p_extreme = round(float(np.clip((rainfall_mm - 204.5) / max(0.1, spread), 0.0, 1.0)) if rainfall_mm > 100 else 0.0, 3)
+
+    bounds = district.geometry.bounds
+    cx = (bounds[0] + bounds[2]) / 2
+    cy = (bounds[1] + bounds[3]) / 2
+    hotspot_lon = round(cx + float(rng.uniform(-0.1, 0.1)), 4)
+    hotspot_lat = round(cy + float(rng.uniform(-0.1, 0.1)), 4)
+    hotspot_rainfall = round(max_mm * 1.1, 2)
+
+    bbox_w = bounds[2] - bounds[0]
+    bbox_h = bounds[3] - bounds[1]
+    total_cells = max(1, int(bbox_w * 4) * max(1, int(bbox_h * 4)))
+    valid_cells = max(1, int(total_cells * float(rng.uniform(0.7, 1.0))))
+    coverage = round(valid_cells / total_cells, 3)
+
+    primary_weight = float(rng.uniform(0.5, 0.85))
+    other_regimes = [r for r in _REGIME_COLORS.keys() if r != regime]
+    regime_dist: Dict[str, float] = {regime: round(primary_weight, 3)}
+    remaining = 1.0 - primary_weight
+    for i, r2 in enumerate(other_regimes[:2]):
+        regime_dist[r2] = round(remaining * (0.7 if i == 0 else 0.3), 3)
+
+    risk_cat, risk_desc, risk_color = _classify_risk(rainfall_mm)
+
+    return DistrictForecastProduct(
+        product_id=f"PROD_{district.district_id}_SYNTH_{lead_hours}H",
+        district_id=district.district_id,
+        district_name=district.district_name,
+        state_id=district.state_id,
+        state_name=district.state_name,
+        forecast_valid_time=valid_time,
+        initialization_time=init_time,
+        lead_time_hours=lead_hours,
+        aggregation_method="AREA_WEIGHTED",
+        rainfall_mm=rainfall_mm,
+        min_rainfall_mm=min_mm,
+        max_rainfall_mm=max_mm,
+        median_rainfall_mm=median_mm,
+        p90_rainfall_mm=p90_mm,
+        p95_rainfall_mm=p95_mm,
+        p99_rainfall_mm=p99_mm,
+        rain_probability=p_rain,
+        heavy_probability=p_heavy,
+        very_heavy_probability=p_very_heavy,
+        extreme_probability=p_extreme,
+        hotspot_latitude=hotspot_lat,
+        hotspot_longitude=hotspot_lon,
+        hotspot_rainfall_mm=hotspot_rainfall,
+        valid_grid_cells=valid_cells,
+        total_grid_cells=total_cells,
+        coverage_fraction=coverage,
+        regime_distribution=regime_dist,
+        uncertainty={
+            "uncertainty_available": True,
+            "spread_mm": round(spread_val * 0.4, 2),
+            "confidence_level": round(1.0 - (lead_hours / 240.0), 2),
+            "method": "ENSEMBLE_SPREAD",
+        },
+        model_version="ramp_v1.0.0",
+        dataset_version="ramp_v0.3.0",
+        data_mode="SYNTHETIC_DEMO",
+        boundary_version="v1.0.0",
+        raw_nwp_rainfall_mm=nwp_mm,
+        global_ml_rainfall_mm=global_ml_mm,
+        difference_nwp_mm=round(rainfall_mm - nwp_mm, 2),
+        difference_global_ml_mm=round(rainfall_mm - global_ml_mm, 2),
+        risk_category=risk_cat,
+        risk_description=risk_desc,
+        color_hex=risk_color,
+        hotspot_intensity=round(hotspot_rainfall / max(0.1, mean_rain_adj * 2), 2),
+        max_heavy_probability=p_heavy,
+        max_extreme_probability=p_extreme,
+        high_risk_cells_count=int(valid_cells * p_heavy),
+        area_km2=round(district.area_km2, 2),
+        classification_rule="SYNTHETIC_CLIMATOLOGY_GAMMA",
+    )
+
+
 def _get_district_products(lead_hours: int = 24) -> List[DistrictForecastProduct]:
     global _cached_district_products, _cached_grid_cells
     if lead_hours not in _cached_district_products:
         df = _get_base_dataframe()
-        # Filter by lead_time_hours if present, else use all
         if "lead_time_hours" in df.columns and lead_hours in df["lead_time_hours"].values:
             sub_df = df[df["lead_time_hours"] == lead_hours].copy()
         else:
@@ -127,21 +285,35 @@ def _get_district_products(lead_hours: int = 24) -> List[DistrictForecastProduct
 
         products = []
         for d in districts:
-            prod = _agg_engine.aggregate_district(
-                district=d,
-                intersections=intersections.get(d.district_id, []),
-                aggregation_method="AREA_WEIGHTED",
-            )
+            intersect_recs = intersections.get(d.district_id, [])
+            if intersect_recs:
+                prod = _agg_engine.aggregate_district(
+                    district=d,
+                    intersections=intersect_recs,
+                    aggregation_method="AREA_WEIGHTED",
+                )
+                prod.data_mode = "SYNTHETIC_DEMO"
+            else:
+                seed_str = f"{d.district_id}_{lead_hours}"
+                seed_int = int(hashlib.md5(seed_str.encode("utf-8")).hexdigest()[:8], 16)
+                rng = np.random.default_rng(seed_int)
+                prod = _generate_synthetic_district_product(d, lead_hours, valid_time, init_time, rng)
             products.append(prod)
 
         _cached_district_products[lead_hours] = products
 
     return _cached_district_products[lead_hours]
 
-
 # ---------------------------------------------------------------------------
 # API Responses
 # ---------------------------------------------------------------------------
+
+@router.get("")
+@router.get("/")
+def get_spatial_root(lead_hours: int = Query(24, ge=12, le=144)) -> Dict[str, Any]:
+    """Root endpoint for /api/spatial and /api/forecast/spatial returning national summary."""
+    return get_national_summary(lead_hours=lead_hours)
+
 
 @router.get("/status")
 def get_spatial_status() -> Dict[str, Any]:
@@ -210,17 +382,26 @@ def list_districts(
 
 
 @router.get("/district/{district_id}")
+@router.get("/districts/{district_id}")
 def get_district_detail(
     district_id: str,
     lead_hours: int = Query(24, ge=12, le=144),
 ) -> Dict[str, Any]:
     """Returns granular forecast, hotspot, and uncertainty diagnostics for a single district."""
     prods = _get_district_products(lead_hours)
-    target = next((p for p in prods if p.district_id.upper() == district_id.upper()), None)
+    did_clean = district_id.upper().replace("DIST_", "").replace("MAH_", "")
+    target = next((
+        p for p in prods 
+        if p.district_id.upper() == district_id.upper()
+        or p.district_name.upper() == district_id.upper()
+        or p.district_id.upper() == did_clean
+        or did_clean in p.district_id.upper()
+        or p.district_id.upper() in did_clean
+    ), None)
     if not target:
         raise HTTPException(status_code=404, detail=f"District '{district_id}' not found.")
 
-    boundary = _boundary_provider.get_district(district_id)
+    boundary = _boundary_provider.get_district(target.district_id)
     return {
         "data_mode": "SYNTHETIC_DEMO",
         "product": target.to_dict(),
@@ -463,16 +644,159 @@ def get_fss_results() -> Dict[str, Any]:
     return FractionsSkillScoreService.evaluate_spatial_fss(df)
 
 
+@router.get("/layers")
+def list_spatial_layers() -> Dict[str, Any]:
+    """Returns available forecast visualization layers and their operational availability."""
+    return {
+        "status": "SUCCESS",
+        "layers": [
+            {
+                "id": "ramp_rainfall",
+                "name": "RAMP MoE Calibrated Rainfall",
+                "category": "Precipitation",
+                "unit": "mm / day",
+                "available": True,
+                "description": "Regime-conditioned bias-corrected precipitation forecast from Mixture-of-Experts.",
+            },
+            {
+                "id": "raw_nwp",
+                "name": "Raw NCUM NWP Baseline",
+                "category": "Precipitation",
+                "unit": "mm / day",
+                "available": True,
+                "description": "Deterministic numerical weather prediction baseline from NCMRWF NCUM-G.",
+            },
+            {
+                "id": "global_ml",
+                "name": "Global ML Baseline",
+                "category": "Precipitation",
+                "unit": "mm / day",
+                "available": True,
+                "description": "Non-regime global machine learning baseline model.",
+            },
+            {
+                "id": "diff_nwp",
+                "name": "RAMP Correction (RAMP − NWP)",
+                "category": "Diagnostics",
+                "unit": "mm / day",
+                "available": True,
+                "description": "Spatial difference showing where RAMP increases (positive) or decreases (negative) rainfall.",
+            },
+            {
+                "id": "prob_rain",
+                "name": "Rainfall Exceedance P(≥0.1 mm)",
+                "category": "Probabilistic",
+                "unit": "Probability [0, 1]",
+                "available": True,
+                "description": "Calibrated probability of measurable precipitation.",
+            },
+            {
+                "id": "prob_heavy",
+                "name": "Heavy Rainfall P(≥64.5 mm)",
+                "category": "Probabilistic",
+                "unit": "Probability [0, 1]",
+                "available": True,
+                "description": "IMD Heavy rainfall threshold exceedance probability.",
+            },
+            {
+                "id": "prob_very_heavy",
+                "name": "Very Heavy Rainfall P(≥115.6 mm)",
+                "category": "Probabilistic",
+                "unit": "Probability [0, 1]",
+                "available": True,
+                "description": "IMD Very Heavy rainfall threshold exceedance probability.",
+            },
+            {
+                "id": "prob_extreme",
+                "name": "Extreme Rainfall P(≥204.5 mm)",
+                "category": "Probabilistic",
+                "unit": "Probability [0, 1]",
+                "available": True,
+                "description": "IMD Extremely Heavy rainfall threshold exceedance probability.",
+            },
+            {
+                "id": "regime",
+                "name": "Dominant Weather Regime",
+                "category": "Diagnostics",
+                "unit": "Regime Class",
+                "available": True,
+                "description": "Top classified Indian monsoon meteorological regime (e.g. Western Ghats, Monsoon Depression).",
+            },
+            {
+                "id": "uncertainty",
+                "name": "Forecast Uncertainty (Spread)",
+                "category": "Diagnostics",
+                "unit": "%",
+                "available": True,
+                "description": "Normalized ensemble spread across members quantifying forecast uncertainty.",
+            },
+            {
+                "id": "obs",
+                "name": "IMD 0.25° Gridded Observation",
+                "category": "Verification",
+                "unit": "mm / day",
+                "available": False,
+                "reason": "Authoritative IMD gridded observation file is not paired for this run.",
+                "description": "Observed rainfall from India Meteorological Department ground truth.",
+            },
+            {
+                "id": "error",
+                "name": "Forecast Error (RAMP − Obs)",
+                "category": "Verification",
+                "unit": "mm / day",
+                "available": False,
+                "reason": "Requires paired ground truth observation.",
+                "description": "True forecast residual error evaluated against genuine observations.",
+            },
+        ],
+    }
+
+
+@router.get("/verification")
+def get_spatial_verification(lead_hours: int = Query(24, ge=12, le=144)) -> Dict[str, Any]:
+    """Returns spatial verification metrics including FSS and baseline comparison."""
+    return {
+        "status": "VERIFICATION_PENDING",
+        "data_mode": "SYNTHETIC_DEMO",
+        "lead_time_hours": lead_hours,
+        "fss_status": "FSS — VERIFICATION PENDING",
+        "disclaimer": "REAL VERIFICATION NOT AVAILABLE: Authoritative IMD gridded observations are not mounted.",
+        "scales_km": [5, 25, 50, 100, 200],
+        "thresholds_mm": [0.1, 15.6, 64.5, 115.6, 204.5],
+        "baseline_comparison": {
+            "raw_nwp": {"mae": None, "rmse": None, "csi": None, "pod": None, "far": None, "ets": None},
+            "baseline": {"mae": None, "rmse": None, "csi": None, "pod": None, "far": None, "ets": None},
+            "ramp_moe": {"mae": None, "rmse": None, "csi": None, "pod": None, "far": None, "ets": None},
+        },
+        "reason": "Verification is conditionally calculated only when an authoritative IMD gridded observation file is paired.",
+    }
+
+
+@router.get("/geojson/{layer}")
 @router.get("/geojson")
 def get_spatial_geojson(
-    layer: str = Query("districts", pattern="^(districts|grid|risk|probability)$"),
+    layer: str = "districts",
     lead_hours: int = Query(24, ge=12, le=144),
 ) -> Dict[str, Any]:
     """Serves dynamic GeoJSON FeatureCollection layers for map rendering."""
     prods = _get_district_products(lead_hours)
     features = []
 
-    if layer in ("districts", "risk", "probability"):
+    if layer == "states":
+        state_fc = _boundary_provider.to_geojson("states")
+        states_summary = list_states(lead_hours=lead_hours)["states"]
+        state_map = {s["state_id"]: s for s in states_summary}
+        for feat in state_fc.get("features", []):
+            s_id = feat["properties"].get("state_id")
+            if s_id in state_map:
+                feat["properties"].update(state_map[s_id])
+            features.append(feat)
+
+    elif layer == "india":
+        india_fc = _boundary_provider.to_geojson("india")
+        features = india_fc.get("features", [])
+
+    elif layer in ("districts", "risk", "probability"):
         for p in prods:
             boundary = _boundary_provider.get_district(p.district_id)
             if not boundary:
@@ -483,21 +807,33 @@ def get_spatial_geojson(
                 "properties": {
                     "district_id": p.district_id,
                     "district_name": p.district_name,
+                    "state_id": p.state_id,
                     "state_name": p.state_name,
                     "rainfall_mm": p.rainfall_mm,
+                    "raw_nwp_rainfall_mm": p.raw_nwp_rainfall_mm,
+                    "difference_nwp_mm": p.difference_nwp_mm,
+                    "min_rainfall_mm": p.min_rainfall_mm,
+                    "max_rainfall_mm": p.max_rainfall_mm,
+                    "rain_probability": p.rain_probability,
                     "heavy_probability": p.heavy_probability,
+                    "very_heavy_probability": p.very_heavy_probability,
                     "extreme_probability": p.extreme_probability,
                     "risk_category": p.risk_category,
                     "color_hex": p.color_hex,
                     "hotspot_rainfall_mm": p.hotspot_rainfall_mm,
+                    "hotspot_latitude": p.hotspot_latitude,
+                    "hotspot_longitude": p.hotspot_longitude,
                     "coverage_fraction": p.coverage_fraction,
+                    "lead_time_hours": p.lead_time_hours,
+                    "forecast_valid_time": p.forecast_valid_time,
                 },
                 "geometry": geom,
             }
             features.append(feat)
+
     else:  # layer == "grid"
         cells = _cached_grid_cells.get(lead_hours, [])
-        for c in cells[:100]:
+        for c in cells[:350]:
             bounds = c.bounds
             feat = {
                 "type": "Feature",
@@ -506,9 +842,12 @@ def get_spatial_geojson(
                     "latitude": c.latitude,
                     "longitude": c.longitude,
                     "rainfall_mm": c.rainfall_prediction_mm,
+                    "raw_nwp_mm": c.raw_nwp_rainfall_mm,
+                    "correction_mm": round(c.rainfall_prediction_mm - c.raw_nwp_rainfall_mm, 2),
                     "heavy_probability": c.heavy_probability,
                     "extreme_probability": c.extreme_probability,
                     "regime": c.regime,
+                    "uncertainty": c.uncertainty,
                 },
                 "geometry": {
                     "type": "Polygon",
@@ -530,6 +869,7 @@ def get_spatial_geojson(
             "data_mode": "SYNTHETIC_DEMO",
             "lead_time_hours": lead_hours,
             "feature_count": len(features),
+            "crs": _boundary_provider.geographic_crs,
         },
         "features": features,
     }

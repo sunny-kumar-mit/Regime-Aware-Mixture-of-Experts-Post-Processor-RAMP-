@@ -490,11 +490,11 @@ export const Shell: React.FC<ShellProps> = ({ children }) => {
             <div
               className={`flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-mono font-medium ${modeBadgeColor}`}
               title="Current scientific data integrity mode"
-              aria-label={`Current data integrity mode: ${dataMode}`}
+              aria-label={`Current data integrity mode: ${dataMode || 'SYNTHETIC_DEMO'}`}
             >
               <span className={`w-2 h-2 rounded-full ${modeDotColor}`} />
               <span className="text-[11px] hidden sm:inline">
-                {dataMode === 'SYNTHETIC_DEMO' ? 'SYNTHETIC DEMO' : dataMode.replace('_', ' ')}
+                {(!dataMode || dataMode === 'SYNTHETIC_DEMO') ? 'SYNTHETIC DEMO' : (typeof dataMode === 'string' ? dataMode.replace(/_/g, ' ') : 'DEMO')}
               </span>
             </div>
 

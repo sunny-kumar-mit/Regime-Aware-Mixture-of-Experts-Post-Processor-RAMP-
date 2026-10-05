@@ -256,6 +256,53 @@ class AdministrativeBoundaryProvider:
             "total_states": len(self._states),
         }
 
+    def to_geojson(self, layer: str = "districts") -> Dict[str, Any]:
+        """
+        Exports GeoJSON FeatureCollection for administrative boundaries.
+        Supports: 'districts', 'states', 'india'.
+        """
+        from shapely.geometry import mapping
+        from shapely.ops import unary_union
+
+        if layer == "states":
+            features = []
+            for s_id, d_list in self._states.items():
+                s_name = d_list[0].state_name if d_list else s_id
+                state_geom = unary_union([d.geometry for d in d_list])
+                features.append({
+                    "type": "Feature",
+                    "properties": {
+                        "state_id": s_id,
+                        "state_name": s_name,
+                        "district_count": len(d_list),
+                        "total_area_km2": round(sum(d.area_km2 for d in d_list), 2),
+                    },
+                    "geometry": mapping(state_geom),
+                })
+            return {"type": "FeatureCollection", "features": features}
+
+        elif layer == "india":
+            national_geom = unary_union([d.geometry for d in self._districts.values()])
+            return {
+                "type": "FeatureCollection",
+                "features": [{
+                    "type": "Feature",
+                    "properties": {
+                        "name": "India Subcontinental Monitored Domain",
+                        "crs": self.geographic_crs,
+                        "district_count": len(self._districts),
+                        "state_count": len(self._states),
+                    },
+                    "geometry": mapping(national_geom),
+                }]
+            }
+
+        else:  # districts
+            return {
+                "type": "FeatureCollection",
+                "features": [d.to_geojson_feature() for d in self._districts.values()]
+            }
+
 
 # Canonical alias
 BoundaryProvider = AdministrativeBoundaryProvider

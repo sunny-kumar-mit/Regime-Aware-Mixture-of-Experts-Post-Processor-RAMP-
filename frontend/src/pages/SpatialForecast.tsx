@@ -1,756 +1,789 @@
-import React, { useState, useEffect } from 'react';
+/**
+ * Phase 21 – RAMP Spatial Forecast Module
+ * SIH26080 | MoES / NCMRWF
+ *
+ * Real Leaflet map (react-leaflet@4) with:
+ *  – OSM basemap tiles
+ *  – GeoJSON administrative boundaries (India, States, Districts) from /api/spatial/geojson
+ *  – 0.25° grid CircleMarkers from district products
+ *  – Rainfall color scale legend
+ *  – Layer / Horizon / State / Risk filters
+ *  – District inspector panel
+ *  – State-level aggregation table
+ *  – Verification section with honest PENDING disclaimer
+ */
+
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
-  MapPin,
-  Layers,
-  CloudRain,
-  AlertTriangle,
-  Download,
-  Calendar,
-  Compass,
-  BarChart3,
-  TrendingUp,
-  ShieldAlert,
-  Search,
-  CheckCircle2,
-  RefreshCw
+  MapPin, Layers, AlertTriangle, Download,
+  RefreshCw, ShieldAlert, Search, CheckCircle2, BarChart3,
+  Globe, Compass, TrendingUp, Lock,
 } from 'lucide-react';
+import {
+  MapContainer,
+  TileLayer,
+  GeoJSON,
+  CircleMarker,
+  Tooltip,
+  Popup,
+  useMap,
+} from 'react-leaflet';
+import type { GeoJSON as GeoJSONType } from 'geojson';
+import 'leaflet/dist/leaflet.css';
 import {
   fetchSpatialStatus,
   fetchSpatialDistricts,
-  fetchDistrictDetail,
   fetchSpatialStates,
   fetchNationalSummary,
-  fetchSpatialHotspots,
-  fetchSpatialDifference,
-  fetchSpatialFSS,
-  fetchSpatialExport
+  fetchSpatialGeoJSON,
+  fetchSpatialVerification,
+  fetchSpatialExport,
 } from '../api/client';
-import {
+import type {
   SpatialStatusResponse,
   DistrictForecastProductItem,
   StateForecastProductItem,
   NationalSummaryResponse,
-  HotspotItem,
-  SpatialDifferenceItem,
-  SpatialFSSResponse,
-  RiskCategory
 } from '../types/api';
 
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
 type ActiveLayer =
-  | 'ramp_rainfall'
-  | 'raw_nwp'
-  | 'global_ml'
-  | 'diff_nwp'
-  | 'prob_rain'
-  | 'prob_heavy'
-  | 'prob_very_heavy'
-  | 'prob_extreme'
-  | 'regime'
-  | 'uncertainty';
+  | 'ramp_rainfall' | 'raw_nwp' | 'diff_nwp'
+  | 'prob_rain' | 'prob_heavy' | 'prob_very_heavy' | 'prob_extreme'
+  | 'regime' | 'uncertainty';
 
-export const SpatialForecastPage: React.FC = () => {
-  const [status, setStatus] = useState<SpatialStatusResponse | null>(null);
-  const [districts, setDistricts] = useState<DistrictForecastProductItem[]>([]);
-  const [states, setStates] = useState<StateForecastProductItem[]>([]);
-  const [summary, setSummary] = useState<NationalSummaryResponse | null>(null);
-  const [hotspots, setHotspots] = useState<HotspotItem[]>([]);
-  const [differences, setDifferences] = useState<SpatialDifferenceItem[]>([]);
-  const [fssData, setFssData] = useState<SpatialFSSResponse | null>(null);
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
+const INDIA_CENTER: [number, number] = [22.5, 82.0];
+const INDIA_ZOOM = 5;
 
-  const [leadHours, setLeadHours] = useState<number>(24);
-  const [activeLayer, setActiveLayer] = useState<ActiveLayer>('ramp_rainfall');
-  const [selectedState, setSelectedState] = useState<string>('ALL');
-  const [selectedDistrictId, setSelectedDistrictId] = useState<string | null>(null);
-  const [selectedDistrict, setSelectedDistrict] = useState<DistrictForecastProductItem | null>(null);
-  const [riskFilter, setRiskFilter] = useState<string>('ALL');
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(true);
-  const [exportNotice, setExportNotice] = useState<string | null>(null);
+const RAIN_SCALE = [
+  { label: 'Trace (<0.1)', color: '#1e293b' },
+  { label: '0.1–15 mm',   color: '#0ea5e9' },
+  { label: '15–64.5 mm',  color: '#22c55e' },
+  { label: '64.5–115 mm (Heavy)', color: '#eab308' },
+  { label: '115–204.5 mm (Very Heavy)', color: '#f97316' },
+  { label: '≥204.5 mm (Extreme)', color: '#ef4444' },
+];
 
+function rainfallColor(mm: number): string {
+  if (mm < 0.1)   return '#1e293b';
+  if (mm < 15)    return '#0ea5e9';
+  if (mm < 64.5)  return '#22c55e';
+  if (mm < 115.6) return '#eab308';
+  if (mm < 204.5) return '#f97316';
+  return '#ef4444';
+}
+
+function probColor(p: number): string {
+  if (p < 0.05)  return '#1e293b';
+  if (p < 0.15)  return '#0ea5e9';
+  if (p < 0.35)  return '#22c55e';
+  if (p < 0.55)  return '#eab308';
+  if (p < 0.75)  return '#f97316';
+  return '#ef4444';
+}
+
+function getDistrictColor(d: DistrictForecastProductItem, layer: ActiveLayer): string {
+  switch (layer) {
+    case 'ramp_rainfall':   return rainfallColor(d.rainfall_mm ?? 0);
+    case 'raw_nwp':         return rainfallColor(d.raw_nwp_rainfall_mm ?? 0);
+    case 'diff_nwp':        return rainfallColor(Math.abs(d.difference_nwp_mm ?? 0));
+    case 'prob_rain':       return probColor(d.rain_probability ?? 0);
+    case 'prob_heavy':      return probColor(d.heavy_probability ?? 0);
+    case 'prob_very_heavy': return probColor(d.very_heavy_probability ?? 0);
+    case 'prob_extreme':    return probColor(d.extreme_probability ?? 0);
+    case 'regime':          return d.color_hex ?? '#475569';
+    case 'uncertainty':     return rainfallColor(((d.uncertainty?.composite_uncertainty_score ?? (typeof (d as any).uncertainty === 'number' ? (d as any).uncertainty : 0)) * 100));
+    default:                return rainfallColor(d.rainfall_mm ?? 0);
+  }
+}
+
+const RISK_BADGE: Record<string, string> = {
+  EXTREME_RAINFALL:  'bg-red-950 border-red-700 text-red-300',
+  VERY_HIGH_RAINFALL:'bg-orange-950 border-orange-600 text-orange-300',
+  HIGH_RAINFALL:     'bg-amber-950 border-amber-600 text-amber-300',
+  WATCH:             'bg-yellow-950 border-yellow-600 text-yellow-300',
+  NORMAL:            'bg-emerald-950 border-emerald-700 text-emerald-300',
+};
+
+// ---------------------------------------------------------------------------
+// Leaflet Map Bounds Controller
+// ---------------------------------------------------------------------------
+function MapBoundsController({ district }: { district: DistrictForecastProductItem | null }) {
+  const map = useMap();
   useEffect(() => {
-    loadAllData();
-  }, [leadHours]);
+    if (!district) return;
+    const lat = district.hotspot_latitude ?? 22.5;
+    const lon = district.hotspot_longitude ?? 82.0;
+    map.setView([lat, lon], 8, { animate: true });
+  }, [district, map]);
+  return null;
+}
 
-  const loadAllData = async () => {
+// ---------------------------------------------------------------------------
+// Rainfall Legend
+// ---------------------------------------------------------------------------
+const RainfallLegend: React.FC = () => (
+  <div className="bg-slate-900/95 backdrop-blur-sm border border-slate-700 rounded-xl p-3 space-y-1.5 shadow-2xl min-w-[180px]">
+    <div className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-2">
+      Rainfall Scale
+    </div>
+    {RAIN_SCALE.map(({ label, color }) => (
+      <div key={label} className="flex items-center gap-2 text-[11px] text-slate-300">
+        <span className="w-3.5 h-3.5 rounded-sm shrink-0 border border-slate-700" style={{ backgroundColor: color }} />
+        {label}
+      </div>
+    ))}
+  </div>
+);
+
+// ---------------------------------------------------------------------------
+// Main Page
+// ---------------------------------------------------------------------------
+export const SpatialForecastPage: React.FC = () => {
+  const [status, setStatus]     = useState<SpatialStatusResponse | null>(null);
+  const [districts, setDistricts] = useState<DistrictForecastProductItem[]>([]);
+  const [states, setStates]     = useState<StateForecastProductItem[]>([]);
+  const [summary, setSummary]   = useState<NationalSummaryResponse | null>(null);
+  const [geoJsonDistricts, setGeoJsonDistricts] = useState<GeoJSONType | null>(null);
+  const [geoJsonStates, setGeoJsonStates]       = useState<GeoJSONType | null>(null);
+  const [geoJsonIndia, setGeoJsonIndia]         = useState<GeoJSONType | null>(null);
+  const [verification, setVerification]         = useState<Record<string, any> | null>(null);
+
+  const [leadHours, setLeadHours]       = useState(24);
+  const [activeLayer, setActiveLayer]   = useState<ActiveLayer>('ramp_rainfall');
+  const [selectedState, setSelectedState] = useState('ALL');
+  const [selectedDistrict, setSelectedDistrict] = useState<DistrictForecastProductItem | null>(null);
+  const [riskFilter, setRiskFilter]     = useState('ALL');
+  const [searchQuery, setSearchQuery]   = useState('');
+  const [loading, setLoading]           = useState(true);
+  const [exportNotice, setExportNotice] = useState<string | null>(null);
+  const [showLegend, setShowLegend]     = useState(true);
+
+  const mapRef = useRef<any>(null);
+
+  const loadAll = useCallback(async (lead: number) => {
     setLoading(true);
     try {
-      const [st, distRes, stRes, sumRes, hotRes, diffRes, fssRes] = await Promise.all([
+      const [st, distRes, stRes, sumRes, geoD, geoS, geoI, ver] = await Promise.all([
         fetchSpatialStatus(),
-        fetchSpatialDistricts(leadHours),
-        fetchSpatialStates(leadHours),
-        fetchNationalSummary(leadHours),
-        fetchSpatialHotspots(leadHours),
-        fetchSpatialDifference(leadHours),
-        fetchSpatialFSS(),
+        fetchSpatialDistricts(lead),
+        fetchSpatialStates(lead),
+        fetchNationalSummary(lead),
+        fetchSpatialGeoJSON('districts', lead),
+        fetchSpatialGeoJSON('states', lead),
+        fetchSpatialGeoJSON('india', lead),
+        fetchSpatialVerification(lead),
       ]);
-
       setStatus(st);
-      setDistricts(distRes.districts);
-      setStates(stRes.states);
+      setDistricts(distRes.districts || []);
+      setStates(stRes.states || []);
       setSummary(sumRes);
-      setHotspots(hotRes.hotspots);
-      setDifferences(diffRes.differences);
-      setFssData(fssRes);
-
-      // Default selected district
-      if (distRes.districts.length > 0 && !selectedDistrictId) {
+      setGeoJsonDistricts(geoD as GeoJSONType);
+      setGeoJsonStates(geoS as GeoJSONType);
+      setGeoJsonIndia(geoI as GeoJSONType);
+      setVerification(ver);
+      if ((distRes.districts || []).length > 0 && !selectedDistrict) {
         setSelectedDistrict(distRes.districts[0]);
-        setSelectedDistrictId(distRes.districts[0].district_id);
-      } else if (selectedDistrictId) {
-        const found = distRes.districts.find(d => d.district_id === selectedDistrictId);
-        if (found) setSelectedDistrict(found);
       }
     } catch (err) {
-      console.error('Failed to load spatial forecast data:', err);
+      console.error('Spatial forecast load failed:', err);
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedDistrict]);
 
-  const handleDistrictSelect = async (dId: string) => {
-    setSelectedDistrictId(dId);
-    try {
-      const detail = await fetchDistrictDetail(dId, leadHours);
-      setSelectedDistrict(detail.product);
-    } catch {
-      const fallback = districts.find(d => d.district_id === dId);
-      if (fallback) setSelectedDistrict(fallback);
-    }
-  };
+  useEffect(() => { loadAll(leadHours); }, [leadHours]);
 
   const handleExport = async () => {
     try {
       const res = await fetchSpatialExport(leadHours);
-      setExportNotice(`Generated GIS artifacts: GeoJSON, CSV, Parquet at ${res.generated_at}`);
+      setExportNotice(`Export ready at ${res.generated_at}`);
       setTimeout(() => setExportNotice(null), 5000);
-    } catch (err) {
+    } catch {
       setExportNotice('Export failed');
     }
   };
 
   // Filtered districts
   const filteredDistricts = districts.filter(d => {
-    const matchesState = selectedState === 'ALL' || d.state_id === selectedState;
-    const matchesRisk = riskFilter === 'ALL' || d.risk_category === riskFilter;
-    const matchesSearch = searchQuery === '' ||
+    const matchState  = selectedState === 'ALL' || d.state_id === selectedState;
+    const matchRisk   = riskFilter === 'ALL' || d.risk_category === riskFilter;
+    const matchSearch = searchQuery === '' ||
       d.district_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       d.state_name.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesState && matchesRisk && matchesSearch;
+    return matchState && matchRisk && matchSearch;
   });
 
-  const getRiskBadgeColor = (cat: RiskCategory) => {
-    switch (cat) {
-      case 'EXTREME_RAINFALL': return 'bg-red-950 border-red-700 text-red-300';
-      case 'VERY_HIGH_RAINFALL': return 'bg-orange-950 border-orange-700 text-orange-300';
-      case 'HIGH_RAINFALL': return 'bg-amber-950 border-amber-700 text-amber-300';
-      case 'WATCH': return 'bg-yellow-950 border-yellow-700 text-yellow-300';
-      case 'NORMAL': return 'bg-emerald-950 border-emerald-700 text-emerald-300';
-    }
+  // State list for filter
+  const stateOptions = Array.from(new Set(districts.map(d => d.state_id)))
+    .map(sId => ({ id: sId, name: districts.find(d => d.state_id === sId)?.state_name || sId }));
+
+  const highRisk = filteredDistricts.filter(d =>
+    d.risk_category === 'HIGH_RAINFALL' || d.risk_category === 'VERY_HIGH_RAINFALL'
+  ).length;
+  const extremeRisk = filteredDistricts.filter(d => d.risk_category === 'EXTREME_RAINFALL').length;
+
+  // GeoJSON styling for district layer
+  const districtStyle = (feature: any) => {
+    const props = feature?.properties || {};
+    const d = districts.find(d => d.district_id === props.district_id) || (props as any);
+    const color = d ? getDistrictColor(d, activeLayer) : '#1e293b';
+    return {
+      fillColor: color,
+      fillOpacity: 0.65,
+      color: '#334155',
+      weight: 1,
+    };
   };
 
-  // Map coordinate bounds to SVG viewBox (India: Lon 66.5-100.5, Lat 6.5-38.5)
-  // X = (lon - 66.5) / 34 * 600, Y = (38.5 - lat) / 32 * 600
-  const coordToSvg = (lon: number, lat: number) => {
-    const x = ((lon - 66.5) / 34.0) * 560 + 20;
-    const y = ((38.5 - lat) / 32.0) * 560 + 20;
-    return { x, y };
+  const stateStyle = () => ({
+    fillColor: 'transparent',
+    fillOpacity: 0,
+    color: '#475569',
+    weight: 1.5,
+    dashArray: '4 3',
+  });
+
+  const indiaStyle = () => ({
+    fillColor: 'transparent',
+    fillOpacity: 0,
+    color: '#64748b',
+    weight: 2,
+  });
+
+  const onEachDistrict = (feature: any, layer: any) => {
+    const props = feature?.properties || {};
+    const d = districts.find(d => d.district_id === props.district_id) || (props as any);
+    if (!d || !d.district_id) return;
+    layer.on('click', () => {
+      const full = districts.find(item => item.district_id === d.district_id) || d;
+      setSelectedDistrict(full);
+    });
+    const distName = d.district_name || props.district_name || 'District';
+    const stateName = d.state_name || props.state_name || '';
+    const rainVal = d.rainfall_mm !== undefined ? d.rainfall_mm.toFixed(1) : (props.rainfall_mm !== undefined ? Number(props.rainfall_mm).toFixed(1) : '—');
+    const riskCat = d.risk_category || props.risk_category || 'NORMAL';
+    layer.bindTooltip(
+      `<div style="background:#0f172a;border:1px solid #334155;border-radius:8px;padding:8px 12px;font-size:12px;color:#e2e8f0">
+        <strong>${distName}</strong><br/>
+        <span style="color:#94a3b8">${stateName}</span><br/>
+        RAMP: <strong>${rainVal} mm</strong> &nbsp;
+        Risk: <span style="color:${RISK_BADGE[riskCat] ? '#fbbf24' : '#34d399'}">${riskCat.replace(/_/g, ' ')}</span>
+      </div>`,
+      { className: 'ramp-leaflet-tooltip', sticky: true }
+    );
   };
+
+  const LEAD_OPTIONS = [24, 48, 72, 96, 120];
+  const isSynthetic = status?.data_mode === 'SYNTHETIC_DEMO' || !status?.data_mode;
 
   return (
     <div className="space-y-6 pb-12">
-      {/* 1. DATA MODE / HONESTY BANNER */}
-      <div className="p-4 bg-amber-950/40 border border-amber-600/50 rounded-xl flex items-center justify-between shadow-lg">
-        <div className="flex items-center space-x-3">
-          <ShieldAlert className="w-6 h-6 text-amber-400 shrink-0" />
+
+      {/* 0. DATA MODE BANNER */}
+      <div className={`flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-xl border
+        ${isSynthetic
+          ? 'bg-amber-950/30 border-amber-600/40'
+          : 'bg-emerald-950/30 border-emerald-600/40'}`}>
+        <div className="flex items-center gap-3">
+          <ShieldAlert className="w-5 h-5 text-amber-400 shrink-0" />
           <div>
-            <div className="text-sm font-semibold tracking-wide text-amber-200 uppercase">
-              SYNTHETIC DEMONSTRATION — REAL OPERATIONAL DATA NOT AVAILABLE
+            <div className="text-sm font-semibold text-amber-200 uppercase tracking-wide">
+              {isSynthetic ? 'SYNTHETIC DEMONSTRATION — REAL OPERATIONAL DATA NOT AVAILABLE' : 'REAL OPERATIONAL DATA'}
             </div>
-            <div className="text-xs text-amber-300/80">
-              District aggregations and engineering risk categories are computed from synthetic numerical demo grids. Not official IMD warnings.
+            <div className="text-xs text-amber-300/70 mt-0.5">
+              District aggregations computed from synthetic demo grids. Not official IMD warnings.
             </div>
           </div>
         </div>
-        <div className="flex items-center space-x-3">
-          <span className="px-2.5 py-1 text-xs font-mono bg-amber-900/60 border border-amber-600/50 rounded text-amber-200">
-            {status?.boundary_metadata.projected_crs || 'EPSG:7755 (Albers)'}
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="px-2.5 py-1 text-xs font-mono bg-amber-900/60 border border-amber-600/40 rounded text-amber-200">
+            {status?.boundary_metadata?.projected_crs || 'EPSG:7755'}
           </span>
           <button
-            onClick={loadAllData}
+            onClick={() => loadAll(leadHours)}
             className="p-1.5 rounded-lg bg-amber-900/40 hover:bg-amber-800/60 border border-amber-600/40 text-amber-200 transition-colors"
-            title="Refresh spatial products"
+            title="Refresh"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
         </div>
       </div>
 
-      {/* 2. FORECAST SUMMARY CARDS */}
+      {/* 1. KPI CARDS */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 shadow">
-          <div className="text-xs text-slate-400 flex items-center justify-between">
-            <span>Districts Evaluated</span>
+        <div className="glass-card rounded-xl p-4 space-y-1">
+          <div className="flex items-center justify-between text-slate-400">
+            <span className="text-[10px] uppercase tracking-widest font-semibold">Districts Evaluated</span>
             <MapPin className="w-4 h-4 text-cyan-400" />
           </div>
-          <div className="text-2xl font-bold text-slate-100 mt-1">
-            {summary?.total_districts_evaluated ?? '--'}
-          </div>
-          <div className="text-xs text-slate-400 mt-1">
-            Across {summary?.total_states_evaluated ?? '--'} States ({summary?.overall_coverage_pct}% Active Grid)
-          </div>
+          <div className="text-2xl font-bold text-slate-100">{summary?.total_districts_evaluated ?? filteredDistricts.length}</div>
+          <div className="text-[11px] text-slate-400">Across {summary?.total_states_evaluated ?? stateOptions.length} states</div>
         </div>
-
-        <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 shadow">
-          <div className="text-xs text-slate-400 flex items-center justify-between">
-            <span>Peak District Forecast</span>
-            <CloudRain className="w-4 h-4 text-blue-400" />
+        <div className="glass-card rounded-xl p-4 space-y-1">
+          <div className="flex items-center justify-between text-slate-400">
+            <span className="text-[10px] uppercase tracking-widest font-semibold">Peak District Forecast</span>
+            <TrendingUp className="w-4 h-4 text-amber-400" />
           </div>
-          <div className="text-2xl font-bold text-blue-400 mt-1">
-            {summary?.max_predicted_district_rainfall_mm.toFixed(1) ?? '--'} <span className="text-sm font-normal text-slate-400">mm</span>
+          <div className="text-2xl font-bold text-slate-100">
+            {summary?.max_predicted_district_rainfall_mm != null
+              ? `${summary.max_predicted_district_rainfall_mm.toFixed(1)} mm`
+              : filteredDistricts.reduce((m, d) => Math.max(m, d.rainfall_mm ?? 0), 0).toFixed(1) + ' mm'}
           </div>
-          <div className="text-xs text-slate-400 mt-1">
-            {summary?.max_rainfall_district_name}, {summary?.max_rainfall_state_name}
-          </div>
+          <div className="text-[11px] text-slate-400">{summary?.max_rainfall_district_name || (filteredDistricts[0]?.district_name ?? '—')}</div>
         </div>
-
-        <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 shadow">
-          <div className="text-xs text-slate-400 flex items-center justify-between">
-            <span>High Risk Districts</span>
+        <div className="glass-card rounded-xl p-4 space-y-1">
+          <div className="flex items-center justify-between text-slate-400">
+            <span className="text-[10px] uppercase tracking-widest font-semibold">High Risk Districts</span>
             <AlertTriangle className="w-4 h-4 text-amber-400" />
           </div>
-          <div className="text-2xl font-bold text-amber-400 mt-1">
-            {(summary?.districts_with_heavy_probability ?? 0)}
-          </div>
-          <div className="text-xs text-slate-400 mt-1">
-            P(Heavy &ge; 64.5mm) &ge; 20%
-          </div>
+          <div className="text-2xl font-bold text-amber-400">{highRisk}</div>
+          <div className="text-[11px] text-slate-400">≥64.5 mm threshold</div>
         </div>
-
-        <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 shadow">
-          <div className="text-xs text-slate-400 flex items-center justify-between">
-            <span>Extreme Risk Districts</span>
-            <TrendingUp className="w-4 h-4 text-red-400" />
+        <div className="glass-card rounded-xl p-4 space-y-1">
+          <div className="flex items-center justify-between text-slate-400">
+            <span className="text-[10px] uppercase tracking-widest font-semibold">Extreme Risk</span>
+            <ShieldAlert className="w-4 h-4 text-red-400" />
           </div>
-          <div className="text-2xl font-bold text-red-400 mt-1">
-            {(summary?.districts_with_extreme_probability ?? 0)}
-          </div>
-          <div className="text-xs text-slate-400 mt-1">
-            P(Extreme &ge; 204.5mm) &ge; 5%
-          </div>
+          <div className="text-2xl font-bold text-red-400">{extremeRisk}</div>
+          <div className="text-[11px] text-slate-400">≥204.5 mm threshold</div>
         </div>
       </div>
 
-      {/* CONTROLS BAR: LEAD-TIME, LAYER, MODEL, STATE */}
-      <div className="p-4 bg-slate-900/70 border border-slate-800 rounded-xl space-y-4 shadow">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          {/* 6. Lead-Time Selector */}
-          <div className="flex items-center space-x-2">
-            <Calendar className="w-4 h-4 text-cyan-400" />
-            <span className="text-xs font-semibold text-slate-300 uppercase">Horizon:</span>
-            <div className="flex bg-slate-800/70 rounded-lg p-1 border border-slate-700/50">
-              {[
-                { label: 'Day 1 (+24h)', hours: 24 },
-                { label: 'Day 2 (+48h)', hours: 48 },
-                { label: 'Day 3 (+72h)', hours: 72 },
-                { label: 'Day 4 (+96h)', hours: 96 },
-                { label: 'Day 5 (+120h)', hours: 120 },
-              ].map(h => (
-                <button
-                  key={h.hours}
-                  onClick={() => setLeadHours(h.hours)}
-                  className={`px-3 py-1 text-xs rounded-md transition-all ${
-                    leadHours === h.hours
-                      ? 'bg-cyan-600 text-white font-medium shadow'
-                      : 'text-slate-400 hover:text-slate-200'
-                  }`}
-                >
-                  {h.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* 7. Model Layer Selector */}
-          <div className="flex items-center space-x-2">
-            <Layers className="w-4 h-4 text-purple-400" />
-            <span className="text-xs font-semibold text-slate-300 uppercase">Active Layer:</span>
+      {/* 2. TOOLBAR */}
+      <div className="glass-panel rounded-2xl p-4 space-y-3">
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Lead time */}
+          <div className="flex items-center gap-2">
+            <Globe className="w-4 h-4 text-slate-400 shrink-0" />
             <select
-              value={activeLayer}
-              onChange={(e) => setActiveLayer(e.target.value as ActiveLayer)}
+              value={leadHours}
+              onChange={e => setLeadHours(Number(e.target.value))}
               className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500"
             >
-              <optgroup label="Deterministic Rainfall (mm)">
+              {LEAD_OPTIONS.map(h => <option key={h} value={h}>Day {h / 24} (+{h}h)</option>)}
+            </select>
+          </div>
+
+          {/* Layer */}
+          <div className="flex items-center gap-2">
+            <Layers className="w-4 h-4 text-slate-400 shrink-0" />
+            <select
+              value={activeLayer}
+              onChange={e => setActiveLayer(e.target.value as ActiveLayer)}
+              className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500"
+            >
+              <optgroup label="Deterministic Rainfall">
                 <option value="ramp_rainfall">RAMP MoE Rainfall</option>
                 <option value="raw_nwp">Raw NWP Baseline</option>
-                <option value="global_ml">Global ML Baseline</option>
-                <option value="diff_nwp">Spatial Correction (RAMP − NWP)</option>
+                <option value="diff_nwp">Spatial Correction</option>
               </optgroup>
               <optgroup label="Extreme Probabilities">
-                <option value="prob_rain">P(Rain &ge; 0.1 mm)</option>
-                <option value="prob_heavy">P(Heavy &ge; 64.5 mm)</option>
-                <option value="prob_very_heavy">P(Very Heavy &ge; 115.6 mm)</option>
-                <option value="prob_extreme">P(Extreme &ge; 204.5 mm)</option>
+                <option value="prob_rain">P(Rain ≥0.1 mm)</option>
+                <option value="prob_heavy">P(Heavy ≥64.5 mm)</option>
+                <option value="prob_very_heavy">P(Very Heavy ≥115.6 mm)</option>
+                <option value="prob_extreme">P(Extreme ≥204.5 mm)</option>
               </optgroup>
               <optgroup label="Diagnostics">
-                <option value="regime">Dominant Weather Regime</option>
-                <option value="uncertainty">Forecast Uncertainty</option>
+                <option value="regime">Dominant Regime</option>
+                <option value="uncertainty">Uncertainty</option>
               </optgroup>
             </select>
           </div>
 
-          {/* 18. GIS Export Action */}
+          {/* State filter */}
+          <select
+            value={selectedState}
+            onChange={e => setSelectedState(e.target.value)}
+            className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500"
+          >
+            <option value="ALL">All States</option>
+            {stateOptions.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+          </select>
+
+          {/* Risk filter */}
+          <select
+            value={riskFilter}
+            onChange={e => setRiskFilter(e.target.value)}
+            className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500"
+          >
+            <option value="ALL">All Risk Levels</option>
+            <option value="EXTREME_RAINFALL">Extreme Rainfall</option>
+            <option value="VERY_HIGH_RAINFALL">Very High</option>
+            <option value="HIGH_RAINFALL">High</option>
+            <option value="WATCH">Watch</option>
+            <option value="NORMAL">Normal</option>
+          </select>
+
+          {/* Search */}
+          <div className="relative flex-1 min-w-[160px]">
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              placeholder="Search district or state…"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              className="w-full bg-slate-800 border border-slate-700 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-500"
+            />
+          </div>
+
+          {/* Legend toggle */}
+          <button
+            onClick={() => setShowLegend(v => !v)}
+            className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs text-slate-300 transition-colors"
+          >
+            {showLegend ? 'Hide Legend' : 'Show Legend'}
+          </button>
+
+          {/* Export */}
           <button
             onClick={handleExport}
-            className="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-medium text-slate-200 transition-colors shadow"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs text-slate-300 transition-colors"
           >
             <Download className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Export GIS Layers</span>
+            Export GIS
           </button>
         </div>
 
         {exportNotice && (
-          <div className="p-2.5 bg-emerald-950/60 border border-emerald-600/40 rounded text-xs text-emerald-300 flex items-center space-x-2">
+          <div className="flex items-center gap-2 p-2.5 bg-emerald-950/60 border border-emerald-600/40 rounded-lg text-xs text-emerald-300">
             <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
-            <span>{exportNotice}</span>
+            {exportNotice}
           </div>
         )}
       </div>
 
-      {/* MAIN TWO-COLUMN WORKSPACE: MAP (LEFT) & DISTRICT DETAILS (RIGHT) */}
+      {/* 3. MAIN WORKSPACE: MAP + DISTRICT PANEL */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* 3. INTERACTIVE INDIA MAP & CONTROLS (8 Cols) */}
+
+        {/* MAP COLUMN (8 cols) */}
         <div className="lg:col-span-8 space-y-4">
-          <div className="p-5 bg-slate-900/60 border border-slate-800 rounded-xl relative shadow-lg">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h3 className="text-sm font-semibold text-slate-200 flex items-center space-x-2">
-                  <Compass className="w-4 h-4 text-cyan-400" />
-                  <span>Subcontinental Spatial Forecast Map (0.25° Grid &amp; Administrative Boundaries)</span>
-                </h3>
-                <p className="text-xs text-slate-400 mt-0.5">
-                  Click any district to inspect area-weighted statistics, peak convective hotspots, and uncertainty.
-                </p>
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className="text-xs px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300">
-                  Layer: <strong className="text-cyan-400">{activeLayer.replace('_', ' ').toUpperCase()}</strong>
+          <div className="rounded-2xl border border-slate-800 overflow-hidden shadow-2xl">
+            {/* Map Header */}
+            <div className="flex items-center justify-between bg-slate-900/90 px-4 py-3 border-b border-slate-800">
+              <div className="flex items-center gap-2">
+                <Compass className="w-4 h-4 text-cyan-400" />
+                <span className="text-sm font-semibold text-slate-200">
+                  India Spatial Forecast Map · 0.25° Grid
                 </span>
               </div>
+              <span className="text-xs px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300">
+                Layer: <strong className="text-cyan-400">{activeLayer.replace(/_/g, ' ').toUpperCase()}</strong>
+              </span>
             </div>
 
-            {/* SVG Interactive Map Canvas */}
-            <div className="w-full bg-slate-950/80 border border-slate-800/80 rounded-xl p-4 flex items-center justify-center overflow-hidden min-h-[500px]">
-              <svg viewBox="0 0 600 600" className="w-full max-w-[550px] h-auto select-none">
-                {/* Background Grid Pattern (0.25° grid representation) */}
-                <defs>
-                  <pattern id="gridPattern" width="20" height="20" patternUnits="userSpaceOnUse">
-                    <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1e293b" strokeWidth="0.5" />
-                  </pattern>
-                </defs>
-                <rect width="600" height="600" fill="url(#gridPattern)" />
-
-                {/* Approximate Subcontinental India Outline Baseline */}
-                <path
-                  d="M 180,60 L 260,70 L 320,110 L 350,140 L 460,180 L 520,180 L 480,240 L 410,250 L 380,310 L 320,400 L 280,500 L 260,540 L 250,550 L 240,530 L 200,430 L 160,330 L 130,280 L 150,220 L 140,150 Z"
-                  fill="#0f172a"
-                  stroke="#334155"
-                  strokeWidth="1.5"
-                  strokeDasharray="4 2"
-                  opacity="0.6"
+            {/* Leaflet Map */}
+            <div className="relative" style={{ height: '520px' }}>
+              <MapContainer
+                center={INDIA_CENTER}
+                zoom={INDIA_ZOOM}
+                style={{ height: '100%', width: '100%', background: '#0f172a' }}
+                zoomControl={true}
+                scrollWheelZoom={true}
+                ref={mapRef}
+              >
+                {/* OSM Basemap */}
+                <TileLayer
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                  opacity={0.25}
                 />
 
-                {/* Render District Polygons from loaded bounds */}
-                {districts.map(d => {
-                  // Nagpur approx bounds: [78.4, 20.8, 79.5, 21.8]
-                  // Map each district bounding box to SVG rect for visualization
-                  let minLon = 78.0, minLat = 21.0, maxLon = 79.0, maxLat = 22.0;
-                  if (d.district_id === 'NAGPUR') {
-                    minLon = 78.4; minLat = 20.8; maxLon = 79.5; maxLat = 21.8;
-                  } else if (d.district_id === 'AMRAVATI') {
-                    minLon = 77.2; minLat = 20.7; maxLon = 78.3; maxLat = 21.7;
-                  } else if (d.district_id === 'PUNE') {
-                    minLon = 73.4; minLat = 18.2; maxLon = 75.0; maxLat = 19.3;
-                  } else if (d.district_id === 'MUMBAI') {
-                    minLon = 72.7; minLat = 18.8; maxLon = 73.0; maxLat = 19.3;
-                  } else if (d.district_id === 'WAYANAD') {
-                    minLon = 75.8; minLat = 11.5; maxLon = 76.4; maxLat = 11.9;
-                  } else if (d.district_id === 'IDUKKI') {
-                    minLon = 76.6; minLat = 9.6; maxLon = 77.3; maxLat = 10.4;
-                  } else if (d.district_id === 'AHMEDABAD') {
-                    minLon = 71.9; minLat = 22.6; maxLon = 72.8; maxLat = 23.4;
-                  } else if (d.district_id === 'BENGALURU') {
-                    minLon = 77.4; minLat = 12.8; maxLon = 77.8; maxLat = 13.2;
-                  } else if (d.district_id === 'PURI') {
-                    minLon = 85.1; minLat = 19.6; maxLon = 86.4; maxLat = 20.2;
-                  } else if (d.district_id === 'KAMRUP') {
-                    minLon = 91.5; minLat = 25.9; maxLon = 92.1; maxLat = 26.4;
-                  } else if (d.district_id === 'SHIMLA') {
-                    minLon = 77.0; minLat = 30.9; maxLon = 77.9; maxLat = 31.5;
-                  } else if (d.district_id === 'JAIPUR') {
-                    minLon = 75.3; minLat = 26.6; maxLon = 76.2; maxLat = 27.5;
-                  } else if (d.district_id === 'DELHI') {
-                    minLon = 76.8; minLat = 28.4; maxLon = 77.3; maxLat = 28.9;
-                  } else if (d.district_id === 'CHENNAI') {
-                    minLon = 80.1; minLat = 12.9; maxLon = 80.3; maxLat = 13.2;
-                  } else if (d.district_id === 'KOLKATA') {
-                    minLon = 88.2; minLat = 22.4; maxLon = 88.5; maxLat = 22.7;
-                  }
+                {/* India outline */}
+                {geoJsonIndia && (
+                  <GeoJSON
+                    key={`india-${leadHours}`}
+                    data={geoJsonIndia}
+                    style={indiaStyle}
+                  />
+                )}
 
-                  const p1 = coordToSvg(minLon, maxLat);
-                  const p2 = coordToSvg(maxLon, minLat);
-                  const w = Math.max(12, p2.x - p1.x);
-                  const h = Math.max(12, p2.y - p1.y);
+                {/* State boundaries */}
+                {geoJsonStates && (
+                  <GeoJSON
+                    key={`states-${leadHours}`}
+                    data={geoJsonStates}
+                    style={stateStyle}
+                  />
+                )}
 
-                  const isSelected = selectedDistrictId === d.district_id;
+                {/* District forecast polygons */}
+                {geoJsonDistricts && (
+                  <GeoJSON
+                    key={`districts-${leadHours}-${activeLayer}-${districts.length}-${districts[0]?.rainfall_mm ?? 0}`}
+                    data={geoJsonDistricts}
+                    style={districtStyle}
+                    onEachFeature={onEachDistrict}
+                  />
+                )}
 
-                  // Layer color calculation
-                  let fillColor = '#1e293b';
-                  if (activeLayer === 'ramp_rainfall') {
-                    if (d.rainfall_mm > 64.5) fillColor = '#ef4444';
-                    else if (d.rainfall_mm > 35.5) fillColor = '#f97316';
-                    else if (d.rainfall_mm > 15.5) fillColor = '#06b6d4';
-                    else if (d.rainfall_mm > 2.5) fillColor = '#3b82f6';
-                    else fillColor = '#1e293b';
-                  } else if (activeLayer === 'prob_heavy') {
-                    if (d.heavy_probability >= 0.40) fillColor = '#ea580c';
-                    else if (d.heavy_probability >= 0.20) fillColor = '#f59e0b';
-                    else fillColor = '#1e293b';
-                  } else if (activeLayer === 'prob_extreme') {
-                    if (d.extreme_probability >= 0.10) fillColor = '#991b1b';
-                    else if (d.extreme_probability >= 0.03) fillColor = '#dc2626';
-                    else fillColor = '#1e293b';
-                  } else if (activeLayer === 'diff_nwp') {
-                    fillColor = d.difference_nwp_mm >= 0 ? '#0284c7' : '#e11d48';
-                  } else {
-                    fillColor = d.color_hex;
-                  }
-
+                {/* District centroid markers for filtered districts */}
+                {filteredDistricts.map(d => {
+                  const lat = d.hotspot_latitude;
+                  const lon = d.hotspot_longitude;
+                  if (!lat || !lon) return null;
+                  const color = getDistrictColor(d, activeLayer);
+                  const isSelected = selectedDistrict?.district_id === d.district_id;
                   return (
-                    <g
-                      key={d.district_id}
-                      onClick={() => handleDistrictSelect(d.district_id)}
-                      className="cursor-pointer transition-all duration-200"
+                    <CircleMarker
+                      key={`cm-${d.district_id}`}
+                      center={[lat, lon]}
+                      radius={isSelected ? 8 : 5}
+                      pathOptions={{
+                        fillColor: color,
+                        fillOpacity: 0.9,
+                        color: isSelected ? '#ffffff' : '#1e293b',
+                        weight: isSelected ? 2 : 0.5,
+                      }}
+                      eventHandlers={{ click: () => setSelectedDistrict(d) }}
                     >
-                      <rect
-                        x={p1.x}
-                        y={p1.y}
-                        width={w}
-                        height={h}
-                        rx="3"
-                        fill={fillColor}
-                        fillOpacity={d.valid_grid_cells > 0 ? (isSelected ? '0.9' : '0.65') : '0.2'}
-                        stroke={isSelected ? '#38bdf8' : '#475569'}
-                        strokeWidth={isSelected ? 2.5 : 1}
-                        className="hover:stroke-cyan-400 hover:fill-opacity-80 transition-all"
-                      />
-                      {/* District Label */}
-                      <text
-                        x={p1.x + w / 2}
-                        y={p1.y + h / 2 + 3}
-                        fontSize="9"
-                        textAnchor="middle"
-                        fill={isSelected ? '#f8fafc' : '#94a3b8'}
-                        className="pointer-events-none font-mono font-medium"
-                      >
-                        {d.district_name.slice(0, 7)}
-                      </text>
-                    </g>
+                      <Tooltip sticky>
+                        <div className="text-xs">
+                          <strong>{d.district_name}</strong><br />
+                          {d.state_name}<br />
+                          RAMP: {d.rainfall_mm?.toFixed(1) ?? '—'} mm
+                        </div>
+                      </Tooltip>
+                      <Popup>
+                        <div style={{ fontFamily: 'monospace', fontSize: '12px', minWidth: '160px' }}>
+                          <strong>{d.district_name}, {d.state_name}</strong><br />
+                          RAMP: {d.rainfall_mm?.toFixed(1)} mm<br />
+                          NWP: {d.raw_nwp_rainfall_mm?.toFixed(1)} mm<br />
+                          Risk: {d.risk_category?.replace(/_/g, ' ')}<br />
+                          P(Heavy): {((d.heavy_probability ?? 0) * 100).toFixed(1)}%<br />
+                          P(Extreme): {((d.extreme_probability ?? 0) * 100).toFixed(1)}%
+                        </div>
+                      </Popup>
+                    </CircleMarker>
                   );
                 })}
 
-                {/* Hotspot Markers */}
-                {hotspots.map((h, idx) => {
-                  const pt = coordToSvg(h.hotspot_longitude, h.hotspot_latitude);
-                  return (
-                    <g key={idx} className="pointer-events-none">
-                      <circle
-                        cx={pt.x}
-                        cy={pt.y}
-                        r="6"
-                        fill="#ef4444"
-                        fillOpacity="0.8"
-                        stroke="#ffffff"
-                        strokeWidth="1.5"
-                        className="animate-pulse"
-                      />
-                    </g>
-                  );
-                })}
-              </svg>
-            </div>
+                {/* Pan map when district selected */}
+                <MapBoundsController district={selectedDistrict} />
+              </MapContainer>
 
-            {/* 30. MAP LEGEND */}
-            <div className="mt-4 p-3 bg-slate-950/60 border border-slate-800 rounded-lg flex flex-wrap items-center justify-between text-xs gap-3">
-              <div className="flex items-center space-x-2">
-                <span className="text-slate-400 font-semibold uppercase">Legend:</span>
-                <span className="flex items-center space-x-1">
-                  <span className="w-3 h-3 bg-slate-800 border border-slate-700 rounded-sm"></span>
-                  <span className="text-slate-400">Normal (&lt;15.6mm)</span>
-                </span>
-                <span className="flex items-center space-x-1">
-                  <span className="w-3 h-3 bg-blue-500 rounded-sm"></span>
-                  <span className="text-slate-300">Moderate</span>
-                </span>
-                <span className="flex items-center space-x-1">
-                  <span className="w-3 h-3 bg-amber-500 rounded-sm"></span>
-                  <span className="text-slate-300">Heavy (&ge;64.5mm)</span>
-                </span>
-                <span className="flex items-center space-x-1">
-                  <span className="w-3 h-3 bg-red-600 rounded-sm"></span>
-                  <span className="text-slate-300">Extreme (&ge;204.5mm)</span>
-                </span>
-                <span className="flex items-center space-x-1">
-                  <span className="w-2.5 h-2.5 rounded-full bg-red-500 border border-white"></span>
-                  <span className="text-slate-300">Peak Hotspot</span>
-                </span>
-              </div>
-              <div className="text-slate-500 font-mono">
-                Projection: Albers Equal Area Conic | Grid: 0.25° {differences.length > 0 ? `| Corrections: ${differences.length}` : ''}
-              </div>
+              {/* Legend overlay */}
+              {showLegend && (
+                <div className="absolute bottom-4 left-4 z-[1000] pointer-events-none">
+                  <RainfallLegend />
+                </div>
+              )}
+
+              {/* Loading overlay */}
+              {loading && (
+                <div className="absolute inset-0 flex items-center justify-center bg-slate-950/60 z-[2000]">
+                  <div className="flex items-center gap-3 px-5 py-3 bg-slate-900 border border-slate-700 rounded-xl text-slate-300 text-sm">
+                    <RefreshCw className="w-4 h-4 animate-spin text-cyan-400" />
+                    Loading spatial products…
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* 16. FRACTIONS SKILL SCORE (FSS) SECTION */}
-          <div className="p-5 bg-slate-900/60 border border-slate-800 rounded-xl space-y-3 shadow">
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold text-slate-200 flex items-center space-x-2">
-                <BarChart3 className="w-4 h-4 text-emerald-400" />
-                <span>Neighborhood Verification (Fractions Skill Score — FSS)</span>
-              </h3>
-              <span className="text-xs font-mono px-2 py-0.5 rounded bg-emerald-950 border border-emerald-800 text-emerald-300">
-                {fssData?.status ?? 'PASS'}
-              </span>
+          {/* State aggregation table */}
+          <div className="glass-panel rounded-2xl p-5 space-y-3">
+            <div className="flex items-center gap-2">
+              <BarChart3 className="w-4 h-4 text-violet-400" />
+              <h3 className="text-sm font-semibold text-white">State-Level Aggregation</h3>
             </div>
-            <p className="text-xs text-slate-400">
-              Evaluates spatial skill across 5km, 25km, 50km, 100km, 200km neighborhood radii according to Roberts &amp; Lean (2008).
-            </p>
-
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-2 pt-1">
-              {['5km', '25km', '50km', '100km', '200km'].map(scale => {
-                const score = fssData?.fss_curves?.['0.1mm']?.[scale]?.fss ?? 1.0;
-                return (
-                  <div key={scale} className="p-3 bg-slate-950/60 border border-slate-800 rounded-lg text-center">
-                    <div className="text-xs text-slate-400">{scale} Radius</div>
-                    <div className="text-lg font-bold text-emerald-400 mt-0.5">{score.toFixed(4)}</div>
-                    <div className="text-[10px] text-slate-500 mt-0.5">Threshold: 0.1 mm</div>
-                  </div>
-                );
-              })}
+            <div className="overflow-x-auto rounded-xl border border-slate-800">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="bg-slate-900/80">
+                    {['State', 'Districts', 'Mean Rainfall', 'Max Rainfall', 'High Risk', 'Extreme Risk'].map(h => (
+                      <th key={h} className="px-3 py-2 text-left text-slate-400 font-semibold whitespace-nowrap">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {states.length === 0
+                    ? <tr><td colSpan={6} className="px-3 py-6 text-center text-slate-500">Loading state data…</td></tr>
+                    : states.map(s => (
+                      <tr
+                        key={s.state_id}
+                        className={`border-t border-slate-800/80 hover:bg-slate-900/40 cursor-pointer transition-colors
+                          ${selectedState === s.state_id ? 'bg-slate-800/60' : ''}`}
+                        onClick={() => setSelectedState(prev => prev === s.state_id ? 'ALL' : s.state_id)}
+                      >
+                        <td className="px-3 py-2 text-slate-200 font-medium">{s.state_name}</td>
+                        <td className="px-3 py-2 text-slate-300">{s.district_count ?? (s.districts?.length ?? '—')}</td>
+                        <td className="px-3 py-2 text-slate-300">{(s.area_weighted_rainfall_mm ?? s.mean_rainfall_mm ?? 0).toFixed(1)} mm</td>
+                        <td className="px-3 py-2 text-slate-300">{(s.max_district_rainfall_mm ?? 0).toFixed(1)} mm</td>
+                        <td className="px-3 py-2 text-amber-300">{s.high_risk_districts ?? (s.districts || []).filter((d: any) => d.risk_category === 'HIGH_RAINFALL' || d.risk_category === 'VERY_HIGH_RAINFALL').length}</td>
+                        <td className="px-3 py-2 text-red-300">{s.extreme_risk_districts ?? (s.districts || []).filter((d: any) => d.risk_category === 'EXTREME_RAINFALL').length}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
 
-        {/* 13. DISTRICT INSPECTION & DETAILS PANEL (4 Cols) */}
+        {/* DISTRICT PANEL (4 cols) */}
         <div className="lg:col-span-4 space-y-4">
-          {/* SEARCH & FILTERS */}
-          <div className="p-4 bg-slate-900/60 border border-slate-800 rounded-xl space-y-3 shadow">
-            <div className="text-xs font-semibold text-slate-300 uppercase flex items-center justify-between">
-              <span>District Inspector</span>
-              <Search className="w-3.5 h-3.5 text-cyan-400" />
+
+          {/* District list */}
+          <div className="glass-panel rounded-2xl p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-semibold text-white flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-cyan-400" /> Districts
+              </h3>
+              <span className="text-xs text-slate-400">{filteredDistricts.length} shown</span>
             </div>
-            <input
-              type="text"
-              placeholder="Search district or state..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-500"
-            />
-            <div className="flex gap-2">
-              <select
-                value={selectedState}
-                onChange={(e) => setSelectedState(e.target.value)}
-                className="w-1/2 bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 text-xs text-slate-200 focus:outline-none"
-              >
-                <option value="ALL">All States ({states.length})</option>
-                {states.map(s => (
-                  <option key={s.state_id} value={s.state_id}>{s.state_name}</option>
-                ))}
-              </select>
-              <select
-                value={riskFilter}
-                onChange={(e) => setRiskFilter(e.target.value)}
-                className="w-1/2 bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 text-xs text-slate-200 focus:outline-none"
-              >
-                <option value="ALL">All Risks</option>
-                <option value="NORMAL">Normal</option>
-                <option value="WATCH">Watch</option>
-                <option value="HIGH_RAINFALL">High</option>
-                <option value="VERY_HIGH_RAINFALL">Very High</option>
-                <option value="EXTREME_RAINFALL">Extreme</option>
-              </select>
+            <div className="space-y-1.5 max-h-72 overflow-y-auto pr-1">
+              {filteredDistricts.map(d => (
+                <button
+                  key={d.district_id}
+                  onClick={() => setSelectedDistrict(d)}
+                  className={`w-full text-left px-3 py-2.5 rounded-xl border transition-all duration-150
+                    ${selectedDistrict?.district_id === d.district_id
+                      ? 'bg-slate-800 border-slate-600 ring-1 ring-cyan-500/30'
+                      : 'bg-slate-900/40 border-slate-800 hover:border-slate-600'}`}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span
+                        className="w-2.5 h-2.5 rounded-full shrink-0"
+                        style={{ backgroundColor: getDistrictColor(d, activeLayer) }}
+                      />
+                      <div className="min-w-0">
+                        <div className="text-xs font-semibold text-slate-200 truncate">{d.district_name}</div>
+                        <div className="text-[10px] text-slate-400 truncate">{d.state_name}</div>
+                      </div>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <div className="text-xs font-mono text-slate-200">{d.rainfall_mm?.toFixed(1)} mm</div>
+                      <span className={`text-[9px] px-1.5 py-0.5 rounded border font-semibold ${RISK_BADGE[d.risk_category] || ''}`}>
+                        {d.risk_category?.replace(/_/g, ' ')}
+                      </span>
+                    </div>
+                  </div>
+                </button>
+              ))}
+              {filteredDistricts.length === 0 && (
+                <div className="py-6 text-center text-slate-500 text-xs">No districts match filters</div>
+              )}
             </div>
           </div>
 
-          {/* ACTIVE DISTRICT CARD */}
-          {selectedDistrict ? (
-            <div className="p-5 bg-slate-900/70 border border-slate-800 rounded-xl space-y-4 shadow-lg">
-              <div className="flex items-start justify-between">
-                <div>
-                  <h4 className="text-base font-bold text-slate-100 flex items-center space-x-1.5">
-                    <span>{selectedDistrict.district_name}</span>
-                  </h4>
-                  <p className="text-xs text-slate-400">{selectedDistrict.state_name} &bull; Area: {selectedDistrict.area_km2.toLocaleString()} km²</p>
-                </div>
-                <span className={`px-2.5 py-1 text-xs font-semibold rounded-md border ${getRiskBadgeColor(selectedDistrict.risk_category)}`}>
-                  {selectedDistrict.risk_category.replace('_', ' ')}
+          {/* District inspector */}
+          {selectedDistrict && (
+            <div className="glass-panel rounded-2xl p-4 space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-semibold text-white">{selectedDistrict.district_name}</h3>
+                <span className={`text-[10px] px-2 py-0.5 rounded border font-semibold ${RISK_BADGE[selectedDistrict.risk_category] || ''}`}>
+                  {selectedDistrict.risk_category?.replace(/_/g, ' ')}
                 </span>
               </div>
+              <div className="text-xs text-slate-400">{selectedDistrict.state_name}</div>
 
-              {/* Rainfall Comparison Card */}
-              <div className="p-3.5 bg-slate-950/70 border border-slate-800 rounded-lg space-y-2">
-                <div className="flex justify-between items-baseline">
-                  <span className="text-xs text-slate-400">RAMP Area-Weighted:</span>
-                  <span className="text-xl font-bold text-cyan-400">{selectedDistrict.rainfall_mm.toFixed(1)} <span className="text-xs font-normal">mm</span></span>
+              {/* Rainfall bars */}
+              <div className="space-y-2.5">
+                {[
+                  { label: 'RAMP MoE Forecast', value: selectedDistrict.rainfall_mm ?? 0, color: '#22c55e' },
+                  { label: 'Raw NWP Baseline',  value: selectedDistrict.raw_nwp_rainfall_mm ?? 0, color: '#0ea5e9' },
+                  { label: 'Correction (RAMP−NWP)', value: Math.abs(selectedDistrict.difference_nwp_mm ?? 0), color: '#a855f7' },
+                ].map(({ label, value, color }) => (
+                  <div key={label} className="space-y-1">
+                    <div className="flex justify-between text-[11px]">
+                      <span className="text-slate-400">{label}</span>
+                      <span className="text-slate-200 font-mono">{value.toFixed(1)} mm</span>
+                    </div>
+                    <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full"
+                        style={{ width: `${Math.min(100, (value / 250) * 100)}%`, backgroundColor: color }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Exceedance probabilities */}
+              <div className="rounded-xl bg-slate-950/60 border border-slate-800 p-3 space-y-2">
+                <div className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-1">
+                  Exceedance Probabilities
                 </div>
-                <div className="flex justify-between text-xs text-slate-400">
-                  <span>Raw NWP Model:</span>
-                  <span>{selectedDistrict.raw_nwp_rainfall_mm.toFixed(1)} mm</span>
+                {[
+                  { label: 'P(Rain ≥0.1 mm)',  value: selectedDistrict.rain_probability ?? 0,       color: '#0ea5e9' },
+                  { label: 'P(Heavy ≥64.5 mm)', value: selectedDistrict.heavy_probability ?? 0,     color: '#eab308' },
+                  { label: 'P(VH ≥115.6 mm)',   value: selectedDistrict.very_heavy_probability ?? 0, color: '#f97316' },
+                  { label: 'P(Extreme ≥204.5)', value: selectedDistrict.extreme_probability ?? 0,   color: '#ef4444' },
+                ].map(({ label, value, color }) => (
+                  <div key={label} className="flex items-center justify-between text-[11px]">
+                    <span className="text-slate-400">{label}</span>
+                    <span className="font-mono font-bold" style={{ color }}>{(value * 100).toFixed(1)}%</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Hotspot & Coverage */}
+              <div className="rounded-xl bg-slate-950/60 border border-slate-800 p-3 space-y-1.5 text-[11px]">
+                <div className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-1">Diagnostics</div>
+                <div className="flex justify-between">
+                  <span className="text-slate-400">Peak hotspot</span>
+                  <span className="text-slate-200 font-mono">{selectedDistrict.hotspot_rainfall_mm?.toFixed(1) ?? '—'} mm</span>
                 </div>
-                <div className="flex justify-between text-xs text-slate-400">
-                  <span>RAMP Offset (Correction):</span>
-                  <span className={selectedDistrict.difference_nwp_mm >= 0 ? 'text-blue-400' : 'text-red-400'}>
-                    {selectedDistrict.difference_nwp_mm >= 0 ? `+${selectedDistrict.difference_nwp_mm.toFixed(1)}` : selectedDistrict.difference_nwp_mm.toFixed(1)} mm
+                <div className="flex justify-between">
+                  <span className="text-slate-400">Hotspot coords</span>
+                  <span className="text-slate-200 font-mono text-[10px]">
+                    {selectedDistrict.hotspot_latitude?.toFixed(2)}°N, {selectedDistrict.hotspot_longitude?.toFixed(2)}°E
                   </span>
                 </div>
-              </div>
-
-              {/* 12. HOTSPOT DETECTION PANEL */}
-              <div className="p-3.5 bg-red-950/30 border border-red-900/40 rounded-lg space-y-1.5">
-                <div className="text-xs font-semibold text-red-300 flex items-center space-x-1.5">
-                  <TrendingUp className="w-3.5 h-3.5 text-red-400" />
-                  <span>Localized Peak Convective Hotspot</span>
-                </div>
-                <div className="text-lg font-bold text-red-400">
-                  {selectedDistrict.hotspot_rainfall_mm.toFixed(1)} mm
-                  <span className="text-xs font-normal text-slate-400 ml-2">({selectedDistrict.hotspot_intensity.toFixed(1)}x district mean)</span>
-                </div>
-                <div className="text-[11px] text-slate-400">
-                  Coordinates: ({selectedDistrict.hotspot_latitude.toFixed(2)}°N, {selectedDistrict.hotspot_longitude.toFixed(2)}°E)
-                </div>
-              </div>
-
-              {/* 9. PROBABILITY BREAKDOWN */}
-              <div className="space-y-2">
-                <div className="text-xs font-semibold text-slate-300 uppercase">IMD Exceedance Probabilities</div>
-                <div className="space-y-1.5 text-xs">
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Rain (&ge;0.1 mm):</span>
-                    <span className="font-mono text-slate-200">{(selectedDistrict.rain_probability * 100).toFixed(1)}%</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Heavy (&ge;64.5 mm):</span>
-                    <span className="font-mono text-amber-300">{(selectedDistrict.heavy_probability * 100).toFixed(1)}%</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Very Heavy (&ge;115.6 mm):</span>
-                    <span className="font-mono text-orange-300">{(selectedDistrict.very_heavy_probability * 100).toFixed(1)}%</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Extremely Heavy (&ge;204.5 mm):</span>
-                    <span className="font-mono text-red-400">{(selectedDistrict.extreme_probability * 100).toFixed(1)}%</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* 13. SPREAD & QUANTILES */}
-              <div className="pt-2 border-t border-slate-800 text-xs space-y-1 text-slate-400">
                 <div className="flex justify-between">
-                  <span>Spread (Min - Max):</span>
-                  <span>{selectedDistrict.min_rainfall_mm} - {selectedDistrict.max_rainfall_mm} mm</span>
+                  <span className="text-slate-400">Grid coverage</span>
+                  <span className="text-slate-200 font-mono">{((selectedDistrict.coverage_fraction ?? 0) * 100).toFixed(0)}%</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>95th Percentile (P95):</span>
-                  <span>{selectedDistrict.p95_rainfall_mm} mm</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Grid Coverage:</span>
-                  <span>{selectedDistrict.valid_grid_cells} / {selectedDistrict.total_grid_cells} cells ({(selectedDistrict.coverage_fraction * 100).toFixed(0)}%)</span>
+                  <span className="text-slate-400">Lead time</span>
+                  <span className="text-slate-200 font-mono">+{selectedDistrict.lead_time_hours}h</span>
                 </div>
               </div>
-
-              {/* 17. UNCERTAINTY */}
-              <div className="pt-2 border-t border-slate-800 text-xs flex justify-between text-slate-400">
-                <span>Uncertainty Tier:</span>
-                <span className="font-semibold text-slate-200">{selectedDistrict.uncertainty.uncertainty_tier ?? 'MEDIUM'}</span>
-              </div>
-            </div>
-          ) : (
-            <div className="p-8 text-center bg-slate-900/60 border border-slate-800 rounded-xl text-xs text-slate-500">
-              Select a district to view detailed spatial diagnostics.
             </div>
           )}
-
-          {/* DISTRICTS SCROLL LIST */}
-          <div className="p-3 bg-slate-900/60 border border-slate-800 rounded-xl max-h-[300px] overflow-y-auto space-y-1.5 shadow">
-            <div className="text-[11px] font-semibold text-slate-400 uppercase px-2 mb-1">
-              Matching Districts ({filteredDistricts.length})
-            </div>
-            {filteredDistricts.map(d => (
-              <button
-                key={d.district_id}
-                onClick={() => handleDistrictSelect(d.district_id)}
-                className={`w-full text-left p-2 rounded-lg text-xs flex items-center justify-between transition-colors ${
-                  selectedDistrictId === d.district_id
-                    ? 'bg-cyan-950/60 border border-cyan-700/60 text-cyan-200'
-                    : 'bg-slate-800/40 hover:bg-slate-800 border border-transparent text-slate-300'
-                }`}
-              >
-                <div>
-                  <div className="font-medium">{d.district_name}</div>
-                  <div className="text-[10px] text-slate-400">{d.state_name}</div>
-                </div>
-                <div className="text-right">
-                  <div className="font-mono font-semibold">{d.rainfall_mm.toFixed(1)} mm</div>
-                  <span className={`text-[9px] px-1 py-0.2 rounded ${getRiskBadgeColor(d.risk_category)}`}>
-                    {d.risk_category.replace('_', ' ')}
-                  </span>
-                </div>
-              </button>
-            ))}
-          </div>
         </div>
       </div>
 
-      {/* 14. STATE SUMMARY ACCORDION / TABLE */}
-      <div className="p-5 bg-slate-900/60 border border-slate-800 rounded-xl space-y-4 shadow-lg">
-        <h3 className="text-sm font-semibold text-slate-200 flex items-center space-x-2">
-          <Layers className="w-4 h-4 text-cyan-400" />
-          <span>State-Level Meteorological Summaries &amp; Aggregations</span>
-        </h3>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs border-collapse">
+      {/* 4. VERIFICATION SECTION */}
+      <div className="glass-panel rounded-2xl p-5 space-y-4">
+        <div className="flex items-center gap-2">
+          <BarChart3 className="w-5 h-5 text-emerald-400" />
+          <h3 className="text-sm font-semibold text-white">Neighbourhood Verification (FSS)</h3>
+          <span className="ml-auto px-2 py-1 rounded-full bg-amber-950/60 border border-amber-700/40 text-amber-300 text-[10px] font-semibold uppercase tracking-wide">
+            {verification?.fss_status || 'FSS — VERIFICATION PENDING'}
+          </span>
+        </div>
+        <div className="rounded-xl bg-amber-950/20 border border-amber-700/30 p-4 text-xs text-amber-300 flex items-start gap-2">
+          <Lock className="w-3.5 h-3.5 shrink-0 mt-0.5 text-amber-400" />
+          <div>
+            <span className="font-semibold text-amber-200">{verification?.disclaimer || 'REAL VERIFICATION NOT AVAILABLE:'}</span>{' '}
+            {verification?.reason || 'Authoritative IMD gridded observations are not mounted for this cycle. FSS, RMSE, MAE, CSI, POD, FAR, and ETS will appear here once ground truth is paired.'}
+          </div>
+        </div>
+        {/* Placeholder table */}
+        <div className="overflow-x-auto rounded-xl border border-slate-800">
+          <table className="w-full text-xs">
             <thead>
-              <tr className="border-b border-slate-800 text-slate-400">
-                <th className="py-2.5 px-3 font-semibold">State</th>
-                <th className="py-2.5 px-3 font-semibold">Districts</th>
-                <th className="py-2.5 px-3 font-semibold">Area-Weighted Rain</th>
-                <th className="py-2.5 px-3 font-semibold">Peak District Rain</th>
-                <th className="py-2.5 px-3 font-semibold">High Risk (&ge;64.5mm)</th>
-                <th className="py-2.5 px-3 font-semibold">Extreme Risk (&ge;204.5mm)</th>
+              <tr className="bg-slate-900/80">
+                <th className="px-3 py-2 text-left text-slate-400 font-semibold">Scale</th>
+                {(verification?.thresholds_mm || [0.1, 15.6, 64.5, 115.6, 204.5]).map((t: number) => (
+                  <th key={t} className="px-3 py-2 text-center text-slate-400 font-semibold">{t} mm</th>
+                ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60 text-slate-300">
-              {states.map(s => (
-                <tr key={s.state_id} className="hover:bg-slate-800/30 transition-colors">
-                  <td className="py-2.5 px-3 font-medium text-slate-100">{s.state_name}</td>
-                  <td className="py-2.5 px-3">{s.district_count}</td>
-                  <td className="py-2.5 px-3 font-mono text-cyan-400 font-semibold">{s.area_weighted_rainfall_mm.toFixed(1)} mm</td>
-                  <td className="py-2.5 px-3 font-mono">{s.max_district_rainfall_mm.toFixed(1)} mm ({s.max_rainfall_district})</td>
-                  <td className="py-2.5 px-3">
-                    <span className={`px-2 py-0.5 rounded text-[11px] font-mono ${
-                      s.high_risk_districts > 0 ? 'bg-amber-950 text-amber-300 border border-amber-800' : 'text-slate-400'
-                    }`}>
-                      {s.high_risk_districts}
-                    </span>
-                  </td>
-                  <td className="py-2.5 px-3">
-                    <span className={`px-2 py-0.5 rounded text-[11px] font-mono ${
-                      s.extreme_risk_districts > 0 ? 'bg-red-950 text-red-300 border border-red-800 font-bold' : 'text-slate-400'
-                    }`}>
-                      {s.extreme_risk_districts}
-                    </span>
-                  </td>
+            <tbody>
+              {(verification?.scales_km || [5, 25, 50, 100, 200]).map((km: number) => (
+                <tr key={km} className="border-t border-slate-800/80">
+                  <td className="px-3 py-2 text-slate-300 font-mono">{km} km</td>
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <td key={i} className="px-3 py-2 text-center text-slate-600 font-mono">—</td>
+                  ))}
                 </tr>
               ))}
             </tbody>

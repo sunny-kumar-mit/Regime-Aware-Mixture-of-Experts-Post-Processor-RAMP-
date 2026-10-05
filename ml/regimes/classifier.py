@@ -116,7 +116,7 @@ class RandomForestRegimeClassifier(BaseRegimeClassifier):
     def predict_proba(self, X: pd.DataFrame) -> np.ndarray:
         self._validate_features(X)
         feats = self.feature_columns if self.feature_columns else list(X.columns)
-        X_mat = X[feats].fillna(0.0).values
+        X_mat = X.reindex(columns=feats, fill_value=0.0).values
 
         raw_probs = self.clf.predict_proba(X_mat)
         # Ensure full 7-class representation even if some classes weren't in mini-batches
@@ -195,7 +195,7 @@ class LightGBMRegimeClassifier(BaseRegimeClassifier):
     def predict_proba(self, X: pd.DataFrame) -> np.ndarray:
         self._validate_features(X)
         feats = self.feature_columns if self.feature_columns else list(X.columns)
-        X_mat = X[feats].fillna(0.0).values
+        X_mat = X.reindex(columns=feats, fill_value=0.0).values
 
         raw_probs = self.clf.predict_proba(X_mat)
         n_samples = len(X)

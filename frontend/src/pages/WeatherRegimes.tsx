@@ -223,19 +223,19 @@ export const WeatherRegimesPage: React.FC = () => {
             <div>
               <div className="text-[10px] text-slate-400">Confidence</div>
               <div className="text-base font-bold text-emerald-400 mt-0.5">
-                {prediction ? (prediction.confidence * 100).toFixed(1) : '72.0'}%
+                {prediction?.confidence != null ? (prediction.confidence * 100).toFixed(1) : '72.0'}%
               </div>
             </div>
             <div>
               <div className="text-[10px] text-slate-400">Entropy H(p)</div>
               <div className="text-base font-bold text-cyan-400 mt-0.5">
-                {prediction?.entropy.toFixed(2) || '1.14'} <span className="text-[10px] font-normal text-slate-400">bits</span>
+                {prediction?.entropy != null ? prediction.entropy.toFixed(2) : '1.14'} <span className="text-[10px] font-normal text-slate-400">bits</span>
               </div>
             </div>
             <div>
               <div className="text-[10px] text-slate-400">Norm. H</div>
               <div className="text-base font-bold text-purple-400 mt-0.5">
-                {prediction?.normalized_entropy.toFixed(2) || '0.41'}
+                {prediction?.normalized_entropy != null ? prediction.normalized_entropy.toFixed(2) : '0.41'}
               </div>
             </div>
           </div>
@@ -297,7 +297,7 @@ export const WeatherRegimesPage: React.FC = () => {
           <div className="space-y-3 pt-2">
             {Object.keys(REGIME_CONFIG).map((regKey) => {
               const cfg = REGIME_CONFIG[regKey];
-              const probVal = prediction?.probabilities[regKey] ?? 0.05;
+              const probVal = prediction?.probabilities?.[regKey] ?? 0.05;
               const pct = (probVal * 100).toFixed(1);
               const isTop = regKey === topRegime;
 
@@ -459,15 +459,15 @@ export const WeatherRegimesPage: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800/60 text-slate-300">
-              {gridData && gridData.latitudes.length > 0 ? (
+              {gridData?.latitudes && gridData.latitudes.length > 0 ? (
                 gridData.latitudes.slice(0, 5).map((lat, idx) => {
-                  const lon = gridData.longitudes[idx];
-                  const top = gridData.top_regimes[idx] || 'ACTIVE_MONSOON';
-                  const ent = gridData.entropy[idx] || 0.85;
+                  const lon = gridData.longitudes?.[idx] ?? 78.0;
+                  const top = gridData.top_regimes?.[idx] || 'ACTIVE_MONSOON';
+                  const ent = gridData.entropy?.[idx] || 0.85;
                   const layerVal =
                     selectedLayer === 'top_regime'
-                      ? (gridData.layers[top] ? gridData.layers[top][idx] : 0.65)
-                      : (gridData.layers[selectedLayer] ? gridData.layers[selectedLayer][idx] : 0.10);
+                      ? (gridData.layers?.[top]?.[idx] ?? 0.65)
+                      : (gridData.layers?.[selectedLayer]?.[idx] ?? 0.10);
 
                   return (
                     <tr key={idx} className="hover:bg-slate-900/40">
@@ -517,25 +517,25 @@ export const WeatherRegimesPage: React.FC = () => {
             <div className="p-3 bg-slate-900 rounded-xl border border-slate-800">
               <div className="text-[10px] text-slate-400">Accuracy</div>
               <div className="text-base font-bold text-white mt-0.5">
-                {metrics ? (metrics.metrics.accuracy * 100).toFixed(1) : '94.2'}%
+                {metrics?.metrics?.accuracy != null ? (metrics.metrics.accuracy * 100).toFixed(1) : '94.2'}%
               </div>
             </div>
             <div className="p-3 bg-slate-900 rounded-xl border border-slate-800">
               <div className="text-[10px] text-slate-400">Balanced Acc.</div>
               <div className="text-base font-bold text-emerald-400 mt-0.5">
-                {metrics ? (metrics.metrics.balanced_accuracy * 100).toFixed(1) : '92.6'}%
+                {metrics?.metrics?.balanced_accuracy != null ? (metrics.metrics.balanced_accuracy * 100).toFixed(1) : '92.6'}%
               </div>
             </div>
             <div className="p-3 bg-slate-900 rounded-xl border border-slate-800">
               <div className="text-[10px] text-slate-400">Macro F1</div>
               <div className="text-base font-bold text-cyan-400 mt-0.5">
-                {metrics ? metrics.metrics.macro_f1.toFixed(3) : '0.918'}
+                {metrics?.metrics?.macro_f1 != null ? metrics.metrics.macro_f1.toFixed(3) : '0.918'}
               </div>
             </div>
             <div className="p-3 bg-slate-900 rounded-xl border border-slate-800">
               <div className="text-[10px] text-slate-400">Weighted F1</div>
               <div className="text-base font-bold text-purple-400 mt-0.5">
-                {metrics ? metrics.metrics.weighted_f1.toFixed(3) : '0.941'}
+                {metrics?.metrics?.weighted_f1 != null ? metrics.metrics.weighted_f1.toFixed(3) : '0.941'}
               </div>
             </div>
           </div>
@@ -564,16 +564,16 @@ export const WeatherRegimesPage: React.FC = () => {
             <div className="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1">
               <div className="text-[11px] text-slate-400">Uncalibrated Brier Score</div>
               <div className="text-lg font-bold text-amber-400">
-                {calibration ? calibration.uncalibrated.brier_score.toFixed(4) : '0.1393'}
+                {calibration?.uncalibrated?.brier_score != null ? calibration.uncalibrated.brier_score.toFixed(4) : '0.1393'}
               </div>
-              <div className="text-[10px] text-slate-500">Log Loss: {calibration?.uncalibrated.log_loss.toFixed(4) || '0.3158'}</div>
+              <div className="text-[10px] text-slate-500">Log Loss: {calibration?.uncalibrated?.log_loss != null ? calibration.uncalibrated.log_loss.toFixed(4) : '0.3158'}</div>
             </div>
             <div className="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1">
               <div className="text-[11px] text-slate-400">Calibrated Brier Score</div>
               <div className="text-lg font-bold text-emerald-400">
-                {calibration ? calibration.calibrated.brier_score.toFixed(4) : '0.1568'}
+                {calibration?.calibrated?.brier_score != null ? calibration.calibrated.brier_score.toFixed(4) : '0.1568'}
               </div>
-              <div className="text-[10px] text-slate-500">Log Loss: {calibration?.calibrated.log_loss.toFixed(4) || '1.4013'}</div>
+              <div className="text-[10px] text-slate-500">Log Loss: {calibration?.calibrated?.log_loss != null ? calibration.calibrated.log_loss.toFixed(4) : '1.4013'}</div>
             </div>
           </div>
 

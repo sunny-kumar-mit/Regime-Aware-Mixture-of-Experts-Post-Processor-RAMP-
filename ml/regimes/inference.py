@@ -50,8 +50,7 @@ class RegimeInferenceService:
 
         # Filter to feature columns if available, or exclude known target columns
         if hasattr(self.classifier, "feature_columns") and self.classifier.feature_columns:
-            feat_cols = [c for c in self.classifier.feature_columns if c in df.columns]
-            pred_df = df[feat_cols]
+            pred_df = df.reindex(columns=self.classifier.feature_columns, fill_value=0.0)
         else:
             from ml.dataset.leakage_guard import LeakageGuard
             pred_df = df.drop(columns=[c for c in LeakageGuard.TARGET_COLUMNS if c in df.columns], errors="ignore")
@@ -120,8 +119,7 @@ class RegimeInferenceService:
             return {"total_points": 0, "layers": {}, "top_regimes": []}
 
         if hasattr(self.classifier, "feature_columns") and self.classifier.feature_columns:
-            feat_cols = [c for c in self.classifier.feature_columns if c in grid_df.columns]
-            pred_grid = grid_df[feat_cols]
+            pred_grid = grid_df.reindex(columns=self.classifier.feature_columns, fill_value=0.0)
         else:
             from ml.dataset.leakage_guard import LeakageGuard
             pred_grid = grid_df.drop(columns=[c for c in LeakageGuard.TARGET_COLUMNS if c in grid_df.columns], errors="ignore")

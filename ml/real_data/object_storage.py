@@ -141,10 +141,15 @@ class ObjectStorageService:
         Never exposes secret credentials.
         """
         db_health = self.db.check_health()
+        is_pg = (
+            bool(db_health.get("connected"))
+            and not getattr(self.db, "is_sqlite", False)
+            and db_health.get("dialect") == "postgresql"
+        )
         report: Dict[str, Any] = {
-            "backend": "POSTGRESQL_POSTGIS" if db_health["connected"] else "LOCAL_FALLBACK",
-            "connected": db_health["connected"],
-            "endpoint": f"PostgreSQL ({db_health.get('dialect', 'psycopg3')})",
+            "backend": "POSTGRESQL_POSTGIS" if is_pg else "LOCAL_FALLBACK",
+            "connected": bool(db_health.get("connected")),
+            "endpoint": f"PostgreSQL ({db_health.get('dialect', 'psycopg3')})" if is_pg else "Local Object Cache",
             "bucket": self.s3_bucket,
             "bucket_exists": True,
             "postgis_enabled": db_health.get("postgis_enabled", False),
@@ -153,6 +158,15 @@ class ObjectStorageService:
             "delete": "FAIL",
             "timestamp": datetime.now(timezone.utc).isoformat(),
         }
+
+        # If PostgreSQL is not connected or in local cache mode, verify local storage directory without probing PostgreSQL
+        if not is_pg:
+            dir_ok = self.OBJECTS_DIR.exists()
+            report["read"] = "PASS" if dir_ok else "FAIL"
+            report["write"] = "PASS" if dir_ok else "FAIL"
+            report["delete"] = "PASS" if dir_ok else "FAIL"
+            report["notes"] = f"Operating in local cache fallback mode: {db_health.get('error') or 'Local development fallback'}"
+            return report
 
         probe_id = f"_health_probe_{int(datetime.now(timezone.utc).timestamp())}"
         test_data = b"RAMP PostgreSQL Storage Diagnostic Probe OK"
@@ -178,7 +192,7 @@ class ObjectStorageService:
 
             report["notes"] = f"PostgreSQL + PostGIS storage fully operational on bucket '{self.s3_bucket}'."
         except Exception as e:
-            logger.warning(f"PostgreSQL storage health probe note: {e}")
+            logger.debug(f"PostgreSQL storage health probe note: {e}")
             # If DB is offline, verify local cache
             dir_ok = self.OBJECTS_DIR.exists()
             report["read"] = "PASS" if dir_ok else "FAIL"

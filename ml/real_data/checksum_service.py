@@ -28,6 +28,8 @@ class ChecksumService:
                 h.update(chunk)
         return h.hexdigest()
 
+    calculate_sha256 = compute_sha256
+
     @classmethod
     def verify_sha256(cls, filepath: str | Path, expected_sha256: str) -> bool:
         actual = cls.compute_sha256(filepath)

@@ -70,99 +70,149 @@ export const LandingPage: React.FC = () => {
     <div className="min-h-screen bg-[#070C18] text-slate-100 selection:bg-cyan-500 selection:text-black font-sans antialiased relative overflow-x-hidden">
       
       {/* =========================================================================
-          01. GLOBAL STICKY HEADER
+          01. GLOBAL STICKY HEADER (RELAXED, CLEAN & PREMIUM)
           ========================================================================= */}
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 h-20 flex items-center ${
           isScrolled
-            ? 'bg-[#0B132B]/85 backdrop-blur-md border-b border-cyan-900/40 shadow-lg shadow-black/40 py-3'
-            : 'bg-transparent py-5'
+            ? 'bg-[#070C18]/80 backdrop-blur-md border-b border-cyan-900/30 shadow-lg shadow-black/40'
+            : 'bg-transparent border-b border-transparent'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          {/* Logo & Identity */}
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 border border-cyan-400/40">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 flex items-center justify-between">
+          {/* Left: Brand & Subtitle (Spaced & Relaxed, No congested badge) */}
+          <div className="flex items-center space-x-3.5">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 border border-cyan-400/40 flex-shrink-0">
               <CloudRain className="w-5 h-5 text-white" />
             </div>
             <div>
-              <div className="flex items-center space-x-2">
-                <span className="text-xl font-bold tracking-tight text-white font-mono">GatiSutra RAMP</span>
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-cyan-950/80 text-cyan-400 border border-cyan-800/60 uppercase tracking-wider">
-                  MoES • NCMRWF
-                </span>
-              </div>
-              <p className="text-xs text-slate-400 font-medium hidden sm:block">
+              <span className="text-xl font-bold tracking-tight text-white font-mono block leading-tight">
+                GatiSutra RAMP
+              </span>
+              <p className="text-xs text-slate-400 font-medium tracking-wide hidden sm:block">
                 Regime-Aware Weather Forecast Post-Processor
               </p>
             </div>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-7 text-sm font-medium text-slate-300">
-            <button onClick={() => scrollToSection('problem')} className="hover:text-cyan-400 transition-colors">Problem</button>
-            <button onClick={() => scrollToSection('solution')} className="hover:text-cyan-400 transition-colors">Solution</button>
-            <button onClick={() => scrollToSection('decision')} className="hover:text-cyan-400 transition-colors">RAMP Decision</button>
-            <button onClick={() => scrollToSection('architecture')} className="hover:text-cyan-400 transition-colors">Architecture</button>
-            <button onClick={() => scrollToSection('workflow')} className="hover:text-cyan-400 transition-colors">Workflow</button>
-            <button onClick={() => scrollToSection('technology')} className="hover:text-cyan-400 transition-colors">Technology</button>
-            <button onClick={() => scrollToSection('evidence')} className="hover:text-cyan-400 transition-colors">Evidence</button>
-            <button onClick={() => scrollToSection('impact')} className="hover:text-cyan-400 transition-colors">Impact</button>
+          {/* Center: Curated Primary Navigation (Only the 5 essential sections) */}
+          <nav className="hidden lg:flex items-center space-x-8 xl:space-x-10 text-sm font-medium text-slate-300">
+            <button
+              onClick={() => scrollToSection('problem')}
+              className="hover:text-cyan-400 transition-colors py-1 focus:outline-none"
+            >
+              Problem
+            </button>
+            <button
+              onClick={() => scrollToSection('solution')}
+              className="hover:text-cyan-400 transition-colors py-1 focus:outline-none"
+            >
+              Solution
+            </button>
+            <button
+              onClick={() => scrollToSection('architecture')}
+              className="hover:text-cyan-400 transition-colors py-1 focus:outline-none"
+            >
+              Architecture
+            </button>
+            <button
+              onClick={() => scrollToSection('evidence')}
+              className="hover:text-cyan-400 transition-colors py-1 focus:outline-none"
+            >
+              Evidence
+            </button>
+            <button
+              onClick={() => scrollToSection('impact')}
+              className="hover:text-cyan-400 transition-colors py-1 focus:outline-none"
+            >
+              Impact
+            </button>
           </nav>
 
-          {/* Action CTAs */}
-          <div className="hidden sm:flex items-center space-x-3">
+          {/* Right: Jury Demo & Dashboard CTAs */}
+          <div className="hidden sm:flex items-center space-x-3.5">
             <Link
               to="/jury-demo"
-              className="text-xs font-semibold px-3.5 py-2 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 border border-slate-700 transition-all flex items-center space-x-1.5"
+              className="text-xs font-semibold px-4 py-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-200 border border-slate-700/80 backdrop-blur-md transition-all flex items-center space-x-2"
             >
               <Radio className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
               <span>Jury Demo</span>
             </Link>
             <Link
               to="/forecast"
-              className="text-xs font-semibold px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold shadow-md shadow-cyan-500/25 transition-all flex items-center space-x-1.5"
+              className="text-xs font-bold px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 shadow-md shadow-cyan-500/25 transition-all flex items-center space-x-2 transform hover:-translate-y-0.5"
             >
               <span>Dashboard</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
-          {/* Mobile Menu Toggle */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white border border-slate-700"
-            aria-label="Toggle Navigation Menu"
-          >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+          {/* Mobile Right: Dashboard Icon + Hamburger */}
+          <div className="flex sm:hidden items-center space-x-2">
+            <Link
+              to="/forecast"
+              className="text-xs font-bold px-3 py-1.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 flex items-center space-x-1"
+            >
+              <span>Dashboard</span>
+              <ArrowRight className="w-3 h-3" />
+            </Link>
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 rounded-lg bg-slate-800/90 text-slate-300 hover:text-white border border-slate-700"
+              aria-label="Toggle Navigation Menu"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
 
-        {/* Mobile Navigation Drawer */}
+        {/* Mobile Navigation Glass Drawer */}
         {mobileMenuOpen && (
-          <div className="lg:hidden bg-[#0A1224]/95 backdrop-blur-xl border-b border-slate-800 px-6 py-6 space-y-4">
-            <div className="grid grid-cols-2 gap-3 text-sm font-medium">
-              <button onClick={() => scrollToSection('problem')} className="text-left text-slate-300 hover:text-cyan-400 py-1.5">Problem</button>
-              <button onClick={() => scrollToSection('solution')} className="text-left text-slate-300 hover:text-cyan-400 py-1.5">Solution</button>
-              <button onClick={() => scrollToSection('decision')} className="text-left text-slate-300 hover:text-cyan-400 py-1.5">RAMP Decision</button>
-              <button onClick={() => scrollToSection('architecture')} className="text-left text-slate-300 hover:text-cyan-400 py-1.5">Architecture</button>
-              <button onClick={() => scrollToSection('workflow')} className="text-left text-slate-300 hover:text-cyan-400 py-1.5">Workflow</button>
-              <button onClick={() => scrollToSection('technology')} className="text-left text-slate-300 hover:text-cyan-400 py-1.5">Technology</button>
-              <button onClick={() => scrollToSection('evidence')} className="text-left text-slate-300 hover:text-cyan-400 py-1.5">Evidence</button>
-              <button onClick={() => scrollToSection('impact')} className="text-left text-slate-300 hover:text-cyan-400 py-1.5">Impact</button>
+          <div className="lg:hidden absolute top-20 left-0 right-0 bg-[#070C18]/95 backdrop-blur-2xl border-b border-cyan-900/30 px-6 py-6 space-y-4 shadow-2xl">
+            <div className="flex flex-col space-y-3 text-sm font-medium">
+              <button
+                onClick={() => scrollToSection('problem')}
+                className="text-left text-slate-300 hover:text-cyan-400 py-1.5"
+              >
+                Problem
+              </button>
+              <button
+                onClick={() => scrollToSection('solution')}
+                className="text-left text-slate-300 hover:text-cyan-400 py-1.5"
+              >
+                Solution
+              </button>
+              <button
+                onClick={() => scrollToSection('architecture')}
+                className="text-left text-slate-300 hover:text-cyan-400 py-1.5"
+              >
+                Architecture
+              </button>
+              <button
+                onClick={() => scrollToSection('evidence')}
+                className="text-left text-slate-300 hover:text-cyan-400 py-1.5"
+              >
+                Evidence
+              </button>
+              <button
+                onClick={() => scrollToSection('impact')}
+                className="text-left text-slate-300 hover:text-cyan-400 py-1.5"
+              >
+                Impact
+              </button>
             </div>
-            <div className="pt-4 border-t border-slate-800 flex flex-col gap-2">
+            <div className="pt-4 border-t border-slate-800/80 flex flex-col gap-2">
               <Link
                 to="/forecast"
-                className="w-full text-center py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-bold text-sm shadow-md"
+                className="w-full text-center py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-bold text-sm shadow-md"
               >
                 Open Operational Dashboard →
               </Link>
               <Link
                 to="/jury-demo"
-                className="w-full text-center py-2.5 rounded-lg bg-slate-800 text-slate-200 text-sm font-semibold border border-slate-700"
+                className="w-full text-center py-2.5 rounded-xl bg-slate-900 text-slate-200 text-sm font-semibold border border-slate-700/80"
               >
-                Open Interactive Jury Demo
+                Launch Jury Demonstration
               </Link>
             </div>
           </div>
@@ -173,20 +223,21 @@ export const LandingPage: React.FC = () => {
           02. HERO: CINEMATIC ATMOSPHERIC INTELLIGENCE
           ========================================================================= */}
       <section className="relative min-h-screen flex items-center justify-center pt-28 pb-16 overflow-hidden">
-        {/* Three.js Atmospheric WebGL Canvas */}
+        {/* Layer 1: Three.js Atmospheric Forecast Field WebGL Canvas */}
         <AtmosphericHeroCanvas />
 
-        {/* Ambient Gradient Overlays */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#070C18]/60 to-[#070C18] pointer-events-none z-10" />
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-cyan-600/10 rounded-full blur-[140px] pointer-events-none z-0" />
+        {/* Layer 2: Atmospheric Vignettes & Dark Readability Gradients */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#070C18]/40 via-[#070C18]/70 to-[#070C18] pointer-events-none z-10" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-[#070C18]/50 to-[#070C18]/90 pointer-events-none z-10" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[800px] h-[450px] bg-cyan-600/10 rounded-full blur-[160px] pointer-events-none z-0" />
 
-        {/* Hero Content */}
+        {/* Layer 3: Foreground Content Hierarchy */}
         <div className="relative z-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          {/* Institutional Badge */}
-          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-slate-900/80 border border-cyan-800/50 backdrop-blur-md mb-6 shadow-inner">
+          {/* Institutional Identification Badge */}
+          <div className="inline-flex items-center space-x-2.5 px-4 py-1.5 rounded-full bg-slate-900/80 border border-cyan-800/50 backdrop-blur-md mb-6 shadow-inner">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
             <span className="text-xs font-mono font-medium text-cyan-300 tracking-wide">
-              Operational Post-Processing Architecture • NCUM 0.17° Resolution
+              Ministry of Earth Sciences • NCMRWF NCUM Post-Processing (0.17° Resolution)
             </span>
           </div>
 
@@ -236,28 +287,29 @@ export const LandingPage: React.FC = () => {
           </div>
 
           {/* Linear High-Level Transformation Pipeline */}
-          <div className="max-w-4xl mx-auto p-4 rounded-2xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-md shadow-2xl">
-            <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 mb-3 text-center">
-              Autonomous Post-Processing Pipeline
+          <div className="max-w-4xl mx-auto p-4 rounded-2xl bg-slate-900/70 border border-slate-800/90 backdrop-blur-md shadow-2xl">
+            <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 mb-3 text-center flex items-center justify-center space-x-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+              <span>Autonomous Atmospheric Post-Processing Pipeline</span>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-left">
-              <div className="p-3 rounded-xl bg-[#091122] border border-cyan-900/30">
-                <div className="text-[10px] font-mono text-cyan-400">01 • INPUT</div>
+              <div className="p-3 rounded-xl bg-[#091122]/90 border border-cyan-900/40 relative">
+                <div className="text-[10px] font-mono text-cyan-400 font-bold">01 • INPUT</div>
                 <div className="text-xs font-bold text-white mt-0.5">Raw NCUM NWP</div>
                 <div className="text-[11px] text-slate-400 mt-1">GRIB2/NetCDF 0.17°</div>
               </div>
-              <div className="p-3 rounded-xl bg-[#091122] border border-cyan-900/30">
-                <div className="text-[10px] font-mono text-cyan-400">02 • DIAGNOSIS</div>
+              <div className="p-3 rounded-xl bg-[#091122]/90 border border-cyan-900/40 relative">
+                <div className="text-[10px] font-mono text-cyan-400 font-bold">02 • DIAGNOSIS</div>
                 <div className="text-xs font-bold text-white mt-0.5">7-Regime Gating</div>
                 <div className="text-[11px] text-slate-400 mt-1">Calibrated Probabilities</div>
               </div>
-              <div className="p-3 rounded-xl bg-[#091122] border border-cyan-900/30">
-                <div className="text-[10px] font-mono text-cyan-400">03 • CORRECTION</div>
+              <div className="p-3 rounded-xl bg-[#091122]/90 border border-cyan-900/40 relative">
+                <div className="text-[10px] font-mono text-cyan-400 font-bold">03 • CORRECTION</div>
                 <div className="text-xs font-bold text-white mt-0.5">Specialized MoE</div>
                 <div className="text-[11px] text-slate-400 mt-1">Soft Blended Experts</div>
               </div>
-              <div className="p-3 rounded-xl bg-[#091122] border border-cyan-900/30">
-                <div className="text-[10px] font-mono text-cyan-400">04 • PRODUCT</div>
+              <div className="p-3 rounded-xl bg-[#091122]/90 border border-cyan-900/40 relative">
+                <div className="text-[10px] font-mono text-cyan-400 font-bold">04 • PRODUCT</div>
                 <div className="text-xs font-bold text-white mt-0.5">Calibrated Districts</div>
                 <div className="text-[11px] text-slate-400 mt-1">788 District Envelopes</div>
               </div>

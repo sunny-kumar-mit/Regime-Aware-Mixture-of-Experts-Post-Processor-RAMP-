@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import {
   X,
   Download,
@@ -62,6 +64,9 @@ export const RawDataExplorerModal: React.FC<RawDataExplorerModalProps> = ({
   // Map state
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
+  const leafletMapRef = useRef<L.Map | null>(null);
+  const leafletLayerGroupRef = useRef<L.LayerGroup | null>(null);
+  const [mapProvider, setMapProvider] = useState<'leaflet' | 'maplibre'>('leaflet');
   const [selectedVar, setSelectedVar] = useState<string>('');
   const [mapPoints, setMapPoints] = useState<any>(null);
   const [mapLoading, setMapLoading] = useState<boolean>(false);
@@ -159,27 +164,81 @@ export const RawDataExplorerModal: React.FC<RawDataExplorerModalProps> = ({
 const MODAL_BASEMAP_STYLE: any = {
   version: 8,
   sources: {
-    'carto-dark-raster': {
+    'esri-dark-raster': {
       type: 'raster',
       tiles: [
-        'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
-        'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
-        'https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+        'https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
       ],
       tileSize: 256,
-      attribution: '&copy; CartoDB &copy; OpenStreetMap contributors',
+      attribution: '&copy; Esri &copy; OpenStreetMap contributors',
     },
   },
   layers: [
     {
-      id: 'carto-dark-layer',
+      id: 'esri-dark-layer',
       type: 'raster',
-      source: 'carto-dark-raster',
+      source: 'esri-dark-raster',
       minzoom: 0,
-      maxzoom: 19,
+      maxzoom: 16,
     },
   ],
 };
+
+  const getRawColor = (val: number, minVal: number, span: number) => {
+    if (val <= minVal) return '#334155';
+    if (val <= minVal + span * 0.08) return '#0284c7';
+    if (val <= minVal + span * 0.22) return '#10b981';
+    if (val <= minVal + span * 0.45) return '#f59e0b';
+    if (val <= minVal + span * 0.75) return '#ef4444';
+    return '#7c3aed';
+  };
+
+  // Helper to sync raw GeoJSON grid points onto Leaflet using HTML5 Canvas
+  const syncLeafletGridPoints = (points: any, op: number) => {
+    if (!leafletMapRef.current || !leafletLayerGroupRef.current) return;
+    leafletLayerGroupRef.current.clearLayers();
+
+    if (!points || !points.features || points.features.length === 0) return;
+
+    const minVal = points.min ?? 0;
+    const maxVal = Math.max(points.max ?? 10, minVal + 1);
+    const span = Math.max(maxVal - minVal, 1);
+
+    const canvasRenderer = L.canvas({ padding: 0.5 });
+
+    points.features.forEach((f: any) => {
+      const coords = f.geometry?.coordinates;
+      if (!coords || coords.length < 2) return;
+      const lon = coords[0];
+      const lat = coords[1];
+      const val = f.properties?.val ?? 0;
+      const color = getRawColor(val, minVal, span);
+
+      const marker = L.circleMarker([lat, lon], {
+        renderer: canvasRenderer,
+        radius: 3.5,
+        fillColor: color,
+        fillOpacity: op,
+        color: '#020617',
+        weight: 0.5,
+        opacity: 0.8,
+      });
+
+      marker.bindTooltip(
+        `<div style="font-family: ui-monospace, monospace; font-size: 11px; padding: 2px 4px; color: #fff; background: #0f172a; border-radius: 4px; border: 1px solid #334155;">
+           <strong style="color: #38bdf8;">${val.toFixed(2)}</strong><br/>
+           <span style="color: #94a3b8;">${lat.toFixed(2)}°N, ${lon.toFixed(2)}°E</span>
+         </div>`,
+        { direction: 'top', sticky: true, opacity: 0.95 }
+      );
+
+      marker.on('click', () => {
+        setSelectedCell(f.properties);
+      });
+
+      leafletLayerGroupRef.current?.addLayer(marker);
+    });
+  };
 
   // Helper to sync raw GeoJSON grid points onto MapLibre
   const syncRawGridPoints = (map: maplibregl.Map, points: any, op: number) => {
@@ -257,9 +316,95 @@ const MODAL_BASEMAP_STYLE: any = {
     }
   };
 
-  // Initialize MapLibre ONCE when MAP tab becomes active
+  // Initialize Leaflet preview (Default Engine)
   useEffect(() => {
-    if (activeTab !== 'MAP' || !mapContainerRef.current) return;
+    if (activeTab !== 'MAP' || mapProvider !== 'leaflet' || !mapContainerRef.current) return;
+
+    if (mapRef.current) {
+      mapRef.current.remove();
+      mapRef.current = null;
+    }
+
+    try {
+      if (leafletMapRef.current) {
+        leafletMapRef.current.remove();
+        leafletMapRef.current = null;
+      }
+
+      const lmap = L.map(mapContainerRef.current, {
+        center: [22.5937, 78.9629],
+        zoom: 4.5,
+        zoomControl: true,
+        preferCanvas: true,
+      });
+
+      L.tileLayer(
+        'https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+        {
+          attribution: '&copy; Esri &copy; OpenStreetMap contributors',
+          maxZoom: 16,
+        }
+      ).addTo(lmap);
+
+      lmap.fitBounds(
+        [
+          [6.5, 66.0],
+          [38.0, 98.0],
+        ],
+        { padding: [20, 20] }
+      );
+
+      const layerGroup = L.layerGroup().addTo(lmap);
+      leafletLayerGroupRef.current = layerGroup;
+      leafletMapRef.current = lmap;
+
+      if (mapPoints) {
+        syncLeafletGridPoints(mapPoints, opacity);
+      }
+
+      const ro = new ResizeObserver(() => {
+        if (leafletMapRef.current) {
+          leafletMapRef.current.invalidateSize();
+        }
+      });
+      if (mapContainerRef.current) {
+        ro.observe(mapContainerRef.current);
+      }
+
+      return () => {
+        ro.disconnect();
+        if (leafletMapRef.current) {
+          leafletMapRef.current.remove();
+          leafletMapRef.current = null;
+        }
+      };
+    } catch (err) {
+      console.error('Failed to init Leaflet preview in modal:', err);
+    }
+
+    return () => {
+      if (leafletMapRef.current) {
+        leafletMapRef.current.remove();
+        leafletMapRef.current = null;
+      }
+    };
+  }, [activeTab, mapProvider]);
+
+  // Sync Leaflet Data when mapPoints change
+  useEffect(() => {
+    if (activeTab === 'MAP' && mapProvider === 'leaflet') {
+      syncLeafletGridPoints(mapPoints, opacity);
+    }
+  }, [mapPoints, opacity, activeTab, mapProvider]);
+
+  // Initialize MapLibre ONCE when MAP tab becomes active and mapProvider === 'maplibre'
+  useEffect(() => {
+    if (activeTab !== 'MAP' || mapProvider !== 'maplibre' || !mapContainerRef.current) return;
+
+    if (leafletMapRef.current) {
+      leafletMapRef.current.remove();
+      leafletMapRef.current = null;
+    }
 
     let mapInstance: maplibregl.Map | null = null;
     try {
@@ -304,21 +449,21 @@ const MODAL_BASEMAP_STYLE: any = {
         mapRef.current = null;
       }
     };
-  }, [activeTab]);
+  }, [activeTab, mapProvider]);
 
   // Sync MapLibre Data when mapPoints change
   useEffect(() => {
-    if (activeTab === 'MAP' && mapRef.current && mapPoints) {
+    if (activeTab === 'MAP' && mapProvider === 'maplibre' && mapRef.current && mapPoints) {
       syncRawGridPoints(mapRef.current, mapPoints, opacity);
     }
-  }, [mapPoints, activeTab]);
+  }, [mapPoints, activeTab, mapProvider]);
 
   // Update Opacity when slider changes without map reload
   useEffect(() => {
-    if (mapRef.current && mapRef.current.getLayer('raw-grid-points')) {
+    if (mapProvider === 'maplibre' && mapRef.current && mapRef.current.getLayer('raw-grid-points')) {
       mapRef.current.setPaintProperty('raw-grid-points', 'circle-opacity', opacity);
     }
-  }, [opacity]);
+  }, [opacity, mapProvider]);
 
   const totalPages = Math.max(1, Math.ceil(tableData.total / pageSize));
   const isRejected = summary?.validation_status === 'REJECTED' || summary?.validation_status === 'FAIL';
@@ -607,19 +752,46 @@ const MODAL_BASEMAP_STYLE: any = {
               <div className="lg:col-span-3 flex flex-col bg-slate-950 rounded-xl border border-slate-800 overflow-hidden relative min-h-[500px]">
                 {/* Map Toolbar */}
                 <div className="bg-slate-900/90 px-4 py-2.5 border-b border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs z-10">
-                  <div className="flex items-center gap-2">
-                    <span className="text-slate-400 font-mono text-[11px]">VARIABLE:</span>
-                    <select
-                      value={selectedVar}
-                      onChange={(e) => setSelectedVar(e.target.value)}
-                      className="bg-slate-950 border border-slate-800 rounded px-2.5 py-1 text-white font-mono focus:outline-none focus:border-indigo-500"
-                    >
-                      {(mapPoints?.available_variables || variables.map((v) => v.name)).map((v: string) => (
-                        <option key={v} value={v}>
-                          {v}
-                        </option>
-                      ))}
-                    </select>
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-slate-400 font-mono text-[11px]">VARIABLE:</span>
+                      <select
+                        value={selectedVar}
+                        onChange={(e) => setSelectedVar(e.target.value)}
+                        className="bg-slate-950 border border-slate-800 rounded px-2.5 py-1 text-white font-mono focus:outline-none focus:border-indigo-500"
+                      >
+                        {(mapPoints?.available_variables || variables.map((v) => v.name)).map((v: string) => (
+                          <option key={v} value={v}>
+                            {v}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Map Engine Toggle */}
+                    <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-lg border border-slate-800">
+                      <span className="text-[10px] text-slate-500 px-1 font-mono">ENGINE:</span>
+                      <button
+                        onClick={() => setMapProvider('leaflet')}
+                        className={`px-2 py-0.5 rounded text-[11px] font-bold transition ${
+                          mapProvider === 'leaflet'
+                            ? 'bg-emerald-600 text-white shadow'
+                            : 'text-slate-400 hover:text-white'
+                        }`}
+                      >
+                        Leaflet (Recommended)
+                      </button>
+                      <button
+                        onClick={() => setMapProvider('maplibre')}
+                        className={`px-2 py-0.5 rounded text-[11px] font-bold transition ${
+                          mapProvider === 'maplibre'
+                            ? 'bg-indigo-600 text-white shadow'
+                            : 'text-slate-400 hover:text-white'
+                        }`}
+                      >
+                        MapLibre GL
+                      </button>
+                    </div>
                   </div>
 
                   <div className="flex items-center gap-3">

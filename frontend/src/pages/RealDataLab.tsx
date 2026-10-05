@@ -474,7 +474,7 @@ export const RealDataLabPage: React.FC<{ initialTab?: string }> = ({ initialTab 
                   </span>
                 </h1>
                 <p className="text-xs text-slate-400 font-mono mt-0.5">
-                  MoES / NCMRWF • PostgreSQL + PostGIS Storage • CF-1.8 Validation • MapLibre GL JS Real Forecast Maps
+                  MoES / NCMRWF • PostgreSQL + PostGIS Storage • CF-1.8 Validation • Leaflet / MapLibre Real Forecast Maps
                 </p>
               </div>
             </div>
@@ -547,7 +547,7 @@ export const RealDataLabPage: React.FC<{ initialTab?: string }> = ({ initialTab 
               spatialGrid ? 'text-emerald-400' : 'text-amber-400'
             }`}>
               <span className={`w-2 h-2 rounded-full ${spatialGrid ? 'bg-emerald-400' : 'bg-amber-400'}`} />
-              {spatialGrid ? 'READY (MapLibre)' : (vaultObjects.length > 0 ? 'DATA LOADED' : 'NO GRID DATA')}
+              {spatialGrid ? 'READY (Leaflet)' : (vaultObjects.length > 0 ? 'DATA LOADED' : 'NO GRID DATA')}
             </span>
           </div>
 
@@ -1697,7 +1697,7 @@ export const RealDataLabPage: React.FC<{ initialTab?: string }> = ({ initialTab 
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500">Map Engine:</span>
-                <span className="text-emerald-400">MapLibre GL JS (Vector/Raster)</span>
+                <span className="text-emerald-400">Leaflet (OSM / Esri) • MapLibre GL</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500">Vault Objects:</span>

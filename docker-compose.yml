@@ -54,9 +54,9 @@ services:
       - "5173:80"
     environment:
       - VITE_API_URL=http://localhost:8000
-      - VITE_MAP_PROVIDER=maplibre
+      - VITE_MAP_PROVIDER=leaflet
       - VITE_MAP_TILE_URL=https://tile.openstreetmap.org/{z}/{x}/{y}.png
-      - VITE_MAP_STYLE_URL=https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json
+      - VITE_MAP_STYLE_URL=https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}
     depends_on:
       - backend
     networks:

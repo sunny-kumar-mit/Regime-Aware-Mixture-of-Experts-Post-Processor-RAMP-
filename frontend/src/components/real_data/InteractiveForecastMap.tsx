@@ -96,35 +96,6 @@ const INDIA_BOUNDS: { minLat: number; maxLat: number; minLon: number; maxLon: nu
 export type BasemapStyleKey = 'carto-dark' | 'esri-dark' | 'openfreemap-dark' | 'osm-standard';
 
 export const BASEMAP_STYLES: Record<BasemapStyleKey, { id: BasemapStyleKey; label: string; desc: string; style: any }> = {
-  'carto-dark': {
-    id: 'carto-dark',
-    label: 'Dark Matter',
-    desc: 'CartoDB Dark Matter Basemap (Keyless - High Contrast)',
-    style: {
-      version: 8 as const,
-      sources: {
-        'carto-dark-raster': {
-          type: 'raster' as const,
-          tiles: [
-            'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
-            'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
-            'https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
-          ],
-          tileSize: 256,
-          attribution: '&copy; CartoDB &copy; OpenStreetMap contributors',
-        },
-      },
-      layers: [
-        {
-          id: 'carto-dark-layer',
-          type: 'raster' as const,
-          source: 'carto-dark-raster',
-          minzoom: 0,
-          maxzoom: 19,
-        },
-      ],
-    },
-  },
   'esri-dark': {
     id: 'esri-dark',
     label: 'Dark Canvas',
@@ -152,22 +123,20 @@ export const BASEMAP_STYLES: Record<BasemapStyleKey, { id: BasemapStyleKey; labe
       ],
     },
   },
-  'openfreemap-dark': {
-    id: 'openfreemap-dark',
-    label: 'Dark Vector',
-    desc: 'CartoDB Dark Matter Basemap (Keyless - High Contrast)',
+  'carto-dark': {
+    id: 'carto-dark',
+    label: 'Dark Matter',
+    desc: 'Esri Dark Gray Canvas Raster (Keyless - High Contrast)',
     style: {
       version: 8 as const,
       sources: {
         'carto-dark-raster': {
           type: 'raster' as const,
           tiles: [
-            'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
-            'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
-            'https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+            'https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
           ],
           tileSize: 256,
-          attribution: '&copy; CartoDB &copy; OpenStreetMap contributors',
+          attribution: '&copy; Esri &copy; OpenStreetMap contributors',
         },
       },
       layers: [
@@ -176,7 +145,34 @@ export const BASEMAP_STYLES: Record<BasemapStyleKey, { id: BasemapStyleKey; labe
           type: 'raster' as const,
           source: 'carto-dark-raster',
           minzoom: 0,
-          maxzoom: 19,
+          maxzoom: 16,
+        },
+      ],
+    },
+  },
+  'openfreemap-dark': {
+    id: 'openfreemap-dark',
+    label: 'World Imagery',
+    desc: 'Esri High-Resolution Satellite Imagery (Keyless)',
+    style: {
+      version: 8 as const,
+      sources: {
+        'satellite-raster': {
+          type: 'raster' as const,
+          tiles: [
+            'https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+          ],
+          tileSize: 256,
+          attribution: '&copy; Esri',
+        },
+      },
+      layers: [
+        {
+          id: 'satellite-layer',
+          type: 'raster' as const,
+          source: 'satellite-raster',
+          minzoom: 0,
+          maxzoom: 18,
         },
       ],
     },
@@ -381,17 +377,24 @@ export const InteractiveForecastMap: React.FC<InteractiveForecastMapProps> = ({
   const mapRef = useRef<maplibregl.Map | null>(null);
   const leafletMapRef = useRef<L.Map | null>(null);
   const leafletLayerGroupRef = useRef<L.LayerGroup | null>(null);
+  const leafletTileLayerRef = useRef<L.TileLayer | null>(null);
 
   const [internalGrid, setInternalGrid] = useState<SpatialGridPayload | null>(null);
   const activeGrid = gridData || internalGrid;
 
   const [webGlSupported, setWebGlSupported] = useState(true);
-  const [mapProvider, setMapProvider] = useState<'maplibre' | 'leaflet'>('maplibre');
-  const [activeBasemap, setActiveBasemap] = useState<BasemapStyleKey>('carto-dark');
+  const [mapProvider, setMapProvider] = useState<'maplibre' | 'leaflet'>('leaflet');
+  const [activeBasemap, setActiveBasemap] = useState<BasemapStyleKey>('esri-dark');
   const [mapEngineStatus, setMapEngineStatus] = useState<'READY' | 'ERROR'>('READY');
   const [lastInitTime, setLastInitTime] = useState<string>('');
   const [mapInitialized, setMapInitialized] = useState<boolean>(false);
   const hoverPopupRef = useRef<maplibregl.Popup | null>(null);
+
+  const getLeafletTileUrl = (key: BasemapStyleKey) => {
+    if (key === 'osm-standard') return 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+    if (key === 'openfreemap-dark') return 'https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+    return 'https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}';
+  };
 
   // IMD Ground Truth Pairing State
   const [pairingModalOpen, setPairingModalOpen] = useState(false);
@@ -467,6 +470,8 @@ export const InteractiveForecastMap: React.FC<InteractiveForecastMapProps> = ({
       mapRef.current.once('styledata', () => {
         setTimeout(onStyleReady, 60);
       });
+    } else if (leafletMapRef.current && leafletTileLayerRef.current) {
+      leafletTileLayerRef.current.setUrl(getLeafletTileUrl(newKey));
     }
   };
 
@@ -477,11 +482,11 @@ export const InteractiveForecastMap: React.FC<InteractiveForecastMapProps> = ({
       try {
         const conf = await fetchMapConfig();
         if (isMounted) {
-          const envProvider = (import.meta.env.VITE_MAP_PROVIDER as string) || conf?.provider || 'maplibre';
-          if (envProvider === 'leaflet') {
-            setMapProvider('leaflet');
-          } else {
+          const envProvider = (import.meta.env.VITE_MAP_PROVIDER as string) || conf?.provider || 'leaflet';
+          if (envProvider === 'maplibre') {
             setMapProvider('maplibre');
+          } else {
+            setMapProvider('leaflet');
           }
           setMapEngineStatus('READY');
         }
@@ -887,10 +892,11 @@ export const InteractiveForecastMap: React.FC<InteractiveForecastMapProps> = ({
         zoomControl: true,
       });
 
-      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors',
+      const tileLayer = L.tileLayer(getLeafletTileUrl(activeBasemap), {
+        attribution: activeBasemap === 'osm-standard' ? '&copy; OpenStreetMap contributors' : '&copy; Esri',
         maxZoom: 18,
       }).addTo(lmap);
+      leafletTileLayerRef.current = tileLayer;
 
       // Fit India domain automatically
       lmap.fitBounds(
@@ -908,6 +914,23 @@ export const InteractiveForecastMap: React.FC<InteractiveForecastMapProps> = ({
       setMapInitialized(true);
       setMapEngineStatus('READY');
       setLastInitTime(new Date().toLocaleTimeString('en-IN') + ' IST');
+
+      const ro = new ResizeObserver(() => {
+        if (leafletMapRef.current) {
+          leafletMapRef.current.invalidateSize();
+        }
+      });
+      if (mapContainerRef.current) {
+        ro.observe(mapContainerRef.current);
+      }
+
+      return () => {
+        ro.disconnect();
+        if (leafletMapRef.current) {
+          leafletMapRef.current.remove();
+          leafletMapRef.current = null;
+        }
+      };
     } catch (err) {
       console.error('Error initializing Leaflet:', err);
       setMapEngineStatus('ERROR');
@@ -1108,6 +1131,16 @@ export const InteractiveForecastMap: React.FC<InteractiveForecastMapProps> = ({
           <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-lg border border-slate-800">
             <span className="text-[10px] text-slate-500 px-2 font-mono">ENGINE:</span>
             <button
+              onClick={() => setMapProvider('leaflet')}
+              className={`px-2.5 py-1 rounded text-xs font-bold transition ${
+                mapProvider === 'leaflet'
+                  ? 'bg-emerald-600 text-white shadow'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              Leaflet (Recommended)
+            </button>
+            <button
               onClick={() => setMapProvider('maplibre')}
               className={`px-2.5 py-1 rounded text-xs font-bold transition ${
                 mapProvider === 'maplibre'
@@ -1117,22 +1150,11 @@ export const InteractiveForecastMap: React.FC<InteractiveForecastMapProps> = ({
             >
               MapLibre GL
             </button>
-            <button
-              onClick={() => setMapProvider('leaflet')}
-              className={`px-2.5 py-1 rounded text-xs font-bold transition ${
-                mapProvider === 'leaflet'
-                  ? 'bg-emerald-600 text-white shadow'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              Leaflet (OSM)
-            </button>
           </div>
 
-          {/* Keyless Basemap Selector for MapLibre */}
-          {mapProvider === 'maplibre' && (
-            <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-lg border border-slate-800">
-              <span className="text-[10px] text-slate-500 px-2 font-mono">BASEMAP:</span>
+          {/* Keyless Basemap Selector */}
+          <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-lg border border-slate-800">
+            <span className="text-[10px] text-slate-500 px-2 font-mono">BASEMAP:</span>
               {(Object.keys(BASEMAP_STYLES) as BasemapStyleKey[]).map((key) => {
                 const bm = BASEMAP_STYLES[key];
                 const isSelected = activeBasemap === key;
@@ -1152,7 +1174,6 @@ export const InteractiveForecastMap: React.FC<InteractiveForecastMapProps> = ({
                 );
               })}
             </div>
-          )}
 
           <div className="hidden xl:flex items-center gap-2 text-[11px] text-slate-400 bg-slate-950/80 px-2.5 py-1.5 rounded-lg border border-slate-800">
             <span

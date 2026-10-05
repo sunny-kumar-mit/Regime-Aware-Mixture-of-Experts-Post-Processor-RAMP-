@@ -244,7 +244,7 @@ class DatabaseManager:
                     connect_args={"check_same_thread": False},
                 )
             else:
-                connect_args = {"connect_timeout": 15}
+                connect_args = {"connect_timeout": 3}
                 eng = create_engine(
                     self.database_url,
                     pool_size=self.pool_size,

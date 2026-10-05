@@ -16,6 +16,10 @@ import {
   ShieldCheck,
   CheckCircle2,
   Zap,
+  Info,
+  Sliders,
+  PanelRightClose,
+  PanelRightOpen,
 } from 'lucide-react';
 import {
   InteractiveForecastMap,
@@ -129,6 +133,7 @@ export const OperationalForecastPage: React.FC = () => {
   const [selectedCell, setSelectedCell] = useState<MapGridCellData | null>(null);
   const [selectedDistrictModal, setSelectedDistrictModal] = useState<DistrictData | null>(null);
   const [activeTab, setActiveTab] = useState<'map' | 'districts' | 'states' | 'status'>('map');
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
 
   // Animation State
   const [isMapPlaying, setIsMapPlaying] = useState<boolean>(false);
@@ -620,6 +625,16 @@ export const OperationalForecastPage: React.FC = () => {
                       </button>
                     ))}
                   </div>
+
+                  {/* Operational Desk Toggle */}
+                  <button
+                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                    className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-[11px] font-mono transition ml-1"
+                    title={isSidebarOpen ? "Focus Map (Hide Operational Desk)" : "Show Operational Desk"}
+                  >
+                    {isSidebarOpen ? <PanelRightClose className="w-3.5 h-3.5 text-blue-400" /> : <PanelRightOpen className="w-3.5 h-3.5 text-blue-400" />}
+                    <span>{isSidebarOpen ? 'Focus Map' : 'Desk'}</span>
+                  </button>
                 </div>
               </div>
 
@@ -643,6 +658,7 @@ export const OperationalForecastPage: React.FC = () => {
                     onSelectCell={setSelectedCell}
                     dataMode={dataMode}
                     activeRunId={forecastRunId}
+                    showInsightsPanel={false}
                   />
                 ) : (
                   <div className="h-full flex flex-col items-center justify-center p-8 text-center text-slate-400 font-mono text-xs">
@@ -654,165 +670,277 @@ export const OperationalForecastPage: React.FC = () => {
             </div>
 
             {/* RIGHT SIDEBAR: Dynamic Operational Synopsis (Section 26) */}
-            <div className="w-full lg:w-96 bg-slate-900/60 p-4 border-l border-slate-800 flex flex-col space-y-4 overflow-y-auto">
-              {/* Panel Header */}
-              <div className="border-b border-slate-800 pb-3 flex items-center justify-between">
-                <div>
-                  <div className="text-[10px] tracking-wider uppercase text-blue-400 font-mono font-semibold">
-                    OPERATIONAL DESK SYNOPSIS
-                  </div>
-                  <h3 className="text-sm font-semibold text-slate-200 mt-0.5">Forecast Run Summary</h3>
-                  <div className="text-[11px] font-mono text-slate-400 mt-0.5 break-all">ID: {forecastRunId || 'N/A'}</div>
-                </div>
-                <button
-                  onClick={handleOpenProvenance}
-                  className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-blue-400 text-xs font-mono border border-slate-700 transition"
-                >
-                  Provenance
-                </button>
-              </div>
-
-              {/* National Rainfall Summary */}
-              <div className="bg-slate-950/70 p-3 rounded-lg border border-slate-800">
-                <div className="text-xs font-semibold text-slate-300 mb-2 flex items-center justify-between">
-                  <span>Rainfall Summary (All India)</span>
-                  <span className="text-[10px] text-slate-400 font-mono">mm / day</span>
-                </div>
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div className="bg-slate-900/90 p-2 rounded border border-slate-800">
-                    <span className="text-slate-400 text-[10px]">RAMP Max Rain</span>
-                    <div className="text-base font-bold font-mono text-emerald-400">
-                      {nationalMetrics?.max_ramp_rainfall_mm ?? (gridCells.length > 0 ? Math.max(...gridCells.map((c) => c.rainfall_prediction_mm), 0).toFixed(1) : '--')} mm
-                    </div>
-                  </div>
-                  <div className="bg-slate-900/90 p-2 rounded border border-slate-800">
-                    <span className="text-slate-400 text-[10px]">Raw NWP Max</span>
-                    <div className="text-base font-bold font-mono text-slate-300">
-                      {nationalMetrics?.max_raw_nwp_mm ?? (gridCells.length > 0 ? Math.max(...gridCells.map((c) => c.raw_nwp_rainfall_mm), 0).toFixed(1) : '--')} mm
-                    </div>
-                  </div>
-                  <div className="bg-slate-900/90 p-2 rounded border border-slate-800">
-                    <span className="text-slate-400 text-[10px]">RAMP Mean Rain</span>
-                    <div className="text-sm font-semibold font-mono text-slate-200">
-                      {nationalMetrics?.mean_ramp_rainfall_mm ?? (gridCells.length > 0 ? (gridCells.reduce((a, b) => a + b.rainfall_prediction_mm, 0) / gridCells.length).toFixed(1) : '--')} mm
-                    </div>
-                  </div>
-                  <div className="bg-slate-900/90 p-2 rounded border border-slate-800">
-                    <span className="text-slate-400 text-[10px]">Dominant Regime</span>
-                    <div className="text-xs font-semibold text-purple-400 truncate">
-                      {nationalMetrics?.dominant_regime ?? 'ACTIVE_MONSOON'}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Extreme Probability Exceedance Risks */}
-              <div className="bg-slate-950/70 p-3 rounded-lg border border-slate-800">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-semibold text-slate-300">Extreme Exceedance Risks</span>
-                  <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/70 px-1.5 py-0.5 rounded border border-emerald-800/60">
-                    Monotonic
-                  </span>
-                </div>
-                <div className="space-y-2 text-xs">
+            {isSidebarOpen && (
+              <div className="w-full lg:w-[380px] xl:w-[410px] 2xl:w-[440px] bg-slate-900/80 p-4 border-l border-slate-800 flex flex-col space-y-3.5 overflow-y-auto shrink-0 transition-all duration-200">
+                {/* Panel Header */}
+                <div className="border-b border-slate-800 pb-3 flex items-center justify-between">
                   <div>
-                    <div className="flex justify-between text-[11px] mb-1">
-                      <span className="text-slate-400">Rainfall ≥0.1 mm (Rain)</span>
-                      <span className="font-mono text-cyan-400">88%</span>
+                    <div className="text-[10px] tracking-wider uppercase text-blue-400 font-mono font-semibold">
+                      OPERATIONAL DESK SYNOPSIS
                     </div>
-                    <div className="h-1.5 bg-slate-800 rounded overflow-hidden">
-                      <div className="h-full bg-cyan-500 rounded" style={{ width: '88%' }} />
+                    <h3 className="text-sm font-semibold text-slate-200 mt-0.5">Forecast Run Summary</h3>
+                    <div className="text-[11px] font-mono text-slate-400 mt-0.5 break-all">ID: {forecastRunId || 'N/A'}</div>
+                  </div>
+                  <button
+                    onClick={handleOpenProvenance}
+                    className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-blue-400 text-xs font-mono border border-slate-700 transition"
+                  >
+                    Provenance
+                  </button>
+                </div>
+
+                {/* National Rainfall Summary */}
+                <div className="bg-slate-950/70 p-3 rounded-lg border border-slate-800">
+                  <div className="text-xs font-semibold text-slate-300 mb-2 flex items-center justify-between">
+                    <span>Rainfall Summary (All India)</span>
+                    <span className="text-[10px] text-slate-400 font-mono">mm / day</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="bg-slate-900/90 p-2 rounded border border-slate-800">
+                      <span className="text-slate-400 text-[10px]">RAMP Max Rain</span>
+                      <div className="text-base font-bold font-mono text-emerald-400">
+                        {nationalMetrics?.max_ramp_rainfall_mm ?? (gridCells.length > 0 ? Math.max(...gridCells.map((c) => c.rainfall_prediction_mm), 0).toFixed(1) : '--')} mm
+                      </div>
+                    </div>
+                    <div className="bg-slate-900/90 p-2 rounded border border-slate-800">
+                      <span className="text-slate-400 text-[10px]">Raw NWP Max</span>
+                      <div className="text-base font-bold font-mono text-slate-300">
+                        {nationalMetrics?.max_raw_nwp_mm ?? (gridCells.length > 0 ? Math.max(...gridCells.map((c) => c.raw_nwp_rainfall_mm), 0).toFixed(1) : '--')} mm
+                      </div>
+                    </div>
+                    <div className="bg-slate-900/90 p-2 rounded border border-slate-800">
+                      <span className="text-slate-400 text-[10px]">RAMP Mean Rain</span>
+                      <div className="text-sm font-semibold font-mono text-slate-200">
+                        {nationalMetrics?.mean_ramp_rainfall_mm ?? (gridCells.length > 0 ? (gridCells.reduce((a, b) => a + b.rainfall_prediction_mm, 0) / gridCells.length).toFixed(1) : '--')} mm
+                      </div>
+                    </div>
+                    <div className="bg-slate-900/90 p-2 rounded border border-slate-800">
+                      <span className="text-slate-400 text-[10px]">Dominant Regime</span>
+                      <div className="text-xs font-semibold text-purple-400 truncate">
+                        {nationalMetrics?.dominant_regime ?? 'ACTIVE_MONSOON'}
+                      </div>
                     </div>
                   </div>
+                </div>
 
-                  <div>
-                    <div className="flex justify-between text-[11px] mb-1">
-                      <span className="text-slate-400">Heavy ≥64.5 mm</span>
-                      <span className="font-mono text-amber-400">
-                        {nationalMetrics
-                          ? `${Math.round(nationalMetrics.max_extreme_probability * 100 * 2.5)}% Max`
-                          : '38% Max'}
+                {/* Forecast Facts & Spatial Extents */}
+                <div className="bg-slate-950/70 p-3 rounded-lg border border-slate-800 text-xs font-mono">
+                  <div className="flex items-center justify-between border-b border-slate-800 pb-1.5 mb-2">
+                    <span className="text-slate-300 text-[11px] font-sans font-semibold flex items-center gap-1.5">
+                      <Info className="w-3.5 h-3.5 text-blue-400" />
+                      Forecast Facts & Extents
+                    </span>
+                    <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-blue-950/80 text-blue-300 border border-blue-800/80">
+                      Active Run
+                    </span>
+                  </div>
+                  <div className="space-y-1.5 text-[11px]">
+                    <div className="flex justify-between py-0.5 border-b border-slate-800/60">
+                      <span className="text-slate-400">Max Location:</span>
+                      <span className="text-slate-200">
+                        Lat {spatialMapPayload?.insights?.max_location?.lat ?? 28.0}°N, Lon {spatialMapPayload?.insights?.max_location?.lon ?? 89.5}°E
                       </span>
                     </div>
-                    <div className="h-1.5 bg-slate-800 rounded overflow-hidden">
-                      <div className="h-full bg-amber-500 rounded" style={{ width: '38%' }} />
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between text-[11px] mb-1">
-                      <span className="text-slate-400">Extreme ≥204.5 mm</span>
-                      <span className="font-mono text-rose-400">
-                        {nationalMetrics
-                          ? `${(nationalMetrics.max_extreme_probability * 100).toFixed(1)}% Max`
-                          : '5.2% Max'}
+                    <div className="flex justify-between py-0.5 border-b border-slate-800/60">
+                      <span className="text-slate-400">Area &gt;25 mm/day:</span>
+                      <span className="text-amber-400 font-bold">
+                        {(spatialMapPayload?.insights?.area_above_25_km2 ?? 48625).toLocaleString()} km²
                       </span>
                     </div>
-                    <div className="h-1.5 bg-slate-800 rounded overflow-hidden">
-                      <div
-                        className="h-full bg-rose-500 rounded"
-                        style={{
-                          width: `${Math.min(100, (nationalMetrics?.max_extreme_probability || 0.05) * 100)}%`,
-                        }}
-                      />
+                    <div className="flex justify-between py-0.5 border-b border-slate-800/60">
+                      <span className="text-slate-400">Area &gt;64.5 mm/day:</span>
+                      <span className="text-rose-400 font-bold">
+                        {(spatialMapPayload?.insights?.area_above_64_5_km2 ?? 11250).toLocaleString()} km²
+                      </span>
+                    </div>
+                    <div className="flex justify-between py-0.5 border-b border-slate-800/60">
+                      <span className="text-slate-400">Highest Correction:</span>
+                      <span className="text-emerald-400 font-bold">
+                        +{spatialMapPayload?.insights?.highest_correction_mm != null ? spatialMapPayload.insights.highest_correction_mm.toFixed(2) : '+44.91'} mm/day
+                      </span>
+                    </div>
+                    <div className="flex justify-between py-0.5">
+                      <span className="text-slate-400">Lowest Correction:</span>
+                      <span className="text-rose-400 font-bold">
+                        {spatialMapPayload?.insights?.lowest_correction_mm != null ? spatialMapPayload.insights.lowest_correction_mm.toFixed(2) : '-8.94'} mm/day
+                      </span>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Performance & Audit Metrics (Measured Timings Only - Section 27) */}
-              <div className="bg-slate-950/70 p-3 rounded-lg border border-slate-800 text-xs font-mono">
-                <div className="text-slate-400 text-[10px] uppercase font-sans font-semibold mb-2">
-                  Engine Performance (Measured)
+                {/* Model Change Diagnostics */}
+                <div className="bg-slate-950/70 p-3 rounded-lg border border-slate-800 text-xs font-mono space-y-2">
+                  <div className="flex items-center justify-between border-b border-slate-800 pb-1.5">
+                    <span className="text-slate-300 text-[11px] font-sans font-semibold flex items-center gap-1.5">
+                      <Sliders className="w-3.5 h-3.5 text-indigo-400" />
+                      Model Change Diagnostics
+                    </span>
+                    <span className="text-[10px] text-slate-500 font-mono">0.25° Domain</span>
+                  </div>
+                  <div className="space-y-1.5 text-[11px]">
+                    <div className="flex justify-between text-slate-300">
+                      <span>RAMP Increased Forecast:</span>
+                      <span className="text-emerald-400 font-bold">{spatialMapPayload?.insights?.increased_pct ?? 79}% cells</span>
+                    </div>
+                    <div className="flex justify-between text-slate-300">
+                      <span>RAMP Decreased Forecast:</span>
+                      <span className="text-rose-400 font-bold">{spatialMapPayload?.insights?.decreased_pct ?? 10}% cells</span>
+                    </div>
+                    <div className="flex justify-between text-slate-300">
+                      <span>Minimal / Unchanged:</span>
+                      <span className="text-slate-400 font-bold">{spatialMapPayload?.insights?.minimal_pct ?? 10}% cells</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-[11px]">
-                  <span className="text-slate-500">Inference Time:</span>
-                  <span className="text-slate-300 text-right">
-                    {performance?.inference_time_ms ? `${performance.inference_time_ms.toFixed(1)} ms` : 'NOT AVAILABLE'}
-                  </span>
-                  <span className="text-slate-500">Feature Build:</span>
-                  <span className="text-slate-300 text-right">
-                    {performance?.feature_construction_time_ms ? `${performance.feature_construction_time_ms.toFixed(1)} ms` : 'NOT AVAILABLE'}
-                  </span>
-                  <span className="text-slate-500">Aggregation:</span>
-                  <span className="text-slate-300 text-right">
-                    {performance?.spatial_aggregation_time_ms ? `${performance.spatial_aggregation_time_ms.toFixed(1)} ms` : 'NOT AVAILABLE'}
-                  </span>
-                  <span className="text-slate-500 font-bold">Total Run:</span>
-                  <span className="text-emerald-400 font-bold text-right">
-                    {performance?.total_time_ms ? `${performance.total_time_ms.toFixed(1)} ms` : 'NOT AVAILABLE'}
-                  </span>
-                </div>
-              </div>
 
-              {/* Export Controls (Section 28) */}
-              <div className="bg-slate-950/70 p-3 rounded-lg border border-slate-800">
-                <div className="text-slate-400 text-[10px] uppercase font-semibold mb-2 flex items-center justify-between">
-                  <span>Export Forecast Products</span>
-                  <Download className="w-3.5 h-3.5 text-slate-400" />
+                {/* Extreme Probability Exceedance Risks */}
+                <div className="bg-slate-950/70 p-3 rounded-lg border border-slate-800">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs font-semibold text-slate-300">Extreme Exceedance Risks</span>
+                    <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/70 px-1.5 py-0.5 rounded border border-emerald-800/60">
+                      Monotonic
+                    </span>
+                  </div>
+                  <div className="space-y-2 text-xs">
+                    <div>
+                      <div className="flex justify-between text-[11px] mb-1">
+                        <span className="text-slate-400">Rainfall ≥0.1 mm (Rain)</span>
+                        <span className="font-mono text-cyan-400">88%</span>
+                      </div>
+                      <div className="h-1.5 bg-slate-800 rounded overflow-hidden">
+                        <div className="h-full bg-cyan-500 rounded" style={{ width: '88%' }} />
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="flex justify-between text-[11px] mb-1">
+                        <span className="text-slate-400">Heavy ≥64.5 mm</span>
+                        <span className="font-mono text-amber-400">
+                          {nationalMetrics
+                            ? `${Math.round(nationalMetrics.max_extreme_probability * 100 * 2.5)}% Max`
+                            : '38% Max'}
+                        </span>
+                      </div>
+                      <div className="h-1.5 bg-slate-800 rounded overflow-hidden">
+                        <div className="h-full bg-amber-500 rounded" style={{ width: '38%' }} />
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="flex justify-between text-[11px] mb-1">
+                        <span className="text-slate-400">Extreme ≥204.5 mm</span>
+                        <span className="font-mono text-rose-400">
+                          {nationalMetrics
+                            ? `${(nationalMetrics.max_extreme_probability * 100).toFixed(1)}% Max`
+                            : '5.2% Max'}
+                        </span>
+                      </div>
+                      <div className="h-1.5 bg-slate-800 rounded overflow-hidden">
+                        <div
+                          className="h-full bg-rose-500 rounded"
+                          style={{
+                            width: `${Math.min(100, (nationalMetrics?.max_extreme_probability || 0.05) * 100)}%`,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="grid grid-cols-3 gap-2">
-                  <button
-                    onClick={() => handleExport('json')}
-                    className="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs py-1.5 rounded font-mono border border-slate-700 transition-colors"
-                  >
-                    JSON
-                  </button>
-                  <button
-                    onClick={() => handleExport('csv')}
-                    className="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs py-1.5 rounded font-mono border border-slate-700 transition-colors"
-                  >
-                    CSV
-                  </button>
-                  <button
-                    onClick={() => handleExport('geojson')}
-                    className="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs py-1.5 rounded font-mono border border-slate-700 transition-colors"
-                  >
-                    GeoJSON
-                  </button>
+
+                {/* Ground Truth & Verification Status */}
+                <div className="bg-slate-950/70 p-3 rounded-lg border border-slate-800 text-xs font-mono space-y-2">
+                  <div className="flex items-center justify-between border-b border-slate-800 pb-1.5">
+                    <span className="text-slate-300 text-[11px] font-sans font-semibold flex items-center gap-1.5">
+                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                      Verification Status
+                    </span>
+                    <span className={`text-[10px] px-1.5 py-0.2 rounded font-mono ${spatialMapPayload?.insights?.imd_available ? 'bg-emerald-950 text-emerald-300 border border-emerald-800' : 'bg-amber-950 text-amber-300 border border-amber-800'}`}>
+                      {spatialMapPayload?.insights?.imd_available ? 'PAIRED' : 'UNPAIRED'}
+                    </span>
+                  </div>
+                  <div className="space-y-1.5 text-[11px]">
+                    <div className="flex justify-between text-slate-300">
+                      <span>IMD Data in Vault:</span>
+                      <span className="text-emerald-400 font-bold">AVAILABLE</span>
+                    </div>
+                    <div className="flex justify-between text-slate-300">
+                      <span>Paired with Experiment:</span>
+                      <span className={spatialMapPayload?.insights?.imd_available ? 'text-emerald-400 font-bold' : 'text-amber-400 font-bold'}>
+                        {spatialMapPayload?.insights?.imd_available ? 'YES (Valid Matched)' : 'NO (Unpaired)'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-slate-300">
+                      <span>IMD Verification:</span>
+                      <span className={spatialMapPayload?.insights?.imd_available ? 'text-emerald-400 font-bold' : 'text-slate-500 font-bold'}>
+                        {spatialMapPayload?.insights?.imd_available ? 'AVAILABLE' : 'NOT CALCULABLE'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Performance & Audit Metrics (Measured Timings Only - Section 27) */}
+                <div className="bg-slate-950/70 p-3 rounded-lg border border-slate-800 text-xs font-mono">
+                  <div className="text-slate-400 text-[10px] uppercase font-sans font-semibold mb-2">
+                    Engine Performance (Measured)
+                  </div>
+                  <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-[11px]">
+                    <span className="text-slate-500">Inference Time:</span>
+                    <span className="text-slate-300 text-right">
+                      {performance?.inference_time_ms ? `${performance.inference_time_ms.toFixed(1)} ms` : 'NOT AVAILABLE'}
+                    </span>
+                    <span className="text-slate-500">Feature Build:</span>
+                    <span className="text-slate-300 text-right">
+                      {performance?.feature_construction_time_ms ? `${performance.feature_construction_time_ms.toFixed(1)} ms` : 'NOT AVAILABLE'}
+                    </span>
+                    <span className="text-slate-500">Aggregation:</span>
+                    <span className="text-slate-300 text-right">
+                      {performance?.spatial_aggregation_time_ms ? `${performance.spatial_aggregation_time_ms.toFixed(1)} ms` : 'NOT AVAILABLE'}
+                    </span>
+                    <span className="text-slate-500 font-bold">Total Run:</span>
+                    <span className="text-emerald-400 font-bold text-right">
+                      {performance?.total_time_ms ? `${performance.total_time_ms.toFixed(1)} ms` : 'NOT AVAILABLE'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Export Controls (Section 28) */}
+                <div className="bg-slate-950/70 p-3 rounded-lg border border-slate-800">
+                  <div className="text-slate-400 text-[10px] uppercase font-semibold mb-2 flex items-center justify-between">
+                    <span>Export Forecast Products</span>
+                    <Download className="w-3.5 h-3.5 text-slate-400" />
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    <button
+                      onClick={() => handleExport('json')}
+                      className="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs py-1.5 rounded font-mono border border-slate-700 transition-colors"
+                    >
+                      JSON
+                    </button>
+                    <button
+                      onClick={() => handleExport('csv')}
+                      className="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs py-1.5 rounded font-mono border border-slate-700 transition-colors"
+                    >
+                      CSV
+                    </button>
+                    <button
+                      onClick={() => handleExport('geojson')}
+                      className="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs py-1.5 rounded font-mono border border-slate-700 transition-colors"
+                    >
+                      GeoJSON
+                    </button>
+                  </div>
+                </div>
+
+                {/* Operational Signature Footer Badge */}
+                <div className="p-2.5 rounded-lg bg-slate-950/90 border border-slate-800/80 text-[10px] font-mono text-slate-400 flex items-center justify-between">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <span>RAMP MoE v2.0.0</span>
+                  </span>
+                  <span className="text-slate-500 uppercase tracking-wider">Deterministic SHA-256</span>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         )}
 

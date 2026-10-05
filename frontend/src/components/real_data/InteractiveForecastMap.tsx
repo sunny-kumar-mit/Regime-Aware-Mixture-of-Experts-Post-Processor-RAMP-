@@ -84,6 +84,7 @@ interface InteractiveForecastMapProps {
   onImportImd?: () => void;
   activeRunId?: string;
   onPairSuccess?: (updatedGrid: SpatialGridPayload) => void;
+  showInsightsPanel?: boolean;
 }
 
 // Canonical India Domain Coordinates (Requirement 6)
@@ -373,6 +374,7 @@ export const InteractiveForecastMap: React.FC<InteractiveForecastMapProps> = ({
   onImportImd,
   activeRunId,
   onPairSuccess,
+  showInsightsPanel = true,
 }) => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
@@ -513,6 +515,23 @@ export const InteractiveForecastMap: React.FC<InteractiveForecastMapProps> = ({
       setWebGlSupported(false);
       setMapProvider('leaflet'); // Auto-fallback to Leaflet raster if WebGL is unavailable
     }
+  }, []);
+
+  // Responsive auto-resizing for Leaflet and MapLibre engines
+  useEffect(() => {
+    if (!mapContainerRef.current) return;
+    const observer = new ResizeObserver(() => {
+      if (mapRef.current) {
+        try { mapRef.current.resize(); } catch (e) {}
+      }
+      if (leafletMapRef.current) {
+        try { leafletMapRef.current.invalidateSize(); } catch (e) {}
+      }
+    });
+    observer.observe(mapContainerRef.current);
+    return () => {
+      observer.disconnect();
+    };
   }, []);
 
   // Convert cells into GeoJSON FeatureCollection
@@ -1314,10 +1333,10 @@ export const InteractiveForecastMap: React.FC<InteractiveForecastMapProps> = ({
         </div>
       )}
 
-      {/* MAIN MAP WORKSPACE: MAP CANVAS + RIGHT-SIDE FORECAST INSIGHTS */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-        {/* MAP CONTAINER (3 COLS) */}
-        <div className="lg:col-span-3 flex flex-col bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-2xl relative min-h-[580px] z-0 isolate">
+      {/* MAIN MAP WORKSPACE: MAP CANVAS + OPTIONAL RIGHT-SIDE FORECAST INSIGHTS */}
+      <div className={showInsightsPanel ? "grid grid-cols-1 lg:grid-cols-4 gap-4" : "flex flex-col gap-4"}>
+        {/* MAP CONTAINER */}
+        <div className={`${showInsightsPanel ? "lg:col-span-3" : "w-full"} flex flex-col bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-2xl relative min-h-[580px] z-0 isolate`}>
           {/* SCALE & ZOOM PRESET TOOLBAR (Requirement 6) */}
           <div className="bg-slate-950 px-4 py-2 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2 z-10">
             <div className="flex items-center gap-1.5 text-xs">
@@ -1417,7 +1436,8 @@ export const InteractiveForecastMap: React.FC<InteractiveForecastMapProps> = ({
         </div>
 
         {/* RIGHT SIDE: FORECAST INSIGHTS PANEL (Requirements 8, 17) */}
-        <div className="flex flex-col gap-4">
+        {showInsightsPanel && (
+          <div className="flex flex-col gap-4">
           <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col gap-3 shadow-xl">
             <div className="flex items-center justify-between border-b border-slate-800 pb-2">
               <h3 className="text-xs font-mono font-bold uppercase text-white flex items-center gap-2">
@@ -1580,6 +1600,7 @@ export const InteractiveForecastMap: React.FC<InteractiveForecastMapProps> = ({
             </p>
           </div>
         </div>
+        )}
       </div>
 
       {/* BOTTOM SECTION: GRID CELL INSPECTOR (Requirement 7) */}

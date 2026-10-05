@@ -35,8 +35,9 @@ if [ -d "/app/tests/fixtures/phase18" ]; then
     cp -n /app/tests/fixtures/phase18/neps_*.nc /app/data/real/vault/objects/canonical/ncmrwf/ 2>/dev/null || true
     cp -n /app/tests/fixtures/phase18/imd_*.nc /app/data/real/vault/objects/raw/imd/ 2>/dev/null || true
     cp -n /app/tests/fixtures/phase18/ncum_*.nc /app/data/real/vault/objects/raw/ncmrwf/ 2>/dev/null || true
-    cp -n /app/tests/fixtures/phase18/neps_*.nc /app/data/real/vault/objects/raw/ncmrwf/ 2>/dev/null || true
 fi
+chmod -R 777 /app/data 2>/dev/null || true
+
 
 # Ensure audit and state files exist with valid JSON so services can read/write without crashing
 if [ ! -s /app/data/audit/cutover_state.json ]; then

@@ -17,10 +17,14 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 import numpy as np
 
+import threading
+
 try:
     import netCDF4 as nc
 except ImportError:
     nc = None
+
+_NETCDF_IO_LOCK = threading.Lock()
 
 from ml.real_data.checksum_service import ChecksumService
 from ml.real_data.object_storage import ObjectStorageService
@@ -280,25 +284,26 @@ class RawDataService:
             fn = path.name
             if path.suffix in [".nc", ".nc4", ".netcdf"] and nc is not None:
                 try:
-                    with nc.Dataset(str(path), "r") as ds:
-                        lat_key = "lat" if "lat" in ds.variables else ("latitude" if "latitude" in ds.variables else None)
-                        lon_key = "lon" if "lon" in ds.variables else ("longitude" if "longitude" in ds.variables else None)
+                    with _NETCDF_IO_LOCK:
+                        with nc.Dataset(str(path), "r") as ds:
+                            lat_key = "lat" if "lat" in ds.variables else ("latitude" if "latitude" in ds.variables else None)
+                            lon_key = "lon" if "lon" in ds.variables else ("longitude" if "longitude" in ds.variables else None)
 
-                        if lat_key and lon_key:
-                            n_lat = len(ds.variables[lat_key])
-                            n_lon = len(ds.variables[lon_key])
-                            record_count = n_lat * n_lon
-                            grid_dims = f"{n_lat} × {n_lon}"
-                            lats = ds.variables[lat_key][:]
-                            lons = ds.variables[lon_key][:]
-                            lat_range = [round(float(np.min(lats)), 2), round(float(np.max(lats)), 2)]
-                            lon_range = [round(float(np.min(lons)), 2), round(float(np.max(lons)), 2)]
+                            if lat_key and lon_key:
+                                n_lat = len(ds.variables[lat_key])
+                                n_lon = len(ds.variables[lon_key])
+                                record_count = n_lat * n_lon
+                                grid_dims = f"{n_lat} × {n_lon}"
+                                lats = ds.variables[lat_key][:]
+                                lons = ds.variables[lon_key][:]
+                                lat_range = [round(float(np.min(lats)), 2), round(float(np.max(lats)), 2)]
+                                lon_range = [round(float(np.min(lons)), 2), round(float(np.max(lons)), 2)]
 
-                        variables = list(ds.variables.keys())
-                        for v_name, var in ds.variables.items():
-                            units = getattr(var, "units", "")
-                            if units:
-                                units_map[v_name] = units
+                            variables = list(ds.variables.keys())
+                            for v_name, var in ds.variables.items():
+                                units = getattr(var, "units", "")
+                                if units:
+                                    units_map[v_name] = units
                 except Exception as e:
                     logger.error(f"Error parsing NetCDF metadata: {e}")
 
@@ -353,27 +358,28 @@ class RawDataService:
         if path and path.exists() and nc is not None and path.suffix in [".nc", ".nc4", ".netcdf"]:
             var_list = []
             try:
-                with nc.Dataset(str(path), "r") as ds:
-                    for v_name, var in ds.variables.items():
-                        data = var[:]
-                        try:
-                            v_min = float(np.nanmin(data))
-                            v_max = float(np.nanmax(data))
-                            v_mean = float(np.nanmean(data))
-                        except Exception:
-                            v_min, v_max, v_mean = 0.0, 0.0, 0.0
+                with _NETCDF_IO_LOCK:
+                    with nc.Dataset(str(path), "r") as ds:
+                        for v_name, var in ds.variables.items():
+                            data = var[:]
+                            try:
+                                v_min = float(np.nanmin(data))
+                                v_max = float(np.nanmax(data))
+                                v_mean = float(np.nanmean(data))
+                            except Exception:
+                                v_min, v_max, v_mean = 0.0, 0.0, 0.0
 
-                        var_list.append({
-                            "name": v_name,
-                            "standard_name": getattr(var, "standard_name", getattr(var, "long_name", v_name)),
-                            "units": getattr(var, "units", "dimensionless"),
-                            "dimensions": list(var.dimensions),
-                            "shape": list(var.shape),
-                            "dtype": str(var.dtype),
-                            "min": round(v_min, 4),
-                            "max": round(v_max, 4),
-                            "mean": round(v_mean, 4),
-                        })
+                            var_list.append({
+                                "name": v_name,
+                                "standard_name": getattr(var, "standard_name", getattr(var, "long_name", v_name)),
+                                "units": getattr(var, "units", "dimensionless"),
+                                "dimensions": list(var.dimensions),
+                                "shape": list(var.shape),
+                                "dtype": str(var.dtype),
+                                "min": round(v_min, 4),
+                                "max": round(v_max, 4),
+                                "mean": round(v_mean, 4),
+                            })
                 return var_list
             except Exception as e:
                 logger.error(f"Error reading variables from {path}: {e}")
@@ -508,6 +514,7 @@ class RawDataService:
         total_records = 0
 
         if path.suffix in [".nc", ".nc4", ".netcdf"] and nc is not None:
+            _NETCDF_IO_LOCK.acquire()
             try:
                 with nc.Dataset(str(path), "r") as ds:
                     lat_key = "lat" if "lat" in ds.variables else ("latitude" if "latitude" in ds.variables else None)
@@ -615,6 +622,8 @@ class RawDataService:
                         }
             except Exception as e:
                 logger.error(f"Error paging records from {path}: {e}")
+            finally:
+                _NETCDF_IO_LOCK.release()
 
         return {
             "records": [],
@@ -656,6 +665,7 @@ class RawDataService:
                 "message": "Authoritative file not mounted or not yet synchronized to storage."
             }
 
+        _NETCDF_IO_LOCK.acquire()
         try:
             with nc.Dataset(str(path), "r") as ds:
                 lat_key = "lat" if "lat" in ds.variables else ("latitude" if "latitude" in ds.variables else None)
@@ -734,6 +744,8 @@ class RawDataService:
         except Exception as e:
             logger.error(f"Error generating map data for {file_id}: {e}")
             return {"type": "FeatureCollection", "features": [], "variable": "", "min": 0, "max": 0}
+        finally:
+            _NETCDF_IO_LOCK.release()
 
     def get_file_download_path(self, file_id: str, download_type: str = "raw") -> Optional[Path]:
         """Resolves physical file path for downloading raw or canonical files."""

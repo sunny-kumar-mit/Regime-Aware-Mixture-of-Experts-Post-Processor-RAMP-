@@ -49,19 +49,23 @@ class SafeGeometry(TypeDecorator):
     Native PostGIS Geometry on PostgreSQL with automatic spatial indexing;
     graceful String/WKT storage fallback on SQLite for isolated testing.
     """
-    impl = String
+    impl = Geometry
     cache_ok = True
 
-    def __init__(self, geometry_type: str = "GEOMETRY", srid: int = 4326, **kwargs):
-        super().__init__()
+    def __init__(self, geometry_type: str = "GEOMETRY", srid: int = 4326, spatial_index: bool = True, **kwargs):
         self.geometry_type = geometry_type
         self.srid = srid
-        self.postgis_geom = Geometry(geometry_type=geometry_type, srid=srid, **kwargs)
+        self.spatial_index = spatial_index
+        super().__init__(geometry_type=geometry_type, srid=srid, spatial_index=spatial_index, **kwargs)
 
     def load_dialect_impl(self, dialect):
-        if dialect.name == "postgresql":
-            return dialect.type_descriptor(self.postgis_geom)
-        return dialect.type_descriptor(String())
+        if dialect is not None and getattr(dialect, "name", None) == "postgresql":
+            return dialect.type_descriptor(
+                Geometry(geometry_type=self.geometry_type, srid=self.srid, spatial_index=self.spatial_index)
+            )
+        if dialect is not None:
+            return dialect.type_descriptor(String())
+        return self.impl
 
 
 # =============================================================================

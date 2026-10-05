@@ -21,6 +21,8 @@ import {
 import {
   fetchProductionDataHealth,
   fetchProductionFreshness,
+  fetchDataHealthSources,
+  fetchDataHealthFreshness,
 } from '../api/client';
 
 export const DataHealthPage: React.FC = () => {
@@ -32,14 +34,14 @@ export const DataHealthPage: React.FC = () => {
     try {
       setLoading(true);
       const [healthRes, freshRes] = await Promise.all([
-        fetchProductionDataHealth().catch(() => null),
-        fetchProductionFreshness().catch(() => null),
+        fetchProductionDataHealth().catch(() => fetchDataHealthSources().catch(() => null)),
+        fetchProductionFreshness().catch(() => fetchDataHealthFreshness().catch(() => null)),
       ]);
-      if (healthRes && healthRes.status === 'SUCCESS') {
-        setDataHealth(healthRes.data);
+      if (healthRes && (healthRes.status === 'SUCCESS' || healthRes.status === 'success')) {
+        setDataHealth(healthRes.data || healthRes);
       }
-      if (freshRes && freshRes.status === 'SUCCESS') {
-        setFreshness(freshRes.data);
+      if (freshRes && (freshRes.status === 'SUCCESS' || freshRes.status === 'success')) {
+        setFreshness(freshRes.data || freshRes);
       }
     } catch (err: any) {
       console.error('Failed to load data health:', err);
@@ -50,9 +52,10 @@ export const DataHealthPage: React.FC = () => {
 
   useEffect(() => {
     loadData();
-    const interval = setInterval(loadData, 20000);
+    const interval = setInterval(loadData, 15000);
     return () => clearInterval(interval);
   }, [loadData]);
+
 
   const providers = dataHealth?.providers || {
     NCMRWF_NCUM: {
@@ -105,6 +108,15 @@ export const DataHealthPage: React.FC = () => {
     }
   };
 
+  const allMounted = Boolean(
+    (providers.NCMRWF_NCUM?.mounted || providers.NCMRWF_NCUM?.status === 'AVAILABLE') &&
+    (providers.NCMRWF_NEPS?.mounted || providers.NCMRWF_NEPS?.status === 'AVAILABLE') &&
+    (providers.IMD_GRIDDED_OBSERVATION?.mounted || providers.IMD_GRIDDED_OBSERVATION?.status === 'AVAILABLE')
+  );
+
+  const rec00Z = (freshness?.freshness_records || []).find((r: any) => r.cycle_type === '00Z') || freshness?.cycles?.['00Z'];
+  const rec12Z = (freshness?.freshness_records || []).find((r: any) => r.cycle_type === '12Z') || freshness?.cycles?.['12Z'];
+
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6 text-slate-100">
       {/* Header */}
@@ -137,23 +149,31 @@ export const DataHealthPage: React.FC = () => {
       </div>
 
       {/* Scientific Integrity Status Banner */}
-      <div className="p-4 rounded-xl bg-slate-900/90 border border-amber-500/40 flex items-center justify-between">
+      <div className={`p-4 rounded-xl bg-slate-900/90 border flex items-center justify-between ${
+        allMounted ? 'border-emerald-500/40' : 'border-amber-500/40'
+      }`}>
         <div className="flex items-center gap-3">
-          <AlertTriangle className="h-5 w-5 text-amber-400" />
+          <AlertTriangle className={`h-5 w-5 ${allMounted ? 'text-emerald-400' : 'text-amber-400'}`} />
           <div>
-            <div className="text-xs font-bold text-amber-300 uppercase tracking-wider font-mono">
+            <div className={`text-xs font-bold uppercase tracking-wider font-mono ${allMounted ? 'text-emerald-300' : 'text-amber-300'}`}>
               Scientific Integrity Mandate
             </div>
             <div className="text-xs text-slate-300">
-              Authoritative NCMRWF HPC archives and IMD gridded directories are currently unmounted. System reports{' '}
-              <span className="font-mono text-amber-300">WAITING_FOR_AUTHORITATIVE_DATA</span>. Zero data fabricated.
+              {allMounted
+                ? 'Authoritative NCMRWF HPC archives and IMD gridded directories are mounted and verified. Real operational pipeline active.'
+                : 'Authoritative NCMRWF HPC archives and IMD gridded directories are currently unmounted. System reports WAITING_FOR_AUTHORITATIVE_DATA. Zero data fabricated.'}
             </div>
           </div>
         </div>
-        <span className="px-3 py-1 rounded bg-amber-950/80 border border-amber-800 text-amber-300 text-xs font-mono font-semibold">
-          REAL_OPERATIONAL_BLOCKED
+        <span className={`px-3 py-1 rounded text-xs font-mono font-semibold ${
+          allMounted
+            ? 'bg-emerald-950/80 border border-emerald-800 text-emerald-300'
+            : 'bg-amber-950/80 border border-amber-800 text-amber-300'
+        }`}>
+          {allMounted ? 'REAL_OPERATIONAL_OPEN' : 'REAL_OPERATIONAL_BLOCKED'}
         </span>
       </div>
+
 
       {/* Provider Health Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -338,9 +358,27 @@ export const DataHealthPage: React.FC = () => {
             <div className="text-xs text-slate-400 space-y-1">
               <div>Initialization Time: 00:00 UTC (05:30 IST)</div>
               <div>Expected Delivery: ~03:30 UTC (09:00 IST)</div>
-              <div>Freshness Threshold: 360 min max tolerance</div>
-              <div className="text-slate-500 font-mono pt-1">
-                Status: {freshness?.cycles?.['00Z']?.status || 'WAITING_FOR_DATA'}
+              <div>
+                Arrival Delay:{' '}
+                <span className="text-slate-200">
+                  {rec00Z?.delay_minutes !== undefined && rec00Z?.delay_minutes !== null
+                    ? `${rec00Z.delay_minutes} min`
+                    : 'N/A'}
+                </span>
+              </div>
+              <div className="pt-1 font-mono">
+                Status:{' '}
+                <span
+                  className={
+                    rec00Z?.sla_status === 'ON_TIME'
+                      ? 'text-emerald-400 font-semibold'
+                      : rec00Z?.sla_status === 'DELAYED'
+                      ? 'text-amber-400 font-semibold'
+                      : 'text-slate-400'
+                  }
+                >
+                  {rec00Z?.sla_status || rec00Z?.status || 'WAITING_FOR_DATA'}
+                </span>
               </div>
             </div>
           </div>
@@ -355,9 +393,27 @@ export const DataHealthPage: React.FC = () => {
             <div className="text-xs text-slate-400 space-y-1">
               <div>Initialization Time: 12:00 UTC (17:30 IST)</div>
               <div>Expected Delivery: ~15:30 UTC (21:00 IST)</div>
-              <div>Freshness Threshold: 360 min max tolerance</div>
-              <div className="text-slate-500 font-mono pt-1">
-                Status: {freshness?.cycles?.['12Z']?.status || 'WAITING_FOR_DATA'}
+              <div>
+                Arrival Delay:{' '}
+                <span className="text-slate-200">
+                  {rec12Z?.delay_minutes !== undefined && rec12Z?.delay_minutes !== null
+                    ? `${rec12Z.delay_minutes} min`
+                    : 'N/A'}
+                </span>
+              </div>
+              <div className="pt-1 font-mono">
+                Status:{' '}
+                <span
+                  className={
+                    rec12Z?.sla_status === 'ON_TIME'
+                      ? 'text-emerald-400 font-semibold'
+                      : rec12Z?.sla_status === 'DELAYED'
+                      ? 'text-amber-400 font-semibold'
+                      : 'text-slate-400'
+                  }
+                >
+                  {rec12Z?.sla_status || rec12Z?.status || 'WAITING_FOR_DATA'}
+                </span>
               </div>
             </div>
           </div>

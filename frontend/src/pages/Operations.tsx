@@ -129,10 +129,15 @@ function ts(iso: string | null | undefined): string {
 
 // ── Sub-components ─────────────────────────────────────────────────────────
 
-const DataBanner: React.FC = () => (
+const DataBanner: React.FC<{ isRealOperational?: boolean; bannerText?: string }> = ({
+  isRealOperational,
+  bannerText,
+}) => (
   <div style={{
-    background: 'linear-gradient(90deg, #1e3a5f 0%, #0f2540 100%)',
-    border: '1px solid #f59e0b55',
+    background: isRealOperational
+      ? 'linear-gradient(90deg, #064e3b 0%, #022c22 100%)'
+      : 'linear-gradient(90deg, #1e3a5f 0%, #0f2540 100%)',
+    border: `1px solid ${isRealOperational ? '#10b98155' : '#f59e0b55'}`,
     borderRadius: '8px',
     padding: '10px 18px',
     display: 'flex',
@@ -140,12 +145,14 @@ const DataBanner: React.FC = () => (
     gap: '10px',
     marginBottom: '20px',
   }}>
-    <AlertTriangle size={16} color="#f59e0b" />
-    <span style={{ color: '#fbbf24', fontSize: '13px', fontWeight: 600, letterSpacing: '0.04em' }}>
-      SYNTHETIC DEMONSTRATION MODE
+    {isRealOperational ? <ShieldCheck size={16} color="#10b981" /> : <AlertTriangle size={16} color="#f59e0b" />}
+    <span style={{ color: isRealOperational ? '#34d399' : '#fbbf24', fontSize: '13px', fontWeight: 600, letterSpacing: '0.04em' }}>
+      {isRealOperational ? 'REAL OPERATIONAL MODE' : 'SYNTHETIC DEMONSTRATION MODE'}
     </span>
     <span style={{ color: '#94a3b8', fontSize: '12px', marginLeft: '8px' }}>
-      — Real NCMRWF NCUM / IMD operational archives not mounted. All products carry SYNTHETIC_DEMO provenance.
+      {bannerText || (isRealOperational
+        ? '— Authoritative NCMRWF NCUM / NEPS and IMD observation data pipeline active.'
+        : '— Real NCMRWF NCUM / IMD operational archives not mounted. All products carry SYNTHETIC_DEMO provenance.')}
     </span>
   </div>
 );
@@ -235,7 +242,7 @@ const LiveOperationsTab: React.FC = () => {
       if (ps && ps.status === 'SUCCESS') setProdStatus(ps.data);
       if (dh && dh.status === 'SUCCESS') setDataHealth(dh.data);
       if (fn && fn.status === 'SUCCESS') setFreshness(fn.data);
-      if (cy && cy.status === 'SUCCESS') setCycles(cy.data?.cycles || []);
+      if (cy && cy.status === 'SUCCESS') setCycles(cy.data?.cycles || cy.cycles || []);
       if (pb && pb.status === 'SUCCESS') setPublications(pb.data);
       if (hl && hl.status === 'SUCCESS') setHealth(hl.data);
       if (vf && vf.status === 'SUCCESS') setVerification(vf.data);
@@ -248,7 +255,7 @@ const LiveOperationsTab: React.FC = () => {
 
   useEffect(() => {
     loadLiveOps();
-    const interval = setInterval(loadLiveOps, 15000);
+    const interval = setInterval(loadLiveOps, 8000);
     return () => clearInterval(interval);
   }, [loadLiveOps]);
 
@@ -286,10 +293,15 @@ const LiveOperationsTab: React.FC = () => {
             {prodStatus?.current_state || 'INITIALIZING'}
           </div>
           <div style={{ fontSize: '12px', color: '#94a3b8' }}>
-            Data Mode: <strong style={{ color: '#fbbf24' }}>{prodStatus?.data_mode || 'SYNTHETIC_DEMO'}</strong>
+            Data Mode: <strong style={{ color: prodStatus?.data_mode === 'REAL_DATA' ? '#34d399' : '#fbbf24' }}>
+              {prodStatus?.data_mode || 'SYNTHETIC_DEMO'}
+            </strong>
           </div>
           <div style={{ fontSize: '11px', color: '#64748b', marginTop: '6px' }}>
-            Operational Gate: <span style={{ color: '#f87171' }}>REAL_OPERATIONAL_BLOCKED</span>
+            Operational Gate:{' '}
+            <span style={{ color: prodStatus?.gates?.real_operational ? '#34d399' : '#f87171', fontWeight: 600 }}>
+              {prodStatus?.gates?.real_operational ? 'OPEN' : 'BLOCKED'}
+            </span>
           </div>
         </div>
 
@@ -397,7 +409,7 @@ const LiveOperationsTab: React.FC = () => {
             </span>
           </div>
           <div style={{ fontSize: '15px', fontWeight: 700, color: '#e2e8f0', marginBottom: '4px' }}>
-            {currentCycle?.cycle_id || 'DEMO_20260927_00Z'}
+            {currentCycle?.cycle_id || prodStatus?.state_machine?.active_cycle_id || 'DEMO_20260927_00Z'}
           </div>
           <div style={{ fontSize: '12px', color: '#94a3b8' }}>
             Leads Supported: <strong style={{ color: '#38bdf8' }}>{currentCycle?.supported_leads?.length || 9} leads</strong> (+6h to +120h)
@@ -421,7 +433,7 @@ const LiveOperationsTab: React.FC = () => {
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#cbd5e1', marginBottom: '4px' }}>
             <span>Completed Jobs:</span>
-            <span style={{ fontWeight: 700, color: '#34d399' }}>{prodStatus?.jobs?.completed ?? 9}</span>
+            <span style={{ fontWeight: 700, color: '#34d399' }}>{prodStatus?.jobs?.completed ?? (prodStatus?.scheduler?.job_summary?.success ?? 0)}</span>
           </div>
           <div style={{ fontSize: '11px', color: '#64748b', marginTop: '6px' }}>
             Idempotency: Guaranteed 100% (No duplicate run)
@@ -489,7 +501,7 @@ const LiveOperationsTab: React.FC = () => {
             Public Dissemination: <span style={{ color: '#38bdf8' }}>SYNTHETIC DEMO ONLY</span>
           </div>
           <div style={{ fontSize: '11px', color: '#64748b', marginTop: '6px' }}>
-            Total Catalog Records: {publications?.total ?? 1}
+            Total Catalog Records: {publications?.total ?? 0}
           </div>
         </div>
 
@@ -732,7 +744,7 @@ const SchedulerTab: React.FC<{
   onStop: () => void;
   onSubmitJob: (cycle: string, lead: number) => void;
 }> = ({ scheduler, jobs, loading, onStart, onStop, onSubmitJob }) => {
-  const [cycleId, setCycleId] = useState('DEMO_20260927_00Z');
+  const [cycleId, setCycleId] = useState('CYCLE_20260927_00Z');
   const [leadHours, setLeadHours] = useState(24);
   const [submitting, setSubmitting] = useState(false);
 
@@ -813,8 +825,9 @@ const SchedulerTab: React.FC<{
                 color: '#e2e8f0', padding: '8px 12px', fontSize: '13px',
               }}
             >
-              <option value="DEMO_20260927_00Z">DEMO_20260927_00Z</option>
-              <option value="DEMO_20260927_12Z">DEMO_20260927_12Z</option>
+              <option value="CYCLE_20260927_00Z">CYCLE_20260927_00Z (00Z Synoptic)</option>
+              <option value="CYCLE_20260927_12Z">CYCLE_20260927_12Z (12Z Synoptic)</option>
+              <option value="DEMO_20260927_00Z">DEMO_20260927_00Z (Synthetic Demo)</option>
             </select>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -1269,7 +1282,17 @@ const ReadinessTab: React.FC<{ readinessData: Record<string, any> | null; loadin
 
 // ── Real Data Activation & Quality Tab (Phase 16 PART V) ────────────────────
 
-const RealActivationTab: React.FC = () => {
+const RealActivationTab: React.FC<{
+  prodStatus?: any;
+  dataHealth?: any;
+}> = ({ prodStatus, dataHealth }) => {
+  const isRealOperational = Boolean(prodStatus?.gates?.real_operational);
+  const providers = dataHealth?.providers || {};
+  const ncumMounted = providers.NCMRWF_NCUM?.mounted ?? false;
+  const nepsMounted = providers.NCMRWF_NEPS?.mounted ?? false;
+  const imdMounted = providers.IMD_GRIDDED_OBSERVATION?.mounted ?? false;
+  const coverage = providers.NCMRWF_NEPS?.coverage_pct ?? 0;
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       {/* Real Data Activation Overview */}
@@ -1285,10 +1308,12 @@ const RealActivationTab: React.FC = () => {
           </div>
           <span style={{
             padding: '4px 10px', borderRadius: '6px',
-            background: '#7f1d1d33', border: '1px solid #ef4444',
-            color: '#ef4444', fontSize: '11px', fontWeight: 700,
+            background: isRealOperational ? '#052e16' : '#7f1d1d33',
+            border: `1px solid ${isRealOperational ? '#22c55e' : '#ef4444'}`,
+            color: isRealOperational ? '#22c55e' : '#ef4444',
+            fontSize: '11px', fontWeight: 700,
           }}>
-            REAL OPERATIONAL BLOCKED
+            {isRealOperational ? 'REAL OPERATIONAL OPEN' : 'REAL OPERATIONAL BLOCKED'}
           </span>
         </div>
 
@@ -1296,7 +1321,9 @@ const RealActivationTab: React.FC = () => {
           <div style={{ background: '#1e293b55', border: '1px solid #334155', borderRadius: '8px', padding: '12px' }}>
             <div style={{ color: '#64748b', fontSize: '11px' }}>DATA SOURCES</div>
             <div style={{ color: '#60a5fa', fontSize: '13px', fontWeight: 700, marginTop: '2px' }}>NCUM · NEPS · IMD</div>
-            <div style={{ color: '#94a3b8', fontSize: '10px' }}>Deterministic · Ensemble · Obs</div>
+            <div style={{ color: '#94a3b8', fontSize: '10px' }}>
+              {ncumMounted && nepsMounted && imdMounted ? 'All 3 Mounted' : 'Unmounted (Archive)'}
+            </div>
           </div>
           <div style={{ background: '#1e293b55', border: '1px solid #334155', borderRadius: '8px', padding: '12px' }}>
             <div style={{ color: '#64748b', fontSize: '11px' }}>AUTHORITY LEVEL</div>
@@ -1305,19 +1332,23 @@ const RealActivationTab: React.FC = () => {
           </div>
           <div style={{ background: '#1e293b55', border: '1px solid #334155', borderRadius: '8px', padding: '12px' }}>
             <div style={{ color: '#64748b', fontSize: '11px' }}>OPERATIONAL COVERAGE</div>
-            <div style={{ color: '#ef4444', fontSize: '13px', fontWeight: 700, marginTop: '2px' }}>0.0% (Unmounted)</div>
+            <div style={{ color: coverage > 0 ? '#34d399' : '#ef4444', fontSize: '13px', fontWeight: 700, marginTop: '2px' }}>
+              {coverage > 0 ? `${coverage}% (Active)` : '0.0% (Unmounted)'}
+            </div>
             <div style={{ color: '#94a3b8', fontSize: '10px' }}>Target: 17,673 canonical cells</div>
           </div>
           <div style={{ background: '#1e293b55', border: '1px solid #334155', borderRadius: '8px', padding: '12px' }}>
             <div style={{ color: '#64748b', fontSize: '11px' }}>OPERATOR SIGN-OFF</div>
-            <div style={{ color: '#cbd5e1', fontSize: '13px', fontWeight: 700, marginTop: '2px' }}>PENDING_DATA</div>
-            <div style={{ color: '#94a3b8', fontSize: '10px' }}>Requires all 15 gates PASS</div>
+            <div style={{ color: isRealOperational ? '#34d399' : '#cbd5e1', fontSize: '13px', fontWeight: 700, marginTop: '2px' }}>
+              {isRealOperational ? 'AUTHORIZED' : 'PENDING_DATA'}
+            </div>
+            <div style={{ color: '#94a3b8', fontSize: '10px' }}>Requires all gates PASS</div>
           </div>
         </div>
 
         <div style={{ padding: '12px', background: '#1e293b33', borderRadius: '8px', border: '1px solid #334155', fontSize: '12px', color: '#94a3b8' }}>
           🔒 <strong style={{ color: '#f87171' }}>Scientific Safety Gate:</strong> In accordance with the RAMP Absolute Scientific Integrity Rule,
-          authoritative data are not mounted in this environment. System operates under verified <strong style={{ color: '#60a5fa' }}>SYNTHETIC_DEMO</strong> governance.
+          authoritative data are validated against physical ground truth. When unmounted, system operates under verified <strong style={{ color: '#60a5fa' }}>SYNTHETIC_DEMO</strong> governance.
         </div>
       </div>
 
@@ -1423,12 +1454,13 @@ export const OperationsPage: React.FC = () => {
   const [alertsData, setAlertsData] = useState<Record<string, any> | null>(null);
   const [driftData, setDriftData] = useState<Record<string, any> | null>(null);
   const [readinessData, setReadinessData] = useState<Record<string, any> | null>(null);
+  const [dataHealth, setDataHealth] = useState<Record<string, any> | null>(null);
 
   const loadAll = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const [st, sd, sc, jb, al, dr, rd] = await Promise.all([
+      const [st, sd, sc, jb, al, dr, rd, dh] = await Promise.all([
         fetchOperationsStatus().catch(() => null),
         fetchOperationsState().catch(() => null),
         fetchOperationsScheduler().catch(() => null),
@@ -1436,6 +1468,7 @@ export const OperationsPage: React.FC = () => {
         fetchOperationsAlerts().catch(() => null),
         fetchOperationsDrift().catch(() => null),
         fetchOperationsReadiness().catch(() => null),
+        fetchProductionDataHealth().catch(() => null),
       ]);
       setStatus(st as OpsStatus);
       setStateData(sd);
@@ -1444,6 +1477,7 @@ export const OperationsPage: React.FC = () => {
       setAlertsData(al);
       setDriftData(dr);
       setReadinessData(rd);
+      if (dh && dh.status === 'SUCCESS') setDataHealth(dh.data);
       setLastRefresh(new Date().toLocaleTimeString('en-IN', { hour12: false }));
     } catch (e: any) {
       setError(String(e));
@@ -1454,7 +1488,7 @@ export const OperationsPage: React.FC = () => {
 
   useEffect(() => {
     loadAll();
-    const interval = setInterval(loadAll, 15000);  // auto-refresh every 15s
+    const interval = setInterval(loadAll, 8000);  // live operational polling every 8s
     return () => clearInterval(interval);
   }, [loadAll]);
 
@@ -1546,11 +1580,11 @@ export const OperationsPage: React.FC = () => {
               background: '#1e3a5f', border: '1px solid #3b82f666',
               color: '#60a5fa', fontSize: '11px', fontWeight: 700,
             }}>
-              PHASE 15
+              PHASE 20 LIVE
             </span>
           </div>
           <div style={{ color: '#64748b', fontSize: '12px', marginTop: '4px' }}>
-            SIH26080 | MoES / NCMRWF | Automated Scheduler · State Machine · Alert Monitor · Drift · Readiness
+            SIH26080 | MoES / NCMRWF | Unified Operational Engine · PostgreSQL State · Real-Time Control
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -1580,7 +1614,7 @@ export const OperationsPage: React.FC = () => {
       </div>
 
       {/* Data Honesty Banner */}
-      <DataBanner />
+      <DataBanner isRealOperational={status?.gates?.real_operational} bannerText={status?.banner} />
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: '4px', marginBottom: '20px', borderBottom: '1px solid #1e3a5f', paddingBottom: '0' }}>
@@ -1670,7 +1704,7 @@ export const OperationsPage: React.FC = () => {
         <ReadinessTab readinessData={readinessData} loading={loading} />
       )}
       {activeTab === 'real_activation' && (
-        <RealActivationTab />
+        <RealActivationTab prodStatus={status} dataHealth={dataHealth} />
       )}
 
       <style>{`

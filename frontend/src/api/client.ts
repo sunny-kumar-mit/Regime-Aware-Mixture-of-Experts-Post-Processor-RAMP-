@@ -906,6 +906,58 @@ export async function fetchOperationsHealth(): Promise<Record<string, any>> {
   return res.json();
 }
 
+export async function fetchOperationsOverview(): Promise<Record<string, any>> {
+  const res = await fetch(API_BASE + '/api/operations/overview');
+  if (!res.ok) throw new Error('Operations overview failed: ' + res.status);
+  return res.json();
+}
+
+export async function fetchOperationsCycles(limit = 20): Promise<Record<string, any>> {
+  const res = await fetch(`${API_BASE}/api/operations/cycles?limit=${limit}`);
+  if (!res.ok) throw new Error('Operations cycles failed: ' + res.status);
+  return res.json();
+}
+
+export async function fetchOperationsCycleDetail(cycleId: string): Promise<Record<string, any>> {
+  const res = await fetch(`${API_BASE}/api/operations/cycles/${encodeURIComponent(cycleId)}`);
+  if (!res.ok) throw new Error('Operations cycle detail failed: ' + res.status);
+  return res.json();
+}
+
+export async function postOperationsCycleRetry(cycleId: string): Promise<Record<string, any>> {
+  const res = await fetch(`${API_BASE}/api/operations/cycles/${encodeURIComponent(cycleId)}/retry`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  if (!res.ok) throw new Error('Operations cycle retry failed: ' + res.status);
+  return res.json();
+}
+
+export async function fetchDataHealthSources(): Promise<Record<string, any>> {
+  const res = await fetch(`${API_BASE}/api/data-health/sources`);
+  if (!res.ok) throw new Error('Data health sources failed: ' + res.status);
+  return res.json();
+}
+
+export async function fetchDataHealthFreshness(): Promise<Record<string, any>> {
+  const res = await fetch(`${API_BASE}/api/data-health/freshness`);
+  if (!res.ok) throw new Error('Data health freshness failed: ' + res.status);
+  return res.json();
+}
+
+export async function fetchDataHealthQuality(): Promise<Record<string, any>> {
+  const res = await fetch(`${API_BASE}/api/data-health/quality`);
+  if (!res.ok) throw new Error('Data health quality failed: ' + res.status);
+  return res.json();
+}
+
+export async function fetchDataHealthEvents(limit = 50): Promise<Record<string, any>> {
+  const res = await fetch(`${API_BASE}/api/data-health/events?limit=${limit}`);
+  if (!res.ok) throw new Error('Data health events failed: ' + res.status);
+  return res.json();
+}
+
+
 // ---------------------------------------------------------------------------
 // Phase 16: Real-Data Activation, Ingestion & Real Verification
 // ---------------------------------------------------------------------------

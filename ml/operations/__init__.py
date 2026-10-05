@@ -20,8 +20,10 @@ from ml.operations.scheduler import ForecastScheduler, ForecastJob, JobStatus
 from ml.operations.alerts import AlertMonitor, AlertRule, Alert, AlertSeverity
 from ml.operations.drift import DriftMonitor, DriftReport
 from ml.operations.production import ProductionReadinessEngine, ReadinessCheckResult
+from ml.operations.engine import OperationsEngine
 
 __all__ = [
+    "OperationsEngine",
     "OperationalStateMachine",
     "OperationalState",
     "ForecastScheduler",

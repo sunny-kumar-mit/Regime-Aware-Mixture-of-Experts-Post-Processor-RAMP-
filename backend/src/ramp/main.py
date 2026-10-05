@@ -52,6 +52,7 @@ from ramp.api.v1.verification_real import router as verification_real_router
 from ramp.api.v1.production import router as production_router
 from ramp.api.v1.acceptance import router as acceptance_router
 from ramp.api.v1.real_data import router as real_data_router
+from ramp.api.v1.data_health import router as data_health_router
 
 
 
@@ -177,6 +178,11 @@ app.include_router(verification_real_router, prefix=settings.API_PREFIX)
 app.include_router(production_router, prefix=settings.API_PREFIX)
 app.include_router(acceptance_router, prefix=settings.API_PREFIX)
 app.include_router(real_data_router, prefix=settings.API_PREFIX)
+app.include_router(data_health_router, prefix=settings.API_PREFIX)
+
+# Also mount under /api/v1 for v1 route compatibility
+app.include_router(operations_router, prefix="/api/v1")
+app.include_router(data_health_router, prefix="/api/v1")
 
 
 # ---------------------------------------------------------------------------

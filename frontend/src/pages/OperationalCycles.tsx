@@ -37,11 +37,14 @@ export const OperationalCyclesPage: React.FC = () => {
     try {
       setLoading(true);
       const res = await fetchProductionCycles();
-      if (res.status === 'SUCCESS' && Array.isArray(res.data?.cycles)) {
-        setCycles(res.data.cycles);
-        if (!selectedCycleId && res.data.cycles.length > 0) {
-          setSelectedCycleId(res.data.cycles[0].cycle_id);
-        }
+      const list = Array.isArray(res?.data?.cycles)
+        ? res.data.cycles
+        : Array.isArray(res?.cycles)
+        ? res.cycles
+        : [];
+      setCycles(list);
+      if (list.length > 0 && !selectedCycleId) {
+        setSelectedCycleId(list[0].cycle_id);
       }
     } catch (err: any) {
       console.error('Failed to load operational cycles:', err);
@@ -56,20 +59,29 @@ export const OperationalCyclesPage: React.FC = () => {
     return () => clearInterval(interval);
   }, [loadCycles]);
 
-  useEffect(() => {
+  const loadCycleDetail = useCallback(async () => {
     if (!selectedCycleId) return;
-    Promise.all([
-      fetchProductionCycleDetail(selectedCycleId).catch(() => null),
-      fetchProductionJobs(selectedCycleId).catch(() => null),
-    ]).then(([detailRes, jobsRes]) => {
-      if (detailRes && detailRes.status === 'SUCCESS') {
-        setCycleDetail(detailRes.data);
+    try {
+      const [detailRes, jobsRes] = await Promise.all([
+        fetchProductionCycleDetail(selectedCycleId).catch(() => null),
+        fetchProductionJobs(selectedCycleId).catch(() => null),
+      ]);
+      if (detailRes && (detailRes.status === 'SUCCESS' || detailRes.cycle_id)) {
+        setCycleDetail(detailRes.data || detailRes);
       }
-      if (jobsRes && jobsRes.status === 'SUCCESS') {
-        setCycleJobs(jobsRes.data?.jobs || []);
+      if (jobsRes && (jobsRes.status === 'SUCCESS' || Array.isArray(jobsRes.jobs))) {
+        setCycleJobs(jobsRes.data?.jobs || jobsRes.jobs || []);
       }
-    });
+    } catch (e) {
+      console.error('Failed to load cycle detail:', e);
+    }
   }, [selectedCycleId]);
+
+  useEffect(() => {
+    loadCycleDetail();
+    const detailInterval = setInterval(loadCycleDetail, 10000);
+    return () => clearInterval(detailInterval);
+  }, [loadCycleDetail]);
 
   const handleRetry = async (cycleId: string) => {
     try {
@@ -78,6 +90,7 @@ export const OperationalCyclesPage: React.FC = () => {
       const res = await postRetryCycle(cycleId);
       setFeedbackMsg({ text: `Retry queued for cycle ${cycleId}: ${res.message || 'Queued'}` });
       await loadCycles();
+      await loadCycleDetail();
     } catch (err: any) {
       setFeedbackMsg({ text: `Retry rejected: ${err.message}`, error: true });
     } finally {
@@ -90,6 +103,7 @@ export const OperationalCyclesPage: React.FC = () => {
       case 'CYCLE_COMPLETE':
       case 'PUBLISHED':
       case 'SUCCESS':
+      case 'VERIFIED':
         return 'text-emerald-400 bg-emerald-950/70 border-emerald-800/80';
       case 'INFERENCING':
       case 'VALIDATING':
@@ -99,16 +113,32 @@ export const OperationalCyclesPage: React.FC = () => {
       case 'WAITING_FOR_DATA':
       case 'QUEUED':
       case 'PENDING':
+      case 'EXPECTED':
         return 'text-blue-400 bg-blue-950/70 border-blue-800/80';
       case 'RETRY_PENDING':
         return 'text-amber-400 bg-amber-950/70 border-amber-800/80';
       case 'VALIDATION_FAILED':
       case 'TERMINAL_FAILURE':
       case 'FAILED':
+      case 'EXPIRED':
       case 'REAL_DATA_LOST':
         return 'text-rose-400 bg-rose-950/70 border-rose-800/80';
       default:
         return 'text-slate-400 bg-slate-900 border-slate-700';
+    }
+  };
+
+  const getSlaColor = (sla: string) => {
+    switch (sla) {
+      case 'ON_TIME':
+        return 'text-emerald-400 bg-emerald-950/60 border-emerald-700/60';
+      case 'DELAYED':
+        return 'text-amber-400 bg-amber-950/60 border-amber-700/60';
+      case 'STALE':
+      case 'MISSING':
+        return 'text-rose-400 bg-rose-950/60 border-rose-700/60';
+      default:
+        return 'text-slate-400 bg-slate-800 border-slate-700';
     }
   };
 
@@ -123,17 +153,20 @@ export const OperationalCyclesPage: React.FC = () => {
               Operational Cycle Manager
             </h1>
             <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/40">
-              IDEMPOTENT MULTI-LEAD ORCHESTRATION
+              POSTGRESQL SYNOPTIC ORCHESTRATION
             </span>
           </div>
           <p className="text-sm text-slate-400 mt-1">
-            Tracking synoptic cycles (00Z / 12Z) across 11 lifecycle states from data arrival to observation verification.
+            Tracking 00Z and 12Z synoptic cycles across deterministic lifecycle states from data arrival to observation verification.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <button
-            onClick={() => loadCycles()}
+            onClick={() => {
+              loadCycles();
+              loadCycleDetail();
+            }}
             disabled={loading}
             className="flex items-center gap-2 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-xs font-medium border border-slate-700 transition"
           >
@@ -172,6 +205,7 @@ export const OperationalCyclesPage: React.FC = () => {
                 <tr>
                   <th className="py-2.5 px-3">Cycle ID</th>
                   <th className="py-2.5 px-3">Init / Expected</th>
+                  <th className="py-2.5 px-3">Freshness / SLA</th>
                   <th className="py-2.5 px-3">Leads</th>
                   <th className="py-2.5 px-3 text-center">Status</th>
                   <th className="py-2.5 px-3 text-right">Actions</th>
@@ -180,8 +214,8 @@ export const OperationalCyclesPage: React.FC = () => {
               <tbody className="divide-y divide-slate-800 font-mono text-[11px]">
                 {cycles.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="py-8 text-center text-slate-500">
-                      No operational cycles recorded.
+                    <td colSpan={6} className="py-8 text-center text-slate-500">
+                      No operational cycles recorded in database.
                     </td>
                   </tr>
                 ) : (
@@ -202,13 +236,21 @@ export const OperationalCyclesPage: React.FC = () => {
                           </span>
                         </td>
                         <td className="py-3 px-3 text-slate-400">
-                          <div>Init: {c.initialization_time || c.cycle_time || '00:00Z'}</div>
-                          <div className="text-[10px] text-slate-500">Exp: {c.expected_time || '—'}</div>
+                          <div>Init: {c.initialization_time ? new Date(c.initialization_time).toLocaleTimeString('en-IN', { hour12: false }) : (c.cycle_time || '00:00Z')}</div>
+                          <div className="text-[10px] text-slate-500">Exp: {c.expected_arrival ? new Date(c.expected_arrival).toLocaleTimeString('en-IN', { hour12: false }) : (c.expected_time || '—')}</div>
+                        </td>
+                        <td className="py-3 px-3 text-slate-300">
+                          <span className={`inline-block px-1.5 py-0.5 rounded text-[9px] font-semibold border ${getSlaColor(c.sla_status || 'ON_TIME')}`}>
+                            {c.sla_status || 'ON_TIME'}
+                          </span>
+                          <div className="text-[10px] text-slate-500 mt-0.5">
+                            {c.delay_minutes !== null && c.delay_minutes !== undefined ? `${c.delay_minutes} min delay` : 'No delay'}
+                          </div>
                         </td>
                         <td className="py-3 px-3 text-slate-300">
                           {c.supported_leads?.length || 9} leads
                           <div className="text-[10px] text-slate-500">
-                            {c.completed_leads?.length || 0} completed
+                            {c.completed_leads?.length || (c.executed_leads?.length ?? 0)} done
                           </div>
                         </td>
                         <td className="py-3 px-3 text-center">
@@ -283,6 +325,10 @@ export const OperationalCyclesPage: React.FC = () => {
               <div className="grid grid-cols-2 gap-2 bg-slate-950/60 p-3 rounded-lg border border-slate-800 font-mono text-[11px]">
                 <div className="text-slate-500">Data Mode:</div>
                 <div className="text-slate-200 text-right">{cycleDetail.data_mode || 'SYNTHETIC_DEMO'}</div>
+                <div className="text-slate-500">SLA Status:</div>
+                <div className="text-slate-200 text-right">{cycleDetail.sla_status || 'ON_TIME'}</div>
+                <div className="text-slate-500">Arrival Delay:</div>
+                <div className="text-slate-200 text-right">{cycleDetail.delay_minutes !== null && cycleDetail.delay_minutes !== undefined ? `${cycleDetail.delay_minutes} min` : '0 min'}</div>
                 <div className="text-slate-500">Retry Count:</div>
                 <div className="text-slate-200 text-right">{cycleDetail.retry_count ?? 0} / 3</div>
                 <div className="text-slate-500">NCUM File:</div>
@@ -299,14 +345,45 @@ export const OperationalCyclesPage: React.FC = () => {
                 </div>
               </div>
 
+              {/* PostgreSQL Cycle Event Timeline */}
+              <div>
+                <h4 className="text-[10px] uppercase font-mono font-semibold text-slate-400 mb-2">
+                  Chronological Event Timeline ({cycleDetail.events?.length || 0})
+                </h4>
+                <div className="space-y-1.5 max-h-56 overflow-y-auto pr-1">
+                  {!cycleDetail.events || cycleDetail.events.length === 0 ? (
+                    <div className="text-slate-500 text-center py-2">No cycle events logged.</div>
+                  ) : (
+                    cycleDetail.events.map((ev: any, idx: number) => (
+                      <div
+                        key={idx}
+                        className="p-2 rounded bg-slate-950/50 border border-slate-800 text-[11px] font-mono space-y-1"
+                      >
+                        <div className="flex items-center justify-between text-[10px]">
+                          <span className="font-semibold text-blue-400">{ev.event_type}</span>
+                          <span className="text-slate-500">
+                            {ev.timestamp ? new Date(ev.timestamp).toLocaleTimeString('en-IN', { hour12: false }) : '—'}
+                          </span>
+                        </div>
+                        <div className="text-slate-300 text-[11px] font-sans">{ev.message}</div>
+                        <div className="flex items-center justify-between text-[9px] text-slate-500">
+                          <span>Status: {ev.status}</span>
+                          <span>Source: {ev.source || 'SYSTEM'}</span>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+
               {/* Lead-Time Jobs */}
               <div>
                 <h4 className="text-[10px] uppercase font-mono font-semibold text-slate-400 mb-2">
                   Lead-Time Inference Jobs ({cycleJobs.length})
                 </h4>
-                <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+                <div className="space-y-1.5 max-h-40 overflow-y-auto pr-1">
                   {cycleJobs.length === 0 ? (
-                    <div className="text-slate-500 text-center py-3">No jobs executed yet.</div>
+                    <div className="text-slate-500 text-center py-2">No jobs executed yet.</div>
                   ) : (
                     cycleJobs.map((j) => (
                       <div

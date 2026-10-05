@@ -518,3 +518,425 @@ class SystemStateModel(Base):
             "updated_by": self.updated_by,
         }
 
+
+# =============================================================================
+# 11. Operational State & Events (Phase 20)
+# =============================================================================
+class OperationalStateRecordModel(Base):
+    __tablename__ = "operations_state"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    current_state = Column(String(64), default="WAITING_FOR_DATA", nullable=False)
+    data_mode = Column(String(32), default="SYNTHETIC_DEMO", nullable=False)
+    operational_gate = Column(String(32), default="BLOCKED", nullable=False)
+    active_cycle_id = Column(String(64), nullable=True)
+    active_lead_hours = Column(Integer, nullable=True)
+    updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    updated_by = Column(String(128), default="SYSTEM")
+    reason = Column(Text, nullable=True)
+    metadata_json = Column("metadata", JSON, default=dict)
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "id": self.id,
+            "current_state": self.current_state,
+            "data_mode": self.data_mode,
+            "operational_gate": self.operational_gate,
+            "active_cycle_id": self.active_cycle_id,
+            "active_lead_hours": self.active_lead_hours,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+            "updated_by": self.updated_by,
+            "reason": self.reason,
+            "metadata": self.metadata_json or {},
+        }
+
+
+class StateTransitionEventModel(Base):
+    __tablename__ = "operation_events"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    event_id = Column(String(64), unique=True, index=True, nullable=False)
+    timestamp = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), index=True)
+    from_state = Column(String(64), nullable=False)
+    to_state = Column(String(64), nullable=False)
+    event = Column(String(64), nullable=False)
+    source = Column(String(64), default="SYSTEM")
+    cycle_id = Column(String(64), nullable=True)
+    operator = Column(String(128), default="SYSTEM")
+    reason = Column(Text, nullable=True)
+    metadata_json = Column("metadata", JSON, default=dict)
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "id": self.id,
+            "event_id": self.event_id,
+            "timestamp": self.timestamp.isoformat() if self.timestamp else None,
+            "from_state": self.from_state,
+            "to_state": self.to_state,
+            "event": self.event,
+            "source": self.source,
+            "cycle_id": self.cycle_id,
+            "operator": self.operator,
+            "reason": self.reason,
+            "metadata": self.metadata_json or {},
+        }
+
+
+# =============================================================================
+# 12. Operational Cycles & Timeline Events (Phase 20)
+# =============================================================================
+class OperationalCycleModel(Base):
+    __tablename__ = "operational_cycles"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    cycle_id = Column(String(64), unique=True, index=True, nullable=False)
+    cycle_type = Column(String(16), default="00Z")
+    initialization_time = Column(DateTime(timezone=True), nullable=False)
+    expected_arrival = Column(DateTime(timezone=True), nullable=False)
+    actual_arrival = Column(DateTime(timezone=True), nullable=True)
+    status = Column(String(32), default="WAITING_FOR_DATA", nullable=False)
+    sla_status = Column(String(32), default="ON_TIME", nullable=False)
+    delay_minutes = Column(Float, default=0.0)
+    source = Column(String(64), default="NCMRWF_NCUM")
+    data_mode = Column(String(32), default="REAL_OPERATIONAL")
+    available_leads = Column(JSON, default=list)
+    executed_leads = Column(JSON, default=list)
+    published_leads = Column(JSON, default=list)
+    error_details = Column(Text, nullable=True)
+    metadata_json = Column("metadata", JSON, default=dict)
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "id": self.id,
+            "cycle_id": self.cycle_id,
+            "cycle_type": self.cycle_type,
+            "initialization_time": self.initialization_time.isoformat() if self.initialization_time else None,
+            "expected_arrival": self.expected_arrival.isoformat() if self.expected_arrival else None,
+            "actual_arrival": self.actual_arrival.isoformat() if self.actual_arrival else None,
+            "status": self.status,
+            "sla_status": self.sla_status,
+            "delay_minutes": self.delay_minutes,
+            "source": self.source,
+            "data_mode": self.data_mode,
+            "available_leads": self.available_leads or [],
+            "executed_leads": self.executed_leads or [],
+            "published_leads": self.published_leads or [],
+            "error_details": self.error_details,
+            "metadata": self.metadata_json or {},
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
+
+
+class CycleEventModel(Base):
+    __tablename__ = "cycle_events"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    cycle_id = Column(String(64), index=True, nullable=False)
+    event_type = Column(String(64), nullable=False)
+    timestamp = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), index=True)
+    status = Column(String(32), default="SUCCESS")
+    message = Column(Text, nullable=False)
+    source = Column(String(64), default="SYSTEM")
+    metadata_json = Column("metadata", JSON, default=dict)
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "id": self.id,
+            "cycle_id": self.cycle_id,
+            "event_type": self.event_type,
+            "timestamp": self.timestamp.isoformat() if self.timestamp else None,
+            "status": self.status,
+            "message": self.message,
+            "source": self.source,
+            "metadata": self.metadata_json or {},
+        }
+
+
+# =============================================================================
+# 13. Scheduler State & Forecast Jobs (Phase 20)
+# =============================================================================
+class SchedulerStateModel(Base):
+    __tablename__ = "scheduler_state"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    scheduler_status = Column(String(32), default="STOPPED", nullable=False)
+    started_at = Column(DateTime(timezone=True), nullable=True)
+    last_poll_at = Column(DateTime(timezone=True), nullable=True)
+    next_poll_at = Column(DateTime(timezone=True), nullable=True)
+    poll_interval_s = Column(Integer, default=300)
+    total_polls = Column(Integer, default=0)
+    total_jobs = Column(Integer, default=0)
+    successful_jobs = Column(Integer, default=0)
+    failed_jobs = Column(Integer, default=0)
+    success_rate = Column(Float, default=0.0)
+    last_error = Column(Text, nullable=True)
+    updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "id": self.id,
+            "scheduler_status": self.scheduler_status,
+            "is_running": (self.scheduler_status == "RUNNING"),
+            "started_at": self.started_at.isoformat() if self.started_at else None,
+            "last_poll_at": self.last_poll_at.isoformat() if self.last_poll_at else None,
+            "next_poll_at": self.next_poll_at.isoformat() if self.next_poll_at else None,
+            "poll_interval_s": self.poll_interval_s,
+            "poll_count": self.total_polls,
+            "total_polls": self.total_polls,
+            "total_jobs": self.total_jobs,
+            "successful_jobs": self.successful_jobs,
+            "failed_jobs": self.failed_jobs,
+            "success_rate": self.success_rate,
+            "last_error": self.last_error,
+            "job_summary": {
+                "total": self.total_jobs,
+                "success": self.successful_jobs,
+                "failed": self.failed_jobs,
+                "success_rate": self.success_rate,
+            },
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
+
+
+class ForecastJobModel(Base):
+    __tablename__ = "forecast_jobs"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    job_id = Column(String(64), unique=True, index=True, nullable=False)
+    cycle_id = Column(String(64), index=True, nullable=False)
+    lead_hours = Column(Integer, nullable=False)
+    model_version = Column(String(32), default="v2.0.0")
+    idempotency_key = Column(String(128), unique=True, index=True, nullable=False)
+    status = Column(String(32), default="QUEUED", nullable=False)
+    data_mode = Column(String(32), default="REAL_OPERATIONAL")
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    started_at = Column(DateTime(timezone=True), nullable=True)
+    completed_at = Column(DateTime(timezone=True), nullable=True)
+    duration_ms = Column(Float, nullable=True)
+    error_message = Column(Text, nullable=True)
+    skip_reason = Column(String(255), nullable=True)
+    forecast_run_id = Column(String(128), nullable=True)
+    metadata_json = Column("metadata", JSON, default=dict)
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "id": self.id,
+            "job_id": self.job_id,
+            "cycle_id": self.cycle_id,
+            "lead_hours": self.lead_hours,
+            "model_version": self.model_version,
+            "idempotency_key": self.idempotency_key,
+            "status": self.status,
+            "data_mode": self.data_mode,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "started_at": self.started_at.isoformat() if self.started_at else None,
+            "completed_at": self.completed_at.isoformat() if self.completed_at else None,
+            "duration_ms": self.duration_ms,
+            "error_message": self.error_message,
+            "skip_reason": self.skip_reason,
+            "forecast_run_id": self.forecast_run_id,
+            "metadata": self.metadata_json or {},
+        }
+
+
+# =============================================================================
+# 14. Operational Alerts & Rules (Phase 20)
+# =============================================================================
+class AlertRuleModel(Base):
+    __tablename__ = "alert_rules"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    rule_id = Column(String(64), unique=True, index=True, nullable=False)
+    name = Column(String(128), nullable=False)
+    severity = Column(String(32), default="WARNING")
+    enabled = Column(Integer, default=1)
+    threshold = Column(Float, nullable=False)
+    evaluation_window = Column(String(64), default="last_5_jobs")
+    condition_key = Column(String(64), nullable=True)
+    comparison = Column(String(16), default=">")
+    description = Column(Text, nullable=True)
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "id": self.id,
+            "rule_id": self.rule_id,
+            "name": self.name,
+            "severity": self.severity,
+            "enabled": bool(self.enabled),
+            "threshold": self.threshold,
+            "evaluation_window": self.evaluation_window,
+            "condition_key": self.condition_key,
+            "comparison": self.comparison,
+            "description": self.description,
+        }
+
+
+class AlertEventModel(Base):
+    __tablename__ = "alert_events"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    alert_id = Column(String(64), unique=True, index=True, nullable=False)
+    rule_id = Column(String(64), index=True, nullable=False)
+    rule_name = Column(String(128), nullable=True)
+    severity = Column(String(32), default="WARNING")
+    cycle_id = Column(String(64), nullable=True)
+    status = Column(String(32), default="ACTIVE")
+    message = Column(Text, nullable=False)
+    acknowledged = Column(Integer, default=0)
+    acknowledged_by = Column(String(128), nullable=True)
+    resolved = Column(Integer, default=0)
+    resolved_by = Column(String(128), nullable=True)
+    resolved_at = Column(DateTime(timezone=True), nullable=True)
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), index=True)
+    updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    metadata_json = Column("metadata", JSON, default=dict)
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "id": self.id,
+            "alert_id": self.alert_id,
+            "rule_id": self.rule_id,
+            "rule_name": self.rule_name or self.rule_id,
+            "severity": self.severity,
+            "cycle_id": self.cycle_id,
+            "status": self.status,
+            "message": self.message,
+            "acknowledged": bool(self.acknowledged),
+            "acknowledged_by": self.acknowledged_by,
+            "resolved": bool(self.resolved),
+            "resolved_by": self.resolved_by,
+            "resolved_at": self.resolved_at.isoformat() if self.resolved_at else None,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "triggered_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+            "metadata": self.metadata_json or {},
+        }
+
+
+# =============================================================================
+# 15. Drift Measurements, Readiness Runs & Data Health (Phase 20)
+# =============================================================================
+class DriftMeasurementModel(Base):
+    __tablename__ = "drift_measurements"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    feature = Column(String(64), index=True, nullable=False)
+    baseline_count = Column(Integer, default=0)
+    current_count = Column(Integer, default=0)
+    baseline_mean = Column(Float, nullable=True)
+    current_mean = Column(Float, nullable=True)
+    baseline_std = Column(Float, nullable=True)
+    current_std = Column(Float, nullable=True)
+    ks_statistic = Column(Float, nullable=True)
+    p_value = Column(Float, nullable=True)
+    drift_status = Column(String(32), default="INSUFFICIENT_DATA")
+    data_mode = Column(String(32), default="REAL_OPERATIONAL")
+    computed_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    metadata_json = Column("metadata", JSON, default=dict)
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "id": self.id,
+            "feature": self.feature,
+            "feature_name": self.feature,
+            "baseline_count": self.baseline_count,
+            "current_count": self.current_count,
+            "baseline_mean": self.baseline_mean,
+            "current_mean": self.current_mean,
+            "baseline_std": self.baseline_std,
+            "current_std": self.current_std,
+            "ks_statistic": self.ks_statistic,
+            "p_value": self.p_value,
+            "drift_status": self.drift_status,
+            "drift_level": self.drift_status,
+            "data_mode": self.data_mode,
+            "computed_at": self.computed_at.isoformat() if self.computed_at else None,
+            "metadata": self.metadata_json or {},
+        }
+
+
+class ReadinessRunModel(Base):
+    __tablename__ = "readiness_runs"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    run_id = Column(String(64), unique=True, index=True, nullable=False)
+    passed_count = Column(Integer, nullable=False)
+    failed_count = Column(Integer, nullable=False)
+    warn_count = Column(Integer, nullable=False)
+    skipped_count = Column(Integer, nullable=False)
+    total_count = Column(Integer, nullable=False)
+    score_pct = Column(Float, nullable=False)
+    overall_status = Column(String(32), default="NO_GO")
+    gate_real_operational = Column(Integer, default=0)
+    data_mode = Column(String(32), default="REAL_OPERATIONAL")
+    checks_json = Column("checks", JSON, nullable=False, default=list)
+    category_summary = Column(JSON, default=dict)
+    executed_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "id": self.id,
+            "run_id": self.run_id,
+            "passed": self.passed_count,
+            "failed": self.failed_count,
+            "warned": self.warn_count,
+            "skipped": self.skipped_count,
+            "total_checks": self.total_count,
+            "score_pct": self.score_pct,
+            "overall_status": self.overall_status,
+            "gate_real_operational": bool(self.gate_real_operational),
+            "data_mode": self.data_mode,
+            "checks": self.checks_json or [],
+            "category_summary": self.category_summary or {},
+            "executed_at": self.executed_at.isoformat() if self.executed_at else None,
+        }
+
+
+class DataSourceHealthModel(Base):
+    __tablename__ = "data_source_health"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    source_id = Column(String(64), unique=True, index=True, nullable=False)
+    provider = Column(String(64), nullable=False)
+    dataset = Column(String(64), nullable=False)
+    availability = Column(String(32), default="NOT_AVAILABLE")
+    last_seen = Column(DateTime(timezone=True), nullable=True)
+    latest_cycle = Column(String(32), nullable=True)
+    arrival_delay_minutes = Column(Float, nullable=True)
+    coverage_pct = Column(Float, default=0.0)
+    quality_control = Column(String(32), default="NOT_AVAILABLE")
+    storage_status = Column(String(32), default="HEALTHY")
+    record_count = Column(Integer, default=0)
+    total_size_bytes = Column(BigInteger, default=0)
+    checksum = Column(String(64), nullable=True)
+    last_error = Column(Text, nullable=True)
+    updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    metadata_json = Column("metadata", JSON, default=dict)
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "id": self.id,
+            "source_id": self.source_id,
+            "provider": self.provider,
+            "dataset": self.dataset,
+            "availability": self.availability,
+            "status": self.availability,
+            "last_seen": self.last_seen.isoformat() if self.last_seen else None,
+            "latest_cycle": self.latest_cycle,
+            "arrival_delay_minutes": self.arrival_delay_minutes,
+            "coverage_pct": self.coverage_pct,
+            "quality_control": self.quality_control,
+            "qc_status": self.quality_control,
+            "storage_status": self.storage_status,
+            "record_count": self.record_count,
+            "total_size_bytes": self.total_size_bytes,
+            "checksum": self.checksum,
+            "last_error": self.last_error,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+            "metadata": self.metadata_json or {},
+        }
+
+

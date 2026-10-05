@@ -39,6 +39,17 @@ REQUIRED_TABLES = [
     "forecast_provenance",
     "audit_events",
     "system_state",
+    "operations_state",
+    "operation_events",
+    "operational_cycles",
+    "cycle_events",
+    "scheduler_state",
+    "forecast_jobs",
+    "alert_rules",
+    "alert_events",
+    "drift_measurements",
+    "readiness_runs",
+    "data_source_health",
 ]
 
 
@@ -425,9 +436,47 @@ class DatabaseManager:
                 self._connection_error = str(err)
                 self._last_error_time = time.time()
                 logger.warning(f"Database schema initialization attempt {attempt}/{max_attempts} failed: {err}")
+                if not self.is_production and "sqlite" not in self.database_url:
+                    logger.info("Local environment: PostgreSQL unreachable, falling back to local SQLite engine.")
+                    self.database_url = "sqlite:///data/ramp_storage.db"
+                    self.is_sqlite = True
+                    Path("data").mkdir(exist_ok=True)
+                    self.engine = create_engine(self.database_url, connect_args={"check_same_thread": False})
+                    self.SessionFactory = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
+                    try:
+                        from ramp.storage.models import Base
+                        Base.metadata.create_all(bind=self.engine)
+                        self._ensure_sqlite_columns()
+                        self._schema_ready = True
+                        self._connected = True
+                        logger.info("SQLite schema initialized successfully for local development.")
+                        return True
+                    except Exception as sqle:
+                        logger.warning(f"SQLite initialization notice: {sqle}")
                 if attempt < max_attempts:
                     time.sleep(2.0)
         return False
+
+    def _ensure_sqlite_columns(self) -> None:
+        """Inspects and adds any missing columns to existing SQLite tables for local dev."""
+        if not self.is_sqlite:
+            return
+        try:
+            from ramp.storage.models import Base
+            with self.engine.begin() as conn:
+                for table_name, table in Base.metadata.tables.items():
+                    try:
+                        res = conn.execute(text(f"PRAGMA table_info('{table_name}')")).fetchall()
+                        existing_cols = {row[1] for row in res}
+                        for col in table.columns:
+                            if col.name not in existing_cols:
+                                col_type = col.type.compile(self.engine.dialect)
+                                conn.execute(text(f"ALTER TABLE '{table_name}' ADD COLUMN {col.name} {col_type}"))
+                                logger.info(f"SQLite migration: added column {table_name}.{col.name}")
+                    except Exception:
+                        pass
+        except Exception as e:
+            logger.debug(f"SQLite column migration notice: {e}")
 
     @contextmanager
     def session(self) -> Generator[Session, None, None]:

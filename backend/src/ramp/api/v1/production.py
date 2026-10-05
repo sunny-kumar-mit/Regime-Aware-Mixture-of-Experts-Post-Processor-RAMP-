@@ -248,73 +248,95 @@ def get_production_data_readiness():
 
 @router.get("/cycles")
 def list_production_cycles():
-    """Lists operational cycles, lead time states, and execution histories."""
-    cycles = cycle_manager.list_cycles()
+    """Lists operational cycles, lead time states, and execution histories from PostgreSQL."""
+    from ramp.services.operations_engine import OperationsEngine
+    engine = OperationsEngine.get_instance()
+    cycles = engine.list_cycles()
     return {
-        "status": "success",
+        "status": "SUCCESS",
         "count": len(cycles),
-        "cycles": [c.to_dict() for c in cycles],
+        "cycles": cycles,
+        "data": {"cycles": cycles},
     }
 
 
 @router.get("/cycles/{cycle_id}")
 def get_production_cycle(cycle_id: str):
-    """Retrieves operational cycle details, jobs, and state history."""
-    cycle = cycle_manager.get_cycle(cycle_id)
+    """Retrieves operational cycle details, jobs, and state history from PostgreSQL."""
+    from ramp.services.operations_engine import OperationsEngine
+    engine = OperationsEngine.get_instance()
+    cycle = engine.get_cycle_detail(cycle_id)
     if not cycle:
         raise HTTPException(status_code=404, detail=f"Cycle '{cycle_id}' not found.")
     return {
-        "status": "success",
-        "cycle": cycle.to_dict(),
+        "status": "SUCCESS",
+        "cycle": cycle,
+        "data": cycle,
     }
 
 
 @router.get("/jobs")
-def list_production_jobs():
-    """Lists operational execution jobs in the queue."""
-    jobs = job_queue.list_jobs()
+def list_production_jobs(cycle_id: Optional[str] = None):
+    """Lists operational execution jobs from PostgreSQL."""
+    from ramp.services.operations_engine import OperationsEngine
+    engine = OperationsEngine.get_instance()
+    jobs = engine.list_jobs(limit=50, cycle_id=cycle_id)
     return {
-        "status": "success",
+        "status": "SUCCESS",
         "count": len(jobs),
-        "jobs": [j.to_dict() for j in jobs],
+        "jobs": jobs,
+        "data": {"jobs": jobs},
     }
 
 
 @router.get("/jobs/{job_id}")
 def get_production_job(job_id: str):
     """Retrieves specific operational job by deterministic SHA-256 ID."""
-    job = job_queue.get_job(job_id)
-    if not job:
-        raise HTTPException(status_code=404, detail=f"Job '{job_id}' not found.")
-    return {
-        "status": "success",
-        "job": job.to_dict(),
-    }
+    from ramp.services.operations_engine import OperationsEngine
+    engine = OperationsEngine.get_instance()
+    jobs = engine.list_jobs(limit=1000)
+    for j in jobs:
+        if j.get("job_id") == job_id:
+            return {"status": "SUCCESS", "job": j, "data": j}
+    raise HTTPException(status_code=404, detail=f"Job '{job_id}' not found.")
 
 
 @router.get("/data-health")
 def get_data_health():
     """Detailed connectivity and data health for NCUM, NEPS, and IMD."""
-    providers = connectivity_monitor.check_all_providers()
-    obs_health = obs_monitor.evaluate_observation_health(providers)
+    from ramp.services.operations_engine import OperationsEngine
+    engine = OperationsEngine.get_instance()
+    dh = engine.get_data_sources_health()
+    providers = dh.get("providers", {})
+    obs_health = providers.get("IMD_GRIDDED_OBSERVATION", {})
     return {
-        "status": "success",
-        "providers": {k: v.to_dict() for k, v in providers.items()},
-        "observation_health": obs_health.to_dict(),
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "status": "SUCCESS",
+        "providers": providers,
+        "observation_health": obs_health,
+        "timestamp": dh.get("timestamp"),
+        "data": {
+            "providers": providers,
+            "observation_health": obs_health,
+        },
     }
 
 
 @router.get("/freshness")
 def get_data_freshness():
     """Expected vs actual arrival times for NCUM and NEPS synoptic cycles."""
-    conn = connectivity_monitor.check_all_providers()
-    records = freshness_monitor.evaluate_freshness(conn)
+    from ramp.services.operations_engine import OperationsEngine
+    engine = OperationsEngine.get_instance()
+    fn = engine.get_data_freshness()
+    records = fn.get("freshness_records", [])
     return {
-        "status": "success",
-        "freshness_records": [r.to_dict() for r in records],
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "status": "SUCCESS",
+        "freshness_records": records,
+        "timestamp": fn.get("timestamp"),
+        "data": {
+            "freshness_records": records,
+        },
     }
+
 
 
 @router.get("/storage")

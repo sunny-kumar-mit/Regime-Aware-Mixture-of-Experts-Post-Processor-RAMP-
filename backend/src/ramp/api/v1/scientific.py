@@ -17,7 +17,7 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, HTTPException, Query
 
 from ml.scientific.benchmarks import ModelBenchmarkComparison
 from ml.scientific.calibration import CalibrationAnalyzer
@@ -42,14 +42,14 @@ MODEL_VERSION = "ramp_v1.0.0"
 PHASE_VERSION = SCIENTIFIC_VERSION
 
 
-def _envelope(data: Any, availability: str = "SYNTHETIC_DEMO", sample_count: int = 0) -> Dict[str, Any]:
+def _envelope(data: Any, availability: str = "SYNTHETIC_DEMO", sample_count: int = 0, run_id: Optional[str] = None) -> Dict[str, Any]:
     """Standard Phase 10 API response envelope."""
     return {
         "data_mode": DATA_MODE,
         "dataset_version": DATASET_VERSION,
         "model_version": MODEL_VERSION,
         "phase_version": PHASE_VERSION,
-        "run_id": f"api_{uuid.uuid4().hex[:8]}",
+        "run_id": run_id or f"api_{uuid.uuid4().hex[:8]}",
         "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
         "sample_count": sample_count,
         "availability_status": availability,
@@ -336,3 +336,150 @@ def scientific_jury_demo() -> Dict[str, Any]:
             "REAL IMD/NCMRWF OBSERVATIONAL ARCHIVES ARE NOT CURRENTLY MOUNTED."
         ),
     }, availability="SYNTHETIC_DEMO", sample_count=200)
+
+
+@router.post("/case/{case_id}/run")
+@router.post("/case/{case_id}/replay")
+def scientific_case_run(case_id: str) -> Dict[str, Any]:
+    """Execute / replay end-to-end RAMP pipeline for a demonstration case."""
+    engine = CaseStudyReplayEngine()
+    case = engine.get_case(case_id)
+    if case is None:
+        raise HTTPException(status_code=404, detail=f"Case '{case_id}' not found.")
+    
+    run_id = f"RUN_{case_id}_{uuid.uuid4().hex[:8].upper()}"
+    return _envelope({
+        "case_id": case.case_id,
+        "status": "COMPLETED",
+        "run_id": run_id,
+        "data_mode": case.data_mode,
+        "model_version": case.model_version,
+        "completed_at": datetime.now(timezone.utc).isoformat() + "Z",
+        "pipeline_stages": [s.to_dict() for s in case.pipeline_stages],
+        "execution_timeline": case.execution_timeline,
+        "case_detail": case.to_dict(),
+    }, availability="SYNTHETIC_DEMO", run_id=run_id)
+
+
+# ---------------------------------------------------------------------------
+# Jury Demo Dedicated Router (PART 21)
+# ---------------------------------------------------------------------------
+jury_router = APIRouter(prefix="/jury", tags=["Jury Demo"])
+
+
+@jury_router.get("/cases")
+def jury_cases() -> Dict[str, Any]:
+    """List all available jury demo cases."""
+    return scientific_cases()
+
+
+@jury_router.get("/cases/{case_id}")
+def jury_case_detail(case_id: str) -> Dict[str, Any]:
+    """Get full case metadata and pipeline stages."""
+    return scientific_case(case_id)
+
+
+@jury_router.post("/cases/{case_id}/run")
+@jury_router.post("/cases/{case_id}/replay")
+def jury_run_case(case_id: str) -> Dict[str, Any]:
+    """Trigger demonstration replay for selected case."""
+    return scientific_case_run(case_id)
+
+
+@jury_router.get("/cases/{case_id}/pipeline")
+def jury_case_pipeline(case_id: str) -> Dict[str, Any]:
+    c = CaseStudyReplayEngine().get_case(case_id)
+    if not c:
+        raise HTTPException(status_code=404, detail=f"Case '{case_id}' not found.")
+    return _envelope([s.to_dict() for s in c.pipeline_stages], availability="SYNTHETIC_DEMO")
+
+
+@jury_router.get("/cases/{case_id}/regime")
+def jury_case_regime(case_id: str) -> Dict[str, Any]:
+    c = CaseStudyReplayEngine().get_case(case_id)
+    if not c:
+        raise HTTPException(status_code=404, detail=f"Case '{case_id}' not found.")
+    return _envelope({
+        "dominant_regime": c.regime,
+        "regime_probabilities": c.regime_probabilities,
+        "top_expert": c.top_expert,
+        "top_expert_weight": c.top_expert_weight,
+    }, availability="SYNTHETIC_DEMO")
+
+
+@jury_router.get("/cases/{case_id}/experts")
+def jury_case_experts(case_id: str) -> Dict[str, Any]:
+    c = CaseStudyReplayEngine().get_case(case_id)
+    if not c:
+        raise HTTPException(status_code=404, detail=f"Case '{case_id}' not found.")
+    return _envelope({
+        "expert_weights": c.expert_weights,
+        "top_expert": c.top_expert,
+        "top_expert_weight": c.top_expert_weight,
+        "why_expert": c.why_expert,
+    }, availability="SYNTHETIC_DEMO")
+
+
+@jury_router.get("/cases/{case_id}/extreme-risk")
+def jury_case_extreme_risk(case_id: str) -> Dict[str, Any]:
+    c = CaseStudyReplayEngine().get_case(case_id)
+    if not c:
+        raise HTTPException(status_code=404, detail=f"Case '{case_id}' not found.")
+    return _envelope(c.probabilities, availability="SYNTHETIC_DEMO")
+
+
+@jury_router.get("/cases/{case_id}/spatial")
+def jury_case_spatial(case_id: str) -> Dict[str, Any]:
+    c = CaseStudyReplayEngine().get_case(case_id)
+    if not c:
+        raise HTTPException(status_code=404, detail=f"Case '{case_id}' not found.")
+    return _envelope({
+        "district": c.district,
+        "state": c.state,
+        "latitude": c.latitude,
+        "longitude": c.longitude,
+        "ramp_rainfall_mm": c.ramp_prediction_mm,
+        "raw_nwp_rainfall_mm": c.nwp_rainfall_mm,
+        "risk_category": c.severity,
+        "affected_districts": c.affected_districts,
+    }, availability="SYNTHETIC_DEMO")
+
+
+@jury_router.get("/cases/{case_id}/explainability")
+def jury_case_explainability(case_id: str) -> Dict[str, Any]:
+    c = CaseStudyReplayEngine().get_case(case_id)
+    if not c:
+        raise HTTPException(status_code=404, detail=f"Case '{case_id}' not found.")
+    return _envelope({
+        "raw_nwp_mm": c.nwp_rainfall_mm,
+        "ramp_prediction_mm": c.ramp_prediction_mm,
+        "dominant_regime": c.regime,
+        "top_expert": c.top_expert,
+        "top_expert_weight": c.top_expert_weight,
+        "why_expert": c.why_expert,
+        "top_features": c.top_features,
+        "probabilities": c.probabilities,
+    }, availability="SYNTHETIC_DEMO")
+
+
+@jury_router.get("/cases/{case_id}/verification")
+def jury_case_verification(case_id: str) -> Dict[str, Any]:
+    c = CaseStudyReplayEngine().get_case(case_id)
+    if not c:
+        raise HTTPException(status_code=404, detail=f"Case '{case_id}' not found.")
+    return _envelope({
+        "status": "VERIFICATION_NOT_AVAILABLE",
+        "reason": "Authoritative IMD observations are not currently mounted.",
+        "observed_mm": None,
+        "error_mm": None,
+    }, availability="NOT_AVAILABLE")
+
+
+@jury_router.get("/runs/{run_id}")
+def jury_run_status(run_id: str) -> Dict[str, Any]:
+    return _envelope({
+        "run_id": run_id,
+        "status": "COMPLETED",
+        "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
+    }, availability="SYNTHETIC_DEMO")
+

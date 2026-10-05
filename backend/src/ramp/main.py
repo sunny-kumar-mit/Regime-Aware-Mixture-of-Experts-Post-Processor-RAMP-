@@ -41,7 +41,7 @@ from ramp.api.v1.ramp import router as ramp_router
 from ramp.api.v1.extreme import router as extreme_router
 from ramp.api.v1.operational import router as operational_router
 from ramp.api.v1.spatial import router as spatial_router
-from ramp.api.v1.scientific import router as scientific_router
+from ramp.api.v1.scientific import router as scientific_router, jury_router
 from ramp.api.v1.datasets_real import router as datasets_real_router
 from ramp.api.v1.models import router as models_router
 from ramp.api.v1.forecast import router as forecast_router
@@ -169,6 +169,7 @@ app.include_router(extreme_router, prefix=settings.API_PREFIX)
 app.include_router(operational_router, prefix=settings.API_PREFIX)
 app.include_router(spatial_router, prefix=settings.API_PREFIX)
 app.include_router(scientific_router, prefix=settings.API_PREFIX)
+app.include_router(jury_router, prefix=settings.API_PREFIX)
 app.include_router(datasets_real_router, prefix=settings.API_PREFIX)
 app.include_router(models_router, prefix=settings.API_PREFIX)
 app.include_router(forecast_router, prefix=settings.API_PREFIX)

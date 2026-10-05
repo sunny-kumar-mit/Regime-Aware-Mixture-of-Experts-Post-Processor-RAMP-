@@ -538,6 +538,80 @@ export async function fetchScientificJuryDemo(): Promise<Record<string, any>> {
   return res.json();
 }
 
+// ---------------------------------------------------------------------------
+// Phase 22 — Dedicated Jury Demo API Functions
+// ---------------------------------------------------------------------------
+
+export async function fetchJuryCases(): Promise<Record<string, any>> {
+  const res = await fetch(`${API_BASE}/api/jury/cases`);
+  if (!res.ok) throw new Error(`Jury cases failed: ${res.status}`);
+  return res.json();
+}
+
+export async function fetchJuryCase(caseId: string): Promise<Record<string, any>> {
+  const res = await fetch(`${API_BASE}/api/jury/cases/${encodeURIComponent(caseId)}`);
+  if (!res.ok) throw new Error(`Jury case failed: ${res.status}`);
+  return res.json();
+}
+
+export async function fetchJuryCasePipeline(caseId: string): Promise<Record<string, any>> {
+  const res = await fetch(`${API_BASE}/api/jury/cases/${encodeURIComponent(caseId)}/pipeline`);
+  if (!res.ok) throw new Error(`Jury pipeline failed: ${res.status}`);
+  return res.json();
+}
+
+export async function fetchJuryCaseRegime(caseId: string): Promise<Record<string, any>> {
+  const res = await fetch(`${API_BASE}/api/jury/cases/${encodeURIComponent(caseId)}/regime`);
+  if (!res.ok) throw new Error(`Jury regime failed: ${res.status}`);
+  return res.json();
+}
+
+export async function fetchJuryCaseExperts(caseId: string): Promise<Record<string, any>> {
+  const res = await fetch(`${API_BASE}/api/jury/cases/${encodeURIComponent(caseId)}/experts`);
+  if (!res.ok) throw new Error(`Jury experts failed: ${res.status}`);
+  return res.json();
+}
+
+export async function fetchJuryCaseExtremeRisk(caseId: string): Promise<Record<string, any>> {
+  const res = await fetch(`${API_BASE}/api/jury/cases/${encodeURIComponent(caseId)}/extreme-risk`);
+  if (!res.ok) throw new Error(`Jury extreme-risk failed: ${res.status}`);
+  return res.json();
+}
+
+export async function fetchJuryCaseSpatial(caseId: string): Promise<Record<string, any>> {
+  const res = await fetch(`${API_BASE}/api/jury/cases/${encodeURIComponent(caseId)}/spatial`);
+  if (!res.ok) throw new Error(`Jury spatial failed: ${res.status}`);
+  return res.json();
+}
+
+export async function fetchJuryCaseExplainability(caseId: string): Promise<Record<string, any>> {
+  const res = await fetch(`${API_BASE}/api/jury/cases/${encodeURIComponent(caseId)}/explainability`);
+  if (!res.ok) throw new Error(`Jury explainability failed: ${res.status}`);
+  return res.json();
+}
+
+export async function fetchJuryCaseVerification(caseId: string): Promise<Record<string, any>> {
+  const res = await fetch(`${API_BASE}/api/jury/cases/${encodeURIComponent(caseId)}/verification`);
+  if (!res.ok) throw new Error(`Jury verification failed: ${res.status}`);
+  return res.json();
+}
+
+export async function runJuryCase(caseId: string): Promise<Record<string, any>> {
+  const res = await fetch(`${API_BASE}/api/jury/cases/${encodeURIComponent(caseId)}/run`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  if (!res.ok) throw new Error(`Jury run case failed: ${res.status}`);
+  return res.json();
+}
+
+export async function fetchJuryRunStatus(runId: string): Promise<Record<string, any>> {
+  const res = await fetch(`${API_BASE}/api/jury/runs/${encodeURIComponent(runId)}`);
+  if (!res.ok) throw new Error(`Jury run status failed: ${res.status}`);
+  return res.json();
+}
+
+
 // ==========================================
 // Phase 11 — Operational Data Plane Functions
 // ==========================================

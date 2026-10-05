@@ -149,6 +149,9 @@ class PostgresStorageProvider:
         """
         Reconstructs the complete file from chunks in PostgreSQL and verifies SHA-256.
         """
+        if not getattr(self.db, "_connected", False):
+            raise FileNotFoundError(f"Database offline: Cannot download '{file_id}'.")
+
         with self.db.session() as session:
             file_obj = session.execute(
                 select(FileObjectModel).where(FileObjectModel.id == file_id)
@@ -227,6 +230,8 @@ class PostgresStorageProvider:
 
     def exists(self, file_id: str) -> bool:
         """Checks if a file exists in PostgreSQL storage."""
+        if not getattr(self.db, "_connected", False):
+            return False
         with self.db.session() as session:
             res = session.execute(
                 select(FileObjectModel.id).where(FileObjectModel.id == file_id)
@@ -235,6 +240,8 @@ class PostgresStorageProvider:
 
     def get_metadata(self, file_id: str) -> Optional[Dict[str, Any]]:
         """Returns metadata for a stored file."""
+        if not getattr(self.db, "_connected", False):
+            return None
         with self.db.session() as session:
             file_obj = session.execute(
                 select(FileObjectModel).where(FileObjectModel.id == file_id)
@@ -243,6 +250,8 @@ class PostgresStorageProvider:
 
     def get_checksum(self, file_id: str) -> Optional[str]:
         """Returns the SHA-256 checksum of a stored file."""
+        if not getattr(self.db, "_connected", False):
+            return None
         with self.db.session() as session:
             res = session.execute(
                 select(FileObjectModel.sha256).where(FileObjectModel.id == file_id)
@@ -253,6 +262,8 @@ class PostgresStorageProvider:
         self, dataset_id: Optional[str] = None, provider: Optional[str] = None
     ) -> List[Dict[str, Any]]:
         """Lists files matching the optional filter criteria."""
+        if not getattr(self.db, "_connected", False):
+            return []
         with self.db.session() as session:
             query = select(FileObjectModel)
             if dataset_id:

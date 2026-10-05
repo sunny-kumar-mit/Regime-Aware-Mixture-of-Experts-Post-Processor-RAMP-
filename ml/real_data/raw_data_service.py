@@ -209,15 +209,16 @@ class RawDataService:
                     }
                     return candidate, synth_meta
 
-        # 6. Fallback PostgreSQL storage fetch
-        try:
-            for k in [file_id_clean, f"canonical/imd/{file_id_clean}", f"canonical/ncmrwf/{file_id_clean}", f"raw/ncmrwf/{file_id_clean}"]:
-                dest = self.object_storage.get_file_path(k)
-                if dest and dest.exists() and dest.stat().st_size > 0:
-                    prov = "IMD" if "imd" in k.lower() else "NCMRWF"
-                    return dest, {"id": file_id_clean, "filename": dest.name, "provider": prov, "storage_key": k}
-        except Exception:
-            pass
+        # 6. Fallback PostgreSQL storage fetch (only if database is online)
+        if getattr(self.object_storage.db, "_connected", False):
+            try:
+                for k in [file_id_clean, f"canonical/imd/{file_id_clean}", f"canonical/ncmrwf/{file_id_clean}", f"raw/ncmrwf/{file_id_clean}"]:
+                    dest = self.object_storage.get_file_path(k)
+                    if dest and dest.exists() and dest.stat().st_size > 0:
+                        prov = "IMD" if "imd" in k.lower() else "NCMRWF"
+                        return dest, {"id": file_id_clean, "filename": dest.name, "provider": prov, "storage_key": k}
+            except Exception:
+                pass
 
         # 7. Fallback to primary valid dataset if file_id is generic, uninitialized, or missing
         if file_id_clean.lower() in ("undefined", "null", "none", "default", "active"):

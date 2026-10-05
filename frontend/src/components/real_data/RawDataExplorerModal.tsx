@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import L from 'leaflet';
@@ -468,8 +469,8 @@ const MODAL_BASEMAP_STYLE: any = {
   const totalPages = Math.max(1, Math.ceil(tableData.total / pageSize));
   const isRejected = summary?.validation_status === 'REJECTED' || summary?.validation_status === 'FAIL';
 
-  return (
-    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-fade-in overflow-hidden">
+  return typeof document !== 'undefined' ? createPortal(
+    <div className="fixed inset-0 z-[9999] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-fade-in overflow-hidden">
       <div className="bg-slate-900 border border-slate-700/80 rounded-2xl w-full max-w-7xl h-[92vh] flex flex-col shadow-2xl overflow-hidden">
         
         {/* MODAL HEADER */}
@@ -749,7 +750,7 @@ const MODAL_BASEMAP_STYLE: any = {
           {/* TAB 2: SPATIAL MAP */}
           {activeTab === 'MAP' && (
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 h-full">
-              <div className="lg:col-span-3 flex flex-col bg-slate-950 rounded-xl border border-slate-800 overflow-hidden relative min-h-[500px]">
+              <div className="lg:col-span-3 flex flex-col bg-slate-950 rounded-xl border border-slate-800 overflow-hidden relative min-h-[500px] z-0 isolate">
                 {/* Map Toolbar */}
                 <div className="bg-slate-900/90 px-4 py-2.5 border-b border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs z-10">
                   <div className="flex items-center gap-3">
@@ -814,7 +815,7 @@ const MODAL_BASEMAP_STYLE: any = {
                 </div>
 
                 {/* Map Canvas */}
-                <div ref={mapContainerRef} className="flex-1 w-full h-full min-h-[460px] bg-slate-950 relative" />
+                <div ref={mapContainerRef} className="flex-1 w-full h-full min-h-[460px] bg-slate-950 relative z-0 isolate" />
 
                 {mapLoading && (
                   <div className="absolute inset-0 bg-slate-950/70 backdrop-blur-sm flex flex-col items-center justify-center text-xs text-indigo-300 z-20">
@@ -1030,6 +1031,7 @@ const MODAL_BASEMAP_STYLE: any = {
           )}
         </div>
       </div>
-    </div>
-  );
+    </div>,
+    document.body
+  ) : null;
 };

@@ -64,3 +64,51 @@
   border-top-color: #334155 !important;
 }
 
+/* ------------------------------------------------------------- */
+/* Leaflet & MapLibre Stacking Isolation & Modal Elevation       */
+/* ------------------------------------------------------------- */
+/* Ensure Leaflet container creates its own isolated stacking context and stays at z-index 0 */
+.leaflet-container {
+  isolation: isolate !important;
+  z-index: 0 !important;
+}
+
+/* Constrain Leaflet panes and controls to low z-indices so they never bleed through modals */
+.leaflet-pane {
+  z-index: 10 !important;
+}
+.leaflet-tile-pane {
+  z-index: 1 !important;
+}
+.leaflet-overlay-pane {
+  z-index: 10 !important;
+}
+.leaflet-shadow-pane {
+  z-index: 15 !important;
+}
+.leaflet-marker-pane {
+  z-index: 20 !important;
+}
+.leaflet-tooltip-pane {
+  z-index: 30 !important;
+}
+.leaflet-popup-pane {
+  z-index: 40 !important;
+}
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 50 !important;
+}
+
+/* MapLibre container reset */
+.maplibregl-map {
+  isolation: isolate !important;
+  z-index: 0 !important;
+}
+
+/* All application dialogs, overlays, and modals must stack above any map components */
+.fixed.inset-0.z-50,
+.fixed.inset-0[class*="z-"] {
+  z-index: 9999 !important;
+}
+

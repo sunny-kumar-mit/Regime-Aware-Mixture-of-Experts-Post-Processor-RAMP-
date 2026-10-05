@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import L from 'leaflet';
@@ -1316,7 +1317,7 @@ export const InteractiveForecastMap: React.FC<InteractiveForecastMapProps> = ({
       {/* MAIN MAP WORKSPACE: MAP CANVAS + RIGHT-SIDE FORECAST INSIGHTS */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
         {/* MAP CONTAINER (3 COLS) */}
-        <div className="lg:col-span-3 flex flex-col bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-2xl relative min-h-[580px]">
+        <div className="lg:col-span-3 flex flex-col bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-2xl relative min-h-[580px] z-0 isolate">
           {/* SCALE & ZOOM PRESET TOOLBAR (Requirement 6) */}
           <div className="bg-slate-950 px-4 py-2 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2 z-10">
             <div className="flex items-center gap-1.5 text-xs">
@@ -1344,7 +1345,7 @@ export const InteractiveForecastMap: React.FC<InteractiveForecastMapProps> = ({
           </div>
 
           {/* MAP CANVAS (Keyless, Public Basemap) */}
-          <div ref={mapContainerRef} className="flex-1 w-full h-full min-h-[520px] bg-slate-950 relative" />
+          <div ref={mapContainerRef} className="flex-1 w-full h-full min-h-[520px] bg-slate-950 relative z-0 isolate" />
 
           {/* ACCESSIBLE RAINFALL LEGEND (Requirement 18) */}
           <div
@@ -1652,8 +1653,8 @@ export const InteractiveForecastMap: React.FC<InteractiveForecastMapProps> = ({
       {/* ============================================================= */}
       {/* MODAL 1: IMD GROUND TRUTH TEMPORAL PAIRING MODAL              */}
       {/* ============================================================= */}
-      {pairingModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
+      {pairingModalOpen && typeof document !== 'undefined' && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
           <div className="bg-slate-900 border border-slate-700/80 rounded-2xl w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-scale-in">
             {/* Modal Header */}
             <div className="p-4 sm:p-5 bg-gradient-to-r from-slate-950 to-slate-900 border-b border-slate-800 flex items-center justify-between">
@@ -1887,14 +1888,15 @@ export const InteractiveForecastMap: React.FC<InteractiveForecastMapProps> = ({
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* ============================================================= */}
       {/* MODAL 2: PAIRING AUDIT & WMO METRICS MODAL                     */}
       {/* ============================================================= */}
-      {auditModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
+      {auditModalOpen && typeof document !== 'undefined' && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
           <div className="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-scale-in">
             <div className="p-4 sm:p-5 bg-gradient-to-r from-emerald-950 to-slate-900 border-b border-slate-800 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
@@ -1998,7 +2000,8 @@ export const InteractiveForecastMap: React.FC<InteractiveForecastMapProps> = ({
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

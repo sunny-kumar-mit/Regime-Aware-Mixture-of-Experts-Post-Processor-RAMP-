@@ -624,7 +624,7 @@ export const OperationalForecastPage: React.FC = () => {
               </div>
 
               {/* REAL GEOGRAPHIC MAP VISUALIZER */}
-              <div className="flex-1 relative rounded-lg border border-slate-800/80 overflow-hidden min-h-[500px]">
+              <div className="flex-1 relative rounded-lg border border-slate-800/80 overflow-hidden min-h-[500px] z-0 isolate">
                 {loading && (
                   <div className="absolute inset-0 bg-slate-950/75 z-20 flex flex-col items-center justify-center backdrop-blur-sm">
                     <RefreshCw className="w-8 h-8 text-blue-400 animate-spin mb-2" />
@@ -1118,7 +1118,7 @@ export const OperationalForecastPage: React.FC = () => {
       {/* DISTRICT DRILL-DOWN MODAL                                             */}
       {/* --------------------------------------------------------------------- */}
       {selectedDistrictModal && (
-        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
           <div className="bg-slate-900 border border-slate-800 rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl p-6">
             <div className="flex items-center justify-between pb-3 border-b border-slate-800">
               <div>
@@ -1248,7 +1248,7 @@ export const OperationalForecastPage: React.FC = () => {
       {/* PROVENANCE MANIFEST MODAL (Section 29)                                */}
       {/* --------------------------------------------------------------------- */}
       {provenanceModalOpen && (
-        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
           <div className="bg-slate-900 border border-slate-800 rounded-xl w-full max-w-2xl max-h-[85vh] overflow-y-auto shadow-2xl p-6 font-mono text-xs">
             <div className="flex items-center justify-between pb-3 border-b border-slate-800">
               <div className="flex items-center gap-2">

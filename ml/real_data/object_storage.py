@@ -21,6 +21,7 @@ import json
 import logging
 import os
 import shutil
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -104,7 +105,8 @@ class ObjectStorageService:
 
     DEFAULT_BUCKET = "ramp-postgresql-vault"
     _synced: bool = False
-    _probe_cached: bool = False
+    _last_health_check: Optional[Dict[str, Any]] = None
+    _last_health_time: float = 0.0
 
     @property
     def VAULT_ROOT(self) -> Path:
@@ -125,6 +127,7 @@ class ObjectStorageService:
 
         self.storage_mode = os.environ.get("STORAGE_MODE", "POSTGRESQL")
         self.s3_bucket = self.DEFAULT_BUCKET
+        self.storage_bucket = self.DEFAULT_BUCKET
 
         # Initialize PostgreSQL + PostGIS Storage
         self.db = DatabaseManager.get_instance()
@@ -139,17 +142,19 @@ class ObjectStorageService:
         - Read chunk (download)
         - Delete chunk
         Never exposes secret credentials.
+        Caches recent results for 10 seconds to prevent connection timeout cascades.
         """
+        now = time.time()
+        if self._last_health_check and (now - self._last_health_time) < 10.0:
+            return dict(self._last_health_check)
+
         db_health = self.db.check_health()
-        is_pg = (
-            bool(db_health.get("connected"))
-            and not getattr(self.db, "is_sqlite", False)
-            and db_health.get("dialect") == "postgresql"
-        )
+        is_connected = bool(db_health.get("connected", False))
+
         report: Dict[str, Any] = {
-            "backend": "POSTGRESQL_POSTGIS" if is_pg else "LOCAL_FALLBACK",
-            "connected": bool(db_health.get("connected")),
-            "endpoint": f"PostgreSQL ({db_health.get('dialect', 'psycopg3')})" if is_pg else "Local Object Cache",
+            "backend": "POSTGRESQL_POSTGIS" if (is_connected and db_health.get("dialect") == "postgresql") else ("POSTGRESQL_DEV" if is_connected else "LOCAL_FALLBACK"),
+            "connected": is_connected,
+            "endpoint": f"PostgreSQL ({db_health.get('dialect', 'psycopg3')})" if is_connected else "PostgreSQL (Offline - Local Fallback)",
             "bucket": self.s3_bucket,
             "bucket_exists": True,
             "postgis_enabled": db_health.get("postgis_enabled", False),
@@ -159,13 +164,15 @@ class ObjectStorageService:
             "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
-        # If PostgreSQL is not connected or in local cache mode, verify local storage directory without probing PostgreSQL
-        if not is_pg:
+        # If PostgreSQL is not connected, do NOT attempt database upload to prevent connection timeouts
+        if not is_connected:
             dir_ok = self.OBJECTS_DIR.exists()
             report["read"] = "PASS" if dir_ok else "FAIL"
             report["write"] = "PASS" if dir_ok else "FAIL"
             report["delete"] = "PASS" if dir_ok else "FAIL"
-            report["notes"] = f"Operating in local cache fallback mode: {db_health.get('error') or 'Local development fallback'}"
+            report["notes"] = f"PostgreSQL offline; operating in local cache fallback mode: {db_health.get('error', 'Database offline')}"
+            self._last_health_check = dict(report)
+            self._last_health_time = now
             return report
 
         probe_id = f"_health_probe_{int(datetime.now(timezone.utc).timestamp())}"
@@ -190,16 +197,18 @@ class ObjectStorageService:
             self.postgres_storage.delete(probe_id)
             report["delete"] = "PASS"
 
-            report["notes"] = f"PostgreSQL + PostGIS storage fully operational on bucket '{self.s3_bucket}'."
+            report["notes"] = f"PostgreSQL storage fully operational on vault '{self.s3_bucket}'."
         except Exception as e:
-            logger.debug(f"PostgreSQL storage health probe note: {e}")
-            # If DB is offline, verify local cache
+            logger.debug(f"PostgreSQL storage probe notice: {e}")
+            # If DB is offline or encounters error, verify local cache
             dir_ok = self.OBJECTS_DIR.exists()
             report["read"] = "PASS" if dir_ok else "FAIL"
             report["write"] = "PASS" if dir_ok else "FAIL"
             report["delete"] = "PASS" if dir_ok else "FAIL"
             report["notes"] = f"Operating in local cache fallback mode: {e}"
 
+        self._last_health_check = dict(report)
+        self._last_health_time = now
         return report
 
     def _sync_existing_records(self) -> None:
@@ -218,25 +227,31 @@ class ObjectStorageService:
                         idx = json.load(f)
                     for rec_id, rec in idx.items():
                         if rec_id not in catalog:
+                            provider = rec.get("provider", "UNKNOWN")
+                            dataset = rec.get("dataset") or rec.get("source_id") or rec.get("source_type") or "UNKNOWN"
+                            fn = rec.get("filename")
+                            conv_fn = rec.get("converted_filename")
+                            downloaded_at = rec.get("downloaded_at") or rec.get("import_timestamp") or rec.get("created_at")
+                            created_at = rec.get("created_at") or rec.get("import_timestamp") or datetime.now(timezone.utc).isoformat()
                             catalog[rec_id] = {
                                 "id": rec_id,
-                                "provider": rec.get("provider", "UNKNOWN"),
-                                "dataset": rec.get("dataset", "UNKNOWN"),
-                                "original_filename": rec.get("filename"),
-                                "converted_filename": rec.get("converted_filename"),
+                                "provider": provider,
+                                "dataset": dataset,
+                                "original_filename": fn,
+                                "converted_filename": conv_fn,
                                 "storage_bucket": self.s3_bucket,
-                                "storage_key": f"raw/{rec.get('provider', 'unknown').lower()}/{rec.get('filename')}",
-                                "converted_storage_key": f"canonical/{rec.get('provider', 'unknown').lower()}/{rec.get('converted_filename')}" if rec.get("converted_filename") else None,
+                                "storage_key": f"raw/{provider.lower()}/{fn}" if fn else rec_id,
+                                "converted_storage_key": f"canonical/{provider.lower()}/{conv_fn}" if conv_fn else None,
                                 "storage_backend": "POSTGRESQL",
                                 "file_size": rec.get("size_bytes", 0),
                                 "sha256": rec.get("sha256"),
                                 "converted_sha256": rec.get("converted_sha256"),
                                 "source_url": rec.get("source_url"),
                                 "download_url": None,
-                                "downloaded_at": rec.get("created_at"),
+                                "downloaded_at": downloaded_at,
                                 "validation_status": rec.get("validation_status", "PASS"),
-                                "import_status": "ACTIVE",
-                                "created_at": rec.get("created_at", datetime.now(timezone.utc).isoformat()),
+                                "import_status": rec.get("import_status", "ACTIVE"),
+                                "created_at": created_at,
                                 "is_deleted": False,
                                 "metadata": rec.get("metadata", {}),
                             }

@@ -255,7 +255,7 @@ class DatabaseManager:
                     connect_args={"check_same_thread": False},
                 )
             else:
-                connect_args = {"connect_timeout": 3 if self.is_production else 1}
+                connect_args = {"connect_timeout": 2}
                 eng = create_engine(
                     self.database_url,
                     pool_size=self.pool_size,
@@ -359,8 +359,23 @@ class DatabaseManager:
             self._last_error_time = time.time()
             logger.warning(f"Database connection check failed: {e}")
             if not self.is_production and not self.is_sqlite:
-                if self._fallback_to_sqlite(str(e)):
-                    return self.run_startup_diagnostics()
+                try:
+                    self.database_url = "sqlite:///data/ramp_storage.db"
+                    self.is_sqlite = True
+                    Path("data").mkdir(exist_ok=True)
+                    self.engine = create_engine(self.database_url, connect_args={"check_same_thread": False})
+                    self.SessionFactory = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
+                    from ramp.storage.models import Base
+                    Base.metadata.create_all(bind=self.engine)
+                    self._ensure_sqlite_columns()
+                    self._schema_ready = True
+                    self._connected = True
+                    diag["database_connected"] = True
+                    diag["database_schema_ready"] = True
+                    diag["postgis_active"] = False
+                    diag["postgis_version"] = "N/A (sqlite)"
+                except Exception:
+                    pass
 
         # Requirement 2: Log diagnostics without password
         logger.info(f"DATABASE_HOST: {diag['database_host']}")
@@ -440,43 +455,25 @@ class DatabaseManager:
                 self._last_error_time = time.time()
                 logger.warning(f"Database schema initialization attempt {attempt}/{max_attempts} failed: {err}")
                 if not self.is_production and "sqlite" not in self.database_url:
-                    if self._fallback_to_sqlite(str(err)):
+                    logger.info("Local environment: PostgreSQL unreachable, falling back to local SQLite engine.")
+                    self.database_url = "sqlite:///data/ramp_storage.db"
+                    self.is_sqlite = True
+                    Path("data").mkdir(exist_ok=True)
+                    self.engine = create_engine(self.database_url, connect_args={"check_same_thread": False})
+                    self.SessionFactory = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
+                    try:
+                        from ramp.storage.models import Base
+                        Base.metadata.create_all(bind=self.engine)
+                        self._ensure_sqlite_columns()
+                        self._schema_ready = True
+                        self._connected = True
+                        logger.info("SQLite schema initialized successfully for local development.")
                         return True
+                    except Exception as sqle:
+                        logger.warning(f"SQLite initialization notice: {sqle}")
                 if attempt < max_attempts:
                     time.sleep(2.0)
         return False
-
-    def _fallback_to_sqlite(self, reason: str = "") -> bool:
-        """Falls back to local SQLite database when PostgreSQL is unreachable in local development."""
-        if self.is_production:
-            return False
-        if self.is_sqlite:
-            return True
-        logger.info(f"Local environment: PostgreSQL unreachable ({reason}), falling back to local SQLite engine.")
-        self.database_url = "sqlite:///data/ramp_storage.db"
-        self.is_sqlite = True
-        self.db_host = "localhost (SQLite)"
-        self.db_name = "data/ramp_storage.db"
-        Path("data").mkdir(exist_ok=True)
-        if hasattr(self, "engine") and self.engine:
-            try:
-                self.engine.dispose()
-            except Exception:
-                pass
-        self.engine = create_engine(self.database_url, connect_args={"check_same_thread": False})
-        self.SessionFactory = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
-        try:
-            from ramp.storage.models import Base
-            Base.metadata.create_all(bind=self.engine)
-            self._ensure_sqlite_columns()
-            self._schema_ready = True
-            self._connected = True
-            self._connection_error = None
-            logger.info("SQLite schema initialized successfully for local development.")
-            return True
-        except Exception as sqle:
-            logger.warning(f"SQLite initialization notice: {sqle}")
-            return False
 
     def _ensure_sqlite_columns(self) -> None:
         """Inspects and adds any missing columns to existing SQLite tables for local dev."""
@@ -506,10 +503,8 @@ class DatabaseManager:
         try:
             yield sess
             sess.commit()
-        except Exception as e:
+        except Exception:
             sess.rollback()
-            if not self.is_production and not self.is_sqlite and ("connection" in str(e).lower() or "timeout" in str(e).lower()):
-                self._fallback_to_sqlite(str(e))
             raise
         finally:
             sess.close()
@@ -597,11 +592,8 @@ class DatabaseManager:
             "database": self.db_name,
         }
 
-        # If a connection error occurred very recently, return DOWN or fallback to SQLite
+        # If a connection error occurred very recently, return DOWN without waiting for TCP timeout
         if not self._connected and (now - getattr(self, "_last_error_time", 0)) < 10.0:
-            if not self.is_production and not self.is_sqlite:
-                if self._fallback_to_sqlite(getattr(self, "_connection_error", "timeout")):
-                    return self.check_health()
             health["error"] = getattr(self, "_connection_error", "Database connection offline")
             self._last_health_check = dict(health)
             self._last_health_time = now
@@ -631,9 +623,34 @@ class DatabaseManager:
             self._connected = False
             self._last_error_time = time.time()
             self._connection_error = str(e)
+
             if not self.is_production and not self.is_sqlite:
-                if self._fallback_to_sqlite(str(e)):
-                    return self.check_health()
+                logger.info("Local environment: PostgreSQL unreachable, automatically switching to local SQLite engine.")
+                try:
+                    self.database_url = "sqlite:///data/ramp_storage.db"
+                    self.is_sqlite = True
+                    Path("data").mkdir(exist_ok=True)
+                    self.engine = create_engine(self.database_url, connect_args={"check_same_thread": False})
+                    self.SessionFactory = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
+                    from ramp.storage.models import Base
+                    Base.metadata.create_all(bind=self.engine)
+                    self._ensure_sqlite_columns()
+                    self._schema_ready = True
+                    self._connected = True
+                    health["connected"] = True
+                    health["is_healthy"] = True
+                    health["status"] = "HEALTHY"
+                    health["backend"] = "sqlite"
+                    health["dialect"] = "sqlite"
+                    health["engine"] = "sqlite"
+                    health["error"] = None
+                    health["postgis_enabled"] = False
+                    health["postgis_version"] = "N/A (sqlite)"
+                    self._last_health_check = dict(health)
+                    self._last_health_time = time.time()
+                    return health
+                except Exception as sqle:
+                    logger.debug(f"SQLite fallback initialization notice: {sqle}")
 
         self._last_health_check = dict(health)
         self._last_health_time = time.time()

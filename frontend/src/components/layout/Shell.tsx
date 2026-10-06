@@ -175,11 +175,12 @@ export const Shell: React.FC<ShellProps> = ({ children }) => {
 
   return (
     <div className="flex h-screen bg-slate-950 text-slate-100 overflow-hidden font-sans">
-      {/* Mobile sidebar backdrop */}
+      {/* Mobile sidebar backdrop (clean dimming without blur so dashboard stays crisp) */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+          className="fixed inset-0 z-40 bg-black/40 lg:hidden transition-opacity duration-200"
           onClick={() => setSidebarOpen(false)}
+          aria-hidden="true"
         />
       )}
 
@@ -230,6 +231,7 @@ export const Shell: React.FC<ShellProps> = ({ children }) => {
                   <NavLink
                     key={item.path}
                     to={item.path}
+                    onClick={() => setSidebarOpen(false)}
                     className={`flex items-center space-x-2.5 px-3 py-2 rounded-lg text-xs font-medium transition-all duration-150 ${
                       isActive
                         ? 'bg-monsoon-600/25 text-monsoon-300 border border-monsoon-500/30 shadow-sm font-semibold'
@@ -284,8 +286,8 @@ export const Shell: React.FC<ShellProps> = ({ children }) => {
           {/* ZONE 1: LEFT BRAND AREA (Section B3) */}
           <div className="flex items-center space-x-3 shrink-0">
             <button
-              onClick={() => setSidebarOpen(true)}
-              aria-label="Open navigation sidebar"
+              onClick={() => setSidebarOpen((prev) => !prev)}
+              aria-label="Toggle navigation sidebar"
               className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
             >
               <Menu className="w-5 h-5" />

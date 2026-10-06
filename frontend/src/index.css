@@ -108,8 +108,18 @@
 
 /* All application dialogs, overlays, and modals must stack above any map components */
 .fixed.inset-0.z-50,
-.fixed.inset-0[class*="z-"] {
+.fixed.inset-0.z-\[9999\],
+.modal-backdrop,
+.modal-overlay {
   z-index: 9999 !important;
+}
+
+/* Mobile Sidebar Drawer Elevation: Drawer must always be strictly above backdrop */
+.mobile-sidebar-drawer {
+  z-index: 10000 !important;
+}
+.mobile-sidebar-backdrop {
+  z-index: 9998 !important;
 }
 
 /* ------------------------------------------------------------- */

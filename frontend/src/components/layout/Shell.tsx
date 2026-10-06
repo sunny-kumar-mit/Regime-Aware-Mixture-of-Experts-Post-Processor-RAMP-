@@ -178,7 +178,7 @@ export const Shell: React.FC<ShellProps> = ({ children }) => {
       {/* Mobile sidebar backdrop (clean dimming without blur so dashboard stays crisp) */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/40 lg:hidden transition-opacity duration-200"
+          className="mobile-sidebar-backdrop fixed inset-0 bg-black/50 lg:hidden transition-opacity duration-200"
           onClick={() => setSidebarOpen(false)}
           aria-hidden="true"
         />
@@ -186,7 +186,7 @@ export const Shell: React.FC<ShellProps> = ({ children }) => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-slate-900/95 border-r border-slate-800/80 flex flex-col transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
+        className={`mobile-sidebar-drawer fixed inset-y-0 left-0 w-64 bg-slate-900 border-r border-slate-800 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >

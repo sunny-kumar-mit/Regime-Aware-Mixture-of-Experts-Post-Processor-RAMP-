@@ -72,7 +72,7 @@ export const LandingPage: React.FC = () => {
       >
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 flex items-center justify-between">
           {/* Left: Brand & Subtitle (Spaced & Relaxed, No congested badge) */}
-          <div className="flex items-center space-x-3.5">
+          <div className="flex items-center space-x-3.5 shrink-0">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 border border-cyan-400/40 flex-shrink-0">
               <CloudRain className="w-5 h-5 text-white" />
             </div>
@@ -87,7 +87,7 @@ export const LandingPage: React.FC = () => {
           </div>
 
           {/* Center: Curated Primary Navigation (Only the 5 essential sections) */}
-          <nav className="hidden lg:flex items-center space-x-8 xl:space-x-10 text-sm font-medium text-slate-300">
+          <nav className="landing-desktop-nav hidden lg:flex items-center space-x-8 xl:space-x-10 text-sm font-medium text-slate-300">
             <button
               onClick={() => scrollToSection('problem')}
               className="hover:text-cyan-400 transition-colors py-1 focus:outline-none"
@@ -121,7 +121,7 @@ export const LandingPage: React.FC = () => {
           </nav>
 
           {/* Right: Jury Demo & Dashboard CTAs */}
-          <div className="hidden sm:flex items-center space-x-3.5">
+          <div className="landing-desktop-actions hidden sm:flex items-center space-x-3.5">
             <Link
               to="/jury-demo"
               className="text-xs font-semibold px-4 py-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-200 border border-slate-700/80 backdrop-blur-md transition-all flex items-center space-x-2"
@@ -139,7 +139,7 @@ export const LandingPage: React.FC = () => {
           </div>
 
           {/* Mobile Right: Dashboard Icon + Hamburger */}
-          <div className="flex sm:hidden items-center space-x-2">
+          <div className="landing-mobile-toggle flex sm:hidden items-center space-x-2">
             <Link
               to="/forecast"
               className="text-xs font-bold px-3 py-1.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 flex items-center space-x-1"

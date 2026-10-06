@@ -28,10 +28,12 @@ import { AcceptancePage } from './pages/Acceptance';
 import { RealDataCasesPage } from './pages/RealDataCases';
 import { RealDataLabPage } from './pages/RealDataLab';
 import { LandingPage } from './pages/LandingPage';
+import { ViewModeSwitcher } from './components/common/ViewModeSwitcher';
 
 export const App: React.FC = () => {
   return (
     <BrowserRouter>
+      <ViewModeSwitcher />
       <Routes>
         {/* Standalone Landing Page at / */}
         <Route path="/" element={<LandingPage />} />

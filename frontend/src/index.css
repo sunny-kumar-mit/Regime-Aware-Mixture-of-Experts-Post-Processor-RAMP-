@@ -123,6 +123,66 @@
 }
 
 /* ------------------------------------------------------------- */
+/* Auto Desktop View Mode (Mobile Auto Preview & Scaling)        */
+/* ------------------------------------------------------------- */
+html.auto-desktop-view {
+  min-width: 1280px;
+}
+
+html.auto-desktop-view body {
+  min-width: 1280px;
+  overflow-x: auto;
+}
+
+html.auto-desktop-view #root {
+  min-width: 1280px;
+  width: 100%;
+}
+
+/* In auto desktop view, ensure sidebar drawer is statically pinned and visible like desktop */
+html.auto-desktop-view .mobile-sidebar-drawer {
+  position: static !important;
+  transform: none !important;
+  display: flex !important;
+  width: 16rem !important; /* w-64 */
+  box-shadow: none !important;
+  z-index: 30 !important;
+}
+
+/* Hide backdrop in desktop view because sidebar is never an overlay */
+html.auto-desktop-view .mobile-sidebar-backdrop {
+  display: none !important;
+}
+
+/* Hide mobile hamburger toggles in desktop view */
+html.auto-desktop-view .mobile-hamburger-btn {
+  display: none !important;
+}
+
+/* Hide sidebar close button in desktop view */
+html.auto-desktop-view .mobile-sidebar-close-btn {
+  display: none !important;
+}
+
+/* Ensure center operational context badge in Shell header is displayed */
+html.auto-desktop-view .header-center-context {
+  display: flex !important;
+}
+
+/* Ensure landing page desktop navigation and CTAs are displayed */
+html.auto-desktop-view .landing-desktop-nav {
+  display: flex !important;
+}
+
+html.auto-desktop-view .landing-desktop-actions {
+  display: flex !important;
+}
+
+html.auto-desktop-view .landing-mobile-toggle {
+  display: none !important;
+}
+
+/* ------------------------------------------------------------- */
 /* Hero Headline & Loading Text Animation Keyframes (Slow Drift) */
 /* ------------------------------------------------------------- */
 @keyframes textLoadingSweepSlow {

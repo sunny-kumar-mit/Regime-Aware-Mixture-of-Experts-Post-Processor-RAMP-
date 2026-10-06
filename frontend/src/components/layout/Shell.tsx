@@ -211,7 +211,7 @@ export const Shell: React.FC<ShellProps> = ({ children }) => {
           <button
             onClick={() => setSidebarOpen(false)}
             aria-label="Close sidebar navigation"
-            className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+            className="mobile-sidebar-close-btn lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
           >
             <X className="w-5 h-5" />
           </button>
@@ -288,7 +288,7 @@ export const Shell: React.FC<ShellProps> = ({ children }) => {
             <button
               onClick={() => setSidebarOpen((prev) => !prev)}
               aria-label="Toggle navigation sidebar"
-              className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+              className="mobile-hamburger-btn lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
             >
               <Menu className="w-5 h-5" />
             </button>
@@ -306,7 +306,7 @@ export const Shell: React.FC<ShellProps> = ({ children }) => {
           </div>
 
           {/* ZONE 2: CENTER OPERATIONAL CONTEXT (Section B4) */}
-          <div className="hidden md:flex items-center justify-center flex-1 px-4">
+          <div className="header-center-context hidden md:flex items-center justify-center flex-1 px-4">
             <div className="flex items-center space-x-2 px-3.5 py-1 rounded-full bg-slate-950/70 border border-slate-800/90 shadow-inner">
               <span className="w-1.5 h-1.5 rounded-full bg-monsoon-400 animate-pulse" />
               <span className="font-mono text-[11px] font-bold tracking-widest text-slate-200 uppercase">

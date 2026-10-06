@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, Link } from 'react-router-dom';
 import {
   LayoutDashboard,
   Database,
@@ -21,6 +21,7 @@ import {
   RefreshCw,
   ShieldCheck,
   Clock,
+  ArrowLeft,
 } from 'lucide-react';
 import { useOperationalStatus } from '../../hooks/useOperationalStatus';
 
@@ -290,22 +291,16 @@ export const Shell: React.FC<ShellProps> = ({ children }) => {
               <Menu className="w-5 h-5" />
             </button>
 
-            <div className="flex items-center space-x-2.5">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-monsoon-500 to-indigo-700 flex items-center justify-center shadow-sm shadow-monsoon-600/30">
-                <CloudRain className="w-4.5 h-4.5 text-white" />
-              </div>
-              <div className="leading-tight">
-                <div className="flex items-center space-x-1.5">
-                  <span className="font-bold text-sm sm:text-base tracking-wider text-white">RAMP</span>
-                  <span className="text-[10px] bg-monsoon-500/20 text-monsoon-300 font-mono px-1.5 py-0.2 rounded border border-monsoon-500/30 font-semibold">
-                    SIH26080
-                  </span>
-                </div>
-                <p className="text-[10px] text-slate-400 font-medium tracking-tight">
-                  MoES • NCMRWF
-                </p>
-              </div>
-            </div>
+            {/* Back to Landing Page Button */}
+            <Link
+              to="/"
+              className="group flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-slate-950/80 hover:bg-cyan-950/60 border border-slate-800 hover:border-cyan-500/50 text-slate-300 hover:text-cyan-300 text-xs font-mono transition-all duration-200 shadow-sm"
+              title="Return to Landing Page"
+            >
+              <ArrowLeft className="w-3.5 h-3.5 text-cyan-400 transition-transform group-hover:-translate-x-1" />
+              <span className="font-semibold hidden sm:inline">Back to Landing Page</span>
+              <span className="font-semibold sm:hidden">Landing Page</span>
+            </Link>
           </div>
 
           {/* ZONE 2: CENTER OPERATIONAL CONTEXT (Section B4) */}

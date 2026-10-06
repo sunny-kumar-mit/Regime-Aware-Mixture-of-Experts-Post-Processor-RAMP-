@@ -2,45 +2,35 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   CloudRain,
-  Activity,
-  CheckCircle2,
   AlertTriangle,
   ArrowRight,
-  MapPin,
   Zap,
   Radio,
-  Gauge,
   Sparkles,
   Menu,
   X,
-  ChevronDown,
-  Info
+  ChevronDown
 } from 'lucide-react';
 import { AtmosphericHeroCanvas } from './landing/AtmosphericHeroCanvas';
 import { TypewriterHeroSubtitle } from './landing/TypewriterHeroHeadline';
+import { ProblemStagesInteractive } from './landing/ProblemStagesInteractive';
+import { CoreInsightMoEInteractive } from './landing/CoreInsightMoEInteractive';
+import { SolutionPipelineInteractive } from './landing/SolutionPipelineInteractive';
+import { WatchRampDecideInteractive } from './landing/WatchRampDecideInteractive';
+import { TechnicalArchitectureInteractive } from './landing/TechnicalArchitectureInteractive';
+import { OperationalWorkflowInteractive } from './landing/OperationalWorkflowInteractive';
 import {
-  CANONICAL_REGIMES,
-  ARCHITECTURE_LAYERS,
-  WORKFLOW_STEPS,
   VERIFIED_TECH_STACK,
   BENCHMARK_MODELS,
   FEASIBILITY_PILLARS,
   MATURITY_ROADMAP,
-  IMPACT_VERTICALS,
-  WeatherRegime,
-  ArchitectureLayer
+  IMPACT_VERTICALS
 } from './landing/landingData';
 
 export const LandingPage: React.FC = () => {
   // Navigation & Scroll State
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  // Interactive "Watch RAMP Decide" State
-  const [selectedRegime, setSelectedRegime] = useState<WeatherRegime>(CANONICAL_REGIMES[0]);
-
-  // Interactive Architecture Explorer State
-  const [activeArchLayer, setActiveArchLayer] = useState<ArchitectureLayer>(ARCHITECTURE_LAYERS[0]);
 
   // Tech Stack Category Filter
   const [selectedTechCategory, setSelectedTechCategory] = useState<string>('All');
@@ -347,95 +337,15 @@ export const LandingPage: React.FC = () => {
             </p>
           </div>
 
-          {/* Scenographic 5-Stage Story Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            <div className="p-6 rounded-2xl bg-gradient-to-b from-slate-900/80 to-slate-950/90 border border-slate-800/80 hover:border-cyan-800/60 transition-all flex flex-col justify-between">
-              <div>
-                <div className="w-10 h-10 rounded-xl bg-blue-950/80 border border-blue-800/40 flex items-center justify-center text-blue-400 mb-4">
-                  <Gauge className="w-5 h-5" />
-                </div>
-                <div className="text-xs font-mono text-cyan-400 mb-1">STAGE 1</div>
-                <h3 className="text-base font-bold text-white mb-2">Raw NWP Grid</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  Hydrostatic dynamical cores simulate large-scale pressure and moisture advection on ~18 km grid points.
-                </p>
-              </div>
-              <div className="mt-6 pt-3 border-t border-slate-800 text-[11px] font-mono text-slate-400">
-                Discrete spatial approximations
-              </div>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-gradient-to-b from-slate-900/80 to-slate-950/90 border border-slate-800/80 hover:border-cyan-800/60 transition-all flex flex-col justify-between">
-              <div>
-                <div className="w-10 h-10 rounded-xl bg-amber-950/80 border border-amber-800/40 flex items-center justify-center text-amber-400 mb-4">
-                  <AlertTriangle className="w-5 h-5" />
-                </div>
-                <div className="text-xs font-mono text-amber-400 mb-1">STAGE 2</div>
-                <h3 className="text-base font-bold text-white mb-2">Grid-Scale Bias</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  Sub-grid convective parameterizations systematically underpredict cloudburst peaks and overpredict widespread drizzle.
-                </p>
-              </div>
-              <div className="mt-6 pt-3 border-t border-slate-800 text-[11px] font-mono text-slate-400">
-                Non-linear error distribution
-              </div>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-gradient-to-b from-slate-900/80 to-slate-950/90 border border-slate-800/80 hover:border-cyan-800/60 transition-all flex flex-col justify-between">
-              <div>
-                <div className="w-10 h-10 rounded-xl bg-purple-950/80 border border-purple-800/40 flex items-center justify-center text-purple-400 mb-4">
-                  <Activity className="w-5 h-5" />
-                </div>
-                <div className="text-xs font-mono text-purple-400 mb-1">STAGE 3</div>
-                <h3 className="text-base font-bold text-white mb-2">Changing Regimes</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  When the monsoon shifts from an active trough to a break state or a tropical depression, the entire bias signature flips.
-                </p>
-              </div>
-              <div className="mt-6 pt-3 border-t border-slate-800 text-[11px] font-mono text-slate-400">
-                Physical mechanisms change
-              </div>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-gradient-to-b from-slate-900/80 to-slate-950/90 border border-slate-800/80 hover:border-cyan-800/60 transition-all flex flex-col justify-between">
-              <div>
-                <div className="w-10 h-10 rounded-xl bg-rose-950/80 border border-rose-800/40 flex items-center justify-center text-rose-400 mb-4">
-                  <CloudRain className="w-5 h-5" />
-                </div>
-                <div className="text-xs font-mono text-rose-400 mb-1">STAGE 4</div>
-                <h3 className="text-base font-bold text-white mb-2">Extreme Events</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  Conventional statistical methods smooth out rare heavy events (&gt;64.5 mm), creating critical missed flood warnings.
-                </p>
-              </div>
-              <div className="mt-6 pt-3 border-t border-slate-800 text-[11px] font-mono text-slate-400">
-                Heavy tail probability loss
-              </div>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-gradient-to-b from-slate-900/80 to-slate-950/90 border border-slate-800/80 hover:border-cyan-800/60 transition-all flex flex-col justify-between">
-              <div>
-                <div className="w-10 h-10 rounded-xl bg-emerald-950/80 border border-emerald-800/40 flex items-center justify-center text-emerald-400 mb-4">
-                  <MapPin className="w-5 h-5" />
-                </div>
-                <div className="text-xs font-mono text-emerald-400 mb-1">STAGE 5</div>
-                <h3 className="text-base font-bold text-white mb-2">District Decisions</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  Disaster managers operate on administrative districts, not floating-point grid coordinates with uncalibrated uncertainty.
-                </p>
-              </div>
-              <div className="mt-6 pt-3 border-t border-slate-800 text-[11px] font-mono text-slate-400">
-                Actionable spatial intelligence
-              </div>
-            </div>
-          </div>
+          {/* Interactive Dynamic 5-Stage Scientific Story Pipeline */}
+          <ProblemStagesInteractive />
         </div>
       </section>
 
       {/* =========================================================================
           04 & 05. THE CORE INSIGHT: ONE CORRECTION DOES NOT FIT EVERY ATMOSPHERE
           ========================================================================= */}
-      <section className="py-24 relative bg-gradient-to-b from-[#070C18] via-[#091122] to-[#070C18]">
+      <section className="py-24 relative bg-gradient-to-b from-[#070C18] via-[#091122] to-[#070C18] border-t border-slate-800/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="text-xs font-mono uppercase tracking-widest text-cyan-400">The Core Insight</span>
@@ -447,76 +357,8 @@ export const LandingPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-            {/* Traditional Post-Processing */}
-            <div className="p-8 rounded-3xl bg-slate-950/80 border border-slate-800 flex flex-col justify-between shadow-xl">
-              <div>
-                <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-rose-950/80 border border-rose-800/50 text-rose-300 text-xs font-mono mb-4">
-                  <span>Traditional Post-Processing</span>
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">Static / Global Correction</h3>
-                <p className="text-sm text-slate-400 leading-relaxed mb-6">
-                  Trained across all historical weather days simultaneously without conditioning on synoptic physics. It learns the "average" error, which degrades both extreme cloudbursts and dry spells.
-                </p>
-
-                <div className="space-y-3 font-mono text-xs">
-                  <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between text-slate-300">
-                    <span>NWP Forecast</span>
-                    <span className="text-slate-500">→</span>
-                    <span className="text-rose-400 font-bold">Single Global Model</span>
-                    <span className="text-slate-500">→</span>
-                    <span>Averaged Output</span>
-                  </div>
-                  <div className="p-3.5 rounded-xl bg-rose-950/30 border border-rose-900/40 text-rose-300 text-[11px] leading-relaxed">
-                    ⚠ Fails during Regime Transitions: Smooths out convective peaks and produces false positives in break conditions.
-                  </div>
-                </div>
-              </div>
-              <div className="mt-8 pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-500">
-                <span>Hard boundaries</span>
-                <span>Zero regime awareness</span>
-              </div>
-            </div>
-
-            {/* GatiSutra RAMP */}
-            <div className="p-8 rounded-3xl bg-gradient-to-b from-[#0D1A33] to-[#0A1428] border border-cyan-800/60 flex flex-col justify-between shadow-2xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
-              <div>
-                <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-600/50 text-cyan-300 text-xs font-mono mb-4">
-                  <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-                  <span>GatiSutra RAMP Architecture</span>
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">Regime-Aware Mixture-of-Experts</h3>
-                <p className="text-sm text-slate-300 leading-relaxed mb-6">
-                  Diagnoses the atmospheric state via 23 dynamic variables, produces a soft 7-class probability distribution, and blends specialized correction experts analytically without spatial edge discontinuities.
-                </p>
-
-                <div className="space-y-2.5 font-mono text-xs">
-                  <div className="p-3 rounded-xl bg-[#061020] border border-cyan-900/40 flex items-center justify-between text-cyan-200">
-                    <span>NWP Ingest</span>
-                    <span className="text-cyan-500">→</span>
-                    <span className="text-cyan-400 font-bold">23 Dynamic Features</span>
-                    <span className="text-cyan-500">→</span>
-                    <span className="text-cyan-300">7-Regime Gating</span>
-                  </div>
-                  <div className="p-3 rounded-xl bg-[#061020] border border-cyan-900/40 flex items-center justify-between text-emerald-200">
-                    <span>Specialized Experts</span>
-                    <span className="text-emerald-500">→</span>
-                    <span className="text-emerald-400 font-bold">Soft Blending</span>
-                    <span className="text-emerald-500">→</span>
-                    <span>Calibrated Extremes</span>
-                  </div>
-                  <div className="p-3.5 rounded-xl bg-cyan-950/40 border border-cyan-800/40 text-cyan-300 text-[11px] leading-relaxed">
-                    ✔ Context-Aware Intelligence: Automatically routes low-pressure vortexes to cyclonic experts and break spells to suppression experts.
-                  </div>
-                </div>
-              </div>
-              <div className="mt-8 pt-4 border-t border-cyan-900/60 flex items-center justify-between text-xs text-cyan-400">
-                <span>Probabilistically smooth</span>
-                <span>Extreme-event calibrated</span>
-              </div>
-            </div>
-          </div>
+          {/* Interactive Regime-Aware Mixture-of-Experts vs Traditional Comparison */}
+          <CoreInsightMoEInteractive />
         </div>
       </section>
 
@@ -535,35 +377,8 @@ export const LandingPage: React.FC = () => {
             </p>
           </div>
 
-          {/* Animated 7-Stage Pipeline Visual */}
-          <div className="relative">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {ARCHITECTURE_LAYERS.map((layer, index) => (
-                <div
-                  key={layer.id}
-                  className="p-5 rounded-2xl bg-slate-900/70 border border-slate-800 hover:border-cyan-700/60 transition-all flex flex-col justify-between group"
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-xs font-mono text-cyan-400 font-bold px-2 py-0.5 rounded bg-cyan-950/80 border border-cyan-900/50">
-                        STAGE {layer.number}
-                      </span>
-                      <span className="text-[10px] font-mono text-slate-500">0{index + 1}/07</span>
-                    </div>
-                    <h3 className="text-base font-bold text-white group-hover:text-cyan-300 transition-colors mb-1.5">
-                      {layer.name}
-                    </h3>
-                    <p className="text-xs text-slate-400 leading-relaxed mb-4">
-                      {layer.tagline}
-                    </p>
-                  </div>
-                  <div className="pt-3 border-t border-slate-800 text-[11px] font-mono text-cyan-400/90 truncate">
-                    {layer.metricsOrQC}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          {/* Interactive Animated 7-Stage Pipeline Visual */}
+          <SolutionPipelineInteractive />
         </div>
       </section>
 
@@ -585,130 +400,8 @@ export const LandingPage: React.FC = () => {
             </p>
           </div>
 
-          {/* Regime Selector Pills */}
-          <div className="flex flex-wrap gap-2 mb-8">
-            {CANONICAL_REGIMES.map((regime) => (
-              <button
-                key={regime.id}
-                onClick={() => setSelectedRegime(regime)}
-                className={`px-4 py-2.5 rounded-xl text-xs font-medium transition-all flex items-center space-x-2 border ${
-                  selectedRegime.id === regime.id
-                    ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-bold border-cyan-400 shadow-lg shadow-cyan-500/20'
-                    : 'bg-slate-900/80 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white'
-                }`}
-              >
-                <span className="w-2 h-2 rounded-full bg-cyan-400" />
-                <span>{regime.name}</span>
-              </button>
-            ))}
-          </div>
-
-          {/* Interactive Simulation Dashboard */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* Left: Regime Physics & Synoptic Context */}
-            <div className="lg:col-span-5 p-6 rounded-3xl bg-[#091222] border border-cyan-900/40 shadow-xl space-y-6">
-              <div>
-                <div className="flex items-center justify-between text-xs font-mono text-cyan-400 mb-2">
-                  <span>ACTIVE REGIME ID: {selectedRegime.id}</span>
-                  <span className="px-2 py-0.5 rounded bg-cyan-950 border border-cyan-800 text-[10px]">
-                    {selectedRegime.code}
-                  </span>
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-2">{selectedRegime.name}</h3>
-                <p className="text-sm text-slate-300 leading-relaxed">
-                  {selectedRegime.shortDesc}
-                </p>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3">
-                <div className="text-xs font-mono text-slate-400 uppercase tracking-wider">Synoptic Diagnostics</div>
-                <p className="text-xs text-slate-300 leading-relaxed">
-                  <strong className="text-cyan-400">Features:</strong> {selectedRegime.synopticFeatures}
-                </p>
-                <p className="text-xs text-slate-300 leading-relaxed">
-                  <strong className="text-cyan-400">Dynamics:</strong> {selectedRegime.primaryDynamics}
-                </p>
-              </div>
-
-              {/* Forecast Delta & Tail Risk */}
-              <div className="grid grid-cols-2 gap-3">
-                <div className="p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800">
-                  <div className="text-[10px] font-mono text-slate-400">FORECAST DELTA</div>
-                  <div className="text-xs font-bold text-emerald-400 mt-1">
-                    {selectedRegime.correctedRainDelta}
-                  </div>
-                </div>
-                <div className="p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800">
-                  <div className="text-[10px] font-mono text-slate-400">P(EXTREME &gt; 64.5mm)</div>
-                  <div className="text-xs font-bold text-cyan-400 mt-1">
-                    {(selectedRegime.extremeProbability * 100).toFixed(0)}% Risk Envelope
-                  </div>
-                </div>
-              </div>
-
-              <div className="text-[11px] font-mono text-slate-500 flex items-center space-x-1.5">
-                <Info className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Illustrative routing simulation grounded in RAMP model architecture.</span>
-              </div>
-            </div>
-
-            {/* Right: Expert Weight Allocation & Gating Distribution */}
-            <div className="lg:col-span-7 p-6 rounded-3xl bg-[#091222] border border-cyan-900/40 shadow-xl space-y-6">
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <h4 className="text-sm font-mono uppercase tracking-wider text-slate-300 font-bold">
-                    Soft Gating Distribution: p(Regime)
-                  </h4>
-                  <span className="text-xs font-mono text-cyan-400 font-bold">
-                    Dominant: {(selectedRegime.sampleProb * 100).toFixed(1)}%
-                  </span>
-                </div>
-                <div className="w-full bg-slate-950 h-3 rounded-full overflow-hidden border border-slate-800 p-0.5">
-                  <div
-                    className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full transition-all duration-500"
-                    style={{ width: `${selectedRegime.sampleProb * 100}%` }}
-                  />
-                </div>
-                <div className="flex items-center justify-between text-[11px] font-mono text-slate-500 mt-1.5">
-                  <span>Normalized Softmax Posterior</span>
-                  <span>Shannon Entropy H(p) = 0.42 bits</span>
-                </div>
-              </div>
-
-              {/* Dynamic Expert Allocation Bars */}
-              <div>
-                <div className="text-xs font-mono uppercase tracking-wider text-slate-300 font-bold mb-3">
-                  Mixture-of-Experts Weight Allocation: Σ w_i = 1.0
-                </div>
-                <div className="space-y-3">
-                  {Object.entries(selectedRegime.simulatedWeights).map(([expertName, weight]) => (
-                    <div key={expertName} className="space-y-1">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-slate-300 font-medium">{expertName}</span>
-                        <span className="font-mono text-cyan-400 font-bold">{(weight * 100).toFixed(0)}%</span>
-                      </div>
-                      <div className="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-800">
-                        <div
-                          className="h-full bg-gradient-to-r from-cyan-500 to-emerald-400 rounded-full transition-all duration-500"
-                          style={{ width: `${weight * 100}%` }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Mathematical Guarantee Box */}
-              <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 text-xs font-mono text-slate-300">
-                <div className="text-cyan-400 font-bold mb-1">ANALYTICAL BLENDING GUARANTEE:</div>
-                <p className="text-slate-400 leading-relaxed">
-                  Corrected_Rainfall = Σ [ p(regime_i) × Expert_i(NWP_Features) ]
-                  <br />
-                  <span className="text-slate-500">Zero discrete switching. Continuous spatial gradients preserved across all 788 districts.</span>
-                </p>
-              </div>
-            </div>
-          </div>
+          {/* Interactive Animated Decision Engine Display */}
+          <WatchRampDecideInteractive />
         </div>
       </section>
 
@@ -727,83 +420,8 @@ export const LandingPage: React.FC = () => {
             </p>
           </div>
 
-          {/* Architecture Horizontal Tabs */}
-          <div className="flex flex-wrap gap-2 mb-8 border-b border-slate-800 pb-4">
-            {ARCHITECTURE_LAYERS.map((layer) => (
-              <button
-                key={layer.id}
-                onClick={() => setActiveArchLayer(layer)}
-                className={`px-4 py-2 rounded-xl text-xs font-mono transition-all flex items-center space-x-2 ${
-                  activeArchLayer.id === layer.id
-                    ? 'bg-cyan-950 text-cyan-300 border border-cyan-700/60 font-bold shadow-md'
-                    : 'bg-slate-900/60 text-slate-400 hover:text-slate-200 border border-transparent'
-                }`}
-              >
-                <span>{layer.number}</span>
-                <span>{layer.name}</span>
-              </button>
-            ))}
-          </div>
-
-          {/* Layer Deep Dive Card */}
-          <div className="p-8 rounded-3xl bg-[#081224] border border-cyan-900/40 shadow-2xl">
-            <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-6 border-b border-slate-800">
-              <div>
-                <span className="text-xs font-mono text-cyan-400 font-bold">LAYER {activeArchLayer.number}</span>
-                <h3 className="text-2xl font-bold text-white mt-1">{activeArchLayer.name}</h3>
-                <p className="text-sm text-slate-300 mt-1">{activeArchLayer.tagline}</p>
-              </div>
-              <div className="px-3.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-mono text-cyan-400">
-                QC & Performance: {activeArchLayer.metricsOrQC}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Inputs & Outputs */}
-              <div className="space-y-6">
-                <div>
-                  <h4 className="text-xs font-mono uppercase tracking-wider text-slate-400 mb-2">Ingested Inputs</h4>
-                  <ul className="space-y-2">
-                    {activeArchLayer.inputs.map((inp, idx) => (
-                      <li key={idx} className="flex items-start space-x-2 text-xs text-slate-300">
-                        <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 mt-1.5 flex-shrink-0" />
-                        <span>{inp}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div>
-                  <h4 className="text-xs font-mono uppercase tracking-wider text-slate-400 mb-2">Emitted Outputs</h4>
-                  <ul className="space-y-2">
-                    {activeArchLayer.outputs.map((out, idx) => (
-                      <li key={idx} className="flex items-start space-x-2 text-xs text-emerald-300">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 mt-0.5 flex-shrink-0" />
-                        <span>{out}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
-              {/* Scientific Purpose & Logic */}
-              <div className="space-y-6">
-                <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-                  <h4 className="text-xs font-mono uppercase tracking-wider text-cyan-400 mb-2">Scientific Purpose</h4>
-                  <p className="text-xs text-slate-300 leading-relaxed">
-                    {activeArchLayer.scientificPurpose}
-                  </p>
-                </div>
-
-                <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-                  <h4 className="text-xs font-mono uppercase tracking-wider text-cyan-400 mb-2">Governing Logic</h4>
-                  <p className="text-xs text-slate-300 leading-relaxed">
-                    {activeArchLayer.governingLogic}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+          {/* Interactive Animated Architecture Component */}
+          <TechnicalArchitectureInteractive />
         </div>
       </section>
 
@@ -822,28 +440,8 @@ export const LandingPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-            {WORKFLOW_STEPS.map((step) => (
-              <div
-                key={step.step}
-                className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-cyan-700/60 transition-all flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs font-mono text-cyan-400 font-bold">{step.step}</span>
-                    <span className="w-2 h-2 rounded-full bg-cyan-400/80" />
-                  </div>
-                  <h3 className="text-sm font-bold text-white mb-2">{step.title}</h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">
-                    {step.subtext}
-                  </p>
-                </div>
-                <div className="mt-4 pt-3 border-t border-slate-800/80 text-[10px] font-mono text-slate-500 truncate">
-                  artifact: {step.technicalArtifact}
-                </div>
-              </div>
-            ))}
-          </div>
+          {/* Interactive Animated Operational Stepper */}
+          <OperationalWorkflowInteractive />
         </div>
       </section>
 
